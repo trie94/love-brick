@@ -19,6 +19,8 @@
         /// </summary>
         [SerializeField] RoomSharingServer RoomSharingServer;
         [SerializeField] CloudAnchorUIController UIController;
+        [SerializeField] GameObject lightPrefab;
+        [SerializeField] float lightDistance = 1f;
 
         [Header("ARCore")]
 
@@ -112,13 +114,16 @@
             if (m_LastPlacedAnchor != null)
             {
                 // spawn a wall
-                GameObject wall = Instantiate(_GetWallPrefab(), m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0), m_LastPlacedAnchor.transform.rotation);
-
-                // Compensate for the hitPose rotation facing away from the raycast (i.e. camera).
-                wall.transform.Rotate(0, 0, 0, Space.Self);
+                GameObject wall = Instantiate(_GetWallPrefab(), m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0),
+                m_LastPlacedAnchor.transform.rotation);
+                GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
+                GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
+                light1.transform.Rotate(0, 180, 0);
 
                 // Make the wall a child of the anchor.
                 wall.transform.parent = m_LastPlacedAnchor.transform;
+                light1.transform.parent = m_LastPlacedAnchor.transform;
+                light2.transform.parent = m_LastPlacedAnchor.transform;
 
                 // Save cloud anchor.
                 _HostLastPlacedAnchor();
@@ -230,7 +235,12 @@
                 }
 
                 m_LastResolvedAnchor = result.Anchor;
-                Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0), Quaternion.identity);
+                GameObject wall = Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0),
+                result.Anchor.transform.rotation);
+                GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
+                GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
+                light1.transform.Rotate(0, 180, 0);
+
                 UIController.ShowResolvingModeSuccess();
             }));
         }
