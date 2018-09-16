@@ -401,7 +401,7 @@ Prefab:
         type: 2}
       propertyPath: SessionConfig
       value: 
-      objectReference: {fileID: 11400000, guid: a121f8901c3214da99464f9976359de1,
+      objectReference: {fileID: 11400000, guid: 7396ad2814a327b4792436eea39d15e7,
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c10877f7cd5764de18d46d7b777d1faa, type: 2}
@@ -2088,7 +2088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ca0c6a3af6b4635b7e98c6ea0a0cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SessionConfig: {fileID: 11400000, guid: a121f8901c3214da99464f9976359de1, type: 2}
+  SessionConfig: {fileID: 11400000, guid: 7396ad2814a327b4792436eea39d15e7, type: 2}
 --- !u!1 &1666565765
 GameObject:
   m_ObjectHideFlags: 0
