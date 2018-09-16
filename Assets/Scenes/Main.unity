@@ -1609,11 +1609,10 @@ MonoBehaviour:
   RoomSharingServer: {fileID: 1142878896}
   UIController: {fileID: 588427968}
   ARCoreRoot: {fileID: 1993931011}
-  ARCoreAndyAndroidPrefab: {fileID: 1190091649889860, guid: 242a320930b81430ba610f94f9b760c8,
-    type: 2}
+  WallPrefab: {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12, type: 2}
   ARKitRoot: {fileID: 1967070699}
   ARKitFirstPersonCamera: {fileID: 100709134}
-  ARKitAndyAndroidPrefab: {fileID: 1190091649889860, guid: 63e9325810cb14b9e8e0590d57d87afb,
+  ARKitAndyAndroidPrefab: {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12,
     type: 2}
 --- !u!1 &1220783337
 GameObject:
@@ -2047,6 +2046,34 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1416262259}
   m_CullTransparentMesh: 0
+--- !u!1 &1459353028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1459353029}
+  m_Layer: 0
+  m_Name: EventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1459353029
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1459353028}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1557543681
 GameObject:
   m_ObjectHideFlags: 0

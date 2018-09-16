@@ -8,100 +8,50 @@
     using UnityEngine.UI;
 
 #if UNITY_EDITOR
-    // Set up touch input propagation while using Instant Preview in the editor.
     using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
-    /// <summary>
-    /// Controller for the Cloud Anchors Example.
-    /// </summary>
     public class CloudAnchorController : MonoBehaviour
     {
         /// <summary>
         /// Manages sharing Anchor Ids across the local network to clients using Unity's NetworkServer.  There
         /// are many ways to share this data and this not part of the ARCore Cloud Anchors API surface.
         /// </summary>
-        public RoomSharingServer RoomSharingServer;
-
-        /// <summary>
-        /// A controller for managing UI associated with the example.
-        /// </summary>
-        public CloudAnchorUIController UIController;
+        [SerializeField] RoomSharingServer RoomSharingServer;
+        [SerializeField] CloudAnchorUIController UIController;
 
         [Header("ARCore")]
 
-        /// <summary>
-        /// The root for ARCore-specific GameObjects in the scene.
-        /// </summary>
-        public GameObject ARCoreRoot;
+        [SerializeField] GameObject ARCoreRoot;
 
-        /// <summary>
-        /// An Andy Android model to visually represent anchors in the scene; this uses ARCore
-        /// lighting estimation shaders.
-        /// </summary>
-        public GameObject ARCoreAndyAndroidPrefab;
+        // use lighting estimation shaders
+        [SerializeField] GameObject WallPrefab;
 
         [Header("ARKit")]
 
-        /// <summary>
-        /// The root for ARKit-specific GameObjects in the scene.
-        /// </summary>
-        public GameObject ARKitRoot;
+        [SerializeField] GameObject ARKitRoot;
+        [SerializeField] Camera ARKitFirstPersonCamera;
 
-        /// <summary>
-        /// The first-person camera used to render the AR background texture for ARKit.
-        /// </summary>
-        public Camera ARKitFirstPersonCamera;
+        // diffuse shader --- future implmentation
+        [SerializeField] GameObject ARKitWallPrefab;
 
-        /// <summary>
-        /// An Andy Android model to visually represent anchors in the scene; this uses
-        /// standard diffuse shaders.
-        /// </summary>
-        public GameObject ARKitAndyAndroidPrefab;
+        const string k_LoopbackIpAddress = "127.0.0.1";
 
-        /// <summary>
-        /// The loopback ip address.
-        /// </summary>
-        private const string k_LoopbackIpAddress = "127.0.0.1";
+        [SerializeField] float rotation = 180.0f;
+        [SerializeField] float height = 1.2f;
 
-        /// <summary>
-        /// The rotation in degrees need to apply to model when the Andy model is placed.
-        /// </summary>
-        private const float k_ModelRotation = 180.0f;
+        ARKitHelper m_ARKit = new ARKitHelper();
 
-        /// <summary>
-        /// A helper object to ARKit functionality.
-        /// </summary>
-        private ARKitHelper m_ARKit = new ARKitHelper();
+        // True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
+        bool m_IsQuitting = false;
 
-        /// <summary>
-        /// True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
-        /// </summary>
-        private bool m_IsQuitting = false;
+        Component m_LastPlacedAnchor = null;
 
-        /// <summary>
-        /// The last placed anchor.
-        /// </summary>
-        private Component m_LastPlacedAnchor = null;
+        XPAnchor m_LastResolvedAnchor = null;
 
-        /// <summary>
-        /// The last resolved anchor.
-        /// </summary>
-        private XPAnchor m_LastResolvedAnchor = null;
+        ApplicationMode m_CurrentMode = ApplicationMode.Ready;
 
-        /// <summary>
-        /// The current cloud anchor mode.
-        /// </summary>
-        private ApplicationMode m_CurrentMode = ApplicationMode.Ready;
-
-        /// <summary>
-        /// Current local room to attach next Anchor to.
-        /// </summary>
-        private int m_CurrentRoom;
-
-        /// <summary>
-        /// Enumerates modes the example application can be in.
-        /// </summary>
+        int m_CurrentRoom;
         public enum ApplicationMode
         {
             Ready,
@@ -109,9 +59,6 @@
             Resolving,
         }
 
-        /// <summary>
-        /// The Unity Start() method.
-        /// </summary>
         public void Start()
         {
             if (Application.platform != RuntimePlatform.IPhonePlayer)
@@ -128,21 +75,15 @@
             _ResetStatus();
         }
 
-        /// <summary>
-        /// The Unity Update() method.
-        /// </summary>
         public void Update()
         {
             _UpdateApplicationLifecycle();
 
-            // If we are not in hosting mode or the user has already placed an anchor then the update
-            // is complete.
             if (m_CurrentMode != ApplicationMode.Hosting || m_LastPlacedAnchor != null)
             {
                 return;
             }
 
-            // If the player has not touched the screen then the update is complete.
             Touch touch;
             if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
             {
@@ -170,25 +111,21 @@
 
             if (m_LastPlacedAnchor != null)
             {
-                // Instantiate Andy model at the hit pose.
-                var andyObject = Instantiate(_GetAndyPrefab(), m_LastPlacedAnchor.transform.position,
-                    m_LastPlacedAnchor.transform.rotation);
+                // spawn a wall
+                GameObject wall = Instantiate(_GetWallPrefab(), m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0), m_LastPlacedAnchor.transform.rotation);
 
                 // Compensate for the hitPose rotation facing away from the raycast (i.e. camera).
-                andyObject.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
+                wall.transform.Rotate(0, 0, 0, Space.Self);
 
-                // Make Andy model a child of the anchor.
-                andyObject.transform.parent = m_LastPlacedAnchor.transform;
+                // Make the wall a child of the anchor.
+                wall.transform.parent = m_LastPlacedAnchor.transform;
 
                 // Save cloud anchor.
                 _HostLastPlacedAnchor();
             }
         }
 
-        /// <summary>
-        /// Handles user intent to enter a mode where they can place an anchor to host or to exit this mode if
-        /// already in it.
-        /// </summary>
+        // host --- assign color here
         public void OnEnterHostingModeClick()
         {
             if (m_CurrentMode == ApplicationMode.Hosting)
@@ -204,10 +141,7 @@
             UIController.ShowHostingModeBegin();
         }
 
-        /// <summary>
-        /// Handles a user intent to enter a mode where they can input an anchor to be resolved or exit this mode if
-        /// already in it.
-        /// </summary>
+        // client --- assign color here
         public void OnEnterResolvingModeClick()
         {
             if (m_CurrentMode == ApplicationMode.Resolving)
@@ -282,7 +216,7 @@
         }
 
         /// <summary>
-        /// Resolves an anchor id and instantiates an Andy prefab on it.
+        /// Resolves an anchor id and instantiates a prefab on it.
         /// </summary>
         /// <param name="cloudAnchorId">Cloud anchor id to be resolved.</param>
         private void _ResolveAnchorFromId(string cloudAnchorId)
@@ -296,7 +230,7 @@
                 }
 
                 m_LastResolvedAnchor = result.Anchor;
-                Instantiate(_GetAndyPrefab(), result.Anchor.transform);
+                Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0), Quaternion.identity);
                 UIController.ShowResolvingModeSuccess();
             }));
         }
@@ -327,10 +261,10 @@
         /// Gets the platform-specific Andy the android prefab.
         /// </summary>
         /// <returns>The platform-specific Andy the android prefab.</returns>
-        private GameObject _GetAndyPrefab()
+        private GameObject _GetWallPrefab()
         {
             return Application.platform != RuntimePlatform.IPhonePlayer ?
-                ARCoreAndyAndroidPrefab : ARKitAndyAndroidPrefab;
+                WallPrefab : ARKitWallPrefab;
         }
 
         /// <summary>
