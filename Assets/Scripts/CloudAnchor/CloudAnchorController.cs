@@ -52,13 +52,28 @@
         XPAnchor m_LastResolvedAnchor = null;
 
         ApplicationMode m_CurrentMode = ApplicationMode.Ready;
+        GameMode gameStatus = GameMode.Lobby;
 
         int m_CurrentRoom;
+
         public enum ApplicationMode
         {
             Ready,
             Hosting,
             Resolving,
+        }
+
+        public enum GameMode
+        {
+            Lobby,
+            Idle,
+            Start,
+            End
+        }
+
+        void Awake()
+        {
+            EventManager.StartListening("OnGameEnd", OnGameEnd);
         }
 
         public void Start()
@@ -127,6 +142,9 @@
 
                 // Save cloud anchor.
                 _HostLastPlacedAnchor();
+
+                // change game status -- wait for other player
+                gameStatus = GameMode.Idle;
             }
         }
 
@@ -216,6 +234,7 @@
 
                 RoomSharingServer.SaveCloudAnchorToRoom(m_CurrentRoom, result.Anchor);
                 UIController.ShowHostingModeBegin("Cloud anchor was created and saved.");
+                EventManager.TriggerEvent("OnGameReady");
             });
 #endif
         }
@@ -252,6 +271,9 @@
         {
             // Reset internal status.
             m_CurrentMode = ApplicationMode.Ready;
+            // reset game status
+            gameStatus = GameMode.Lobby;
+
             if (m_LastPlacedAnchor != null)
             {
                 Destroy(m_LastPlacedAnchor.gameObject);
@@ -348,6 +370,23 @@
                     toastObject.Call("show");
                 }));
             }
+        }
+
+        public void ResetStatus()
+        {
+            _ResetStatus();
+        }
+
+        public void StartGame()
+        {
+            gameStatus = GameMode.Start;
+            EventManager.TriggerEvent("OnGameStart");
+        }
+
+        void OnGameEnd(object data)
+        {
+            gameStatus = GameMode.End;
+            Debug.Log("End");
         }
     }
 }

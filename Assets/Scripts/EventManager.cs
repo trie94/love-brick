@@ -8,20 +8,26 @@ public class EventManager : MonoBehaviour {
 	public class Event: UnityEvent<object>{}
 	Dictionary<string, Event> eventDictionary;
 	static EventManager eventManager;
-	public static EventManager Instance { get { return eventManager; } }
+	 public static EventManager Instance
+    {
+        get
+        {
+            if (!eventManager)
+            {
+                eventManager = FindObjectOfType(typeof(EventManager)) as EventManager;
+                if (!eventManager)
+                {
+                    Debug.LogError("There needs to be one active EventManger script on a GameObject in your scene.");
+                }
+                else
+                {
+                    eventManager.Init();
+                }
+            }
 
-	void Awake()
-	{
-		if(eventManager != null && eventManager != this)
-		{
-			Destroy(this.gameObject);
-		}
-		else
-		{
-			eventManager = this;
-			eventManager.Init();
-		}
-	}
+            return eventManager;
+        }
+    }
 
 	void Init()
 	{

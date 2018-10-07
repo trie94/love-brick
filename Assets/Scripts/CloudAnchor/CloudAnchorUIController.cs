@@ -1,12 +1,12 @@
 namespace Love.Core
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Net;
     using UnityEngine;
     using UnityEngine.UI;
+    using TMPro;
 
-    /// <summary>
-    /// Controller managing UI for the Cloud Anchors Example.
-    /// </summary>
     public class CloudAnchorUIController : MonoBehaviour
     {
         /// <summary>
@@ -14,20 +14,26 @@ namespace Love.Core
         /// </summary>
         public Text SnackbarText;
 
-        /// <summary>
-        /// A text element displaying the current Room.
-        /// </summary>
-        public Text RoomText;
+        [SerializeField] GameObject roomInfo;
+        [SerializeField] GameObject IPAdressInfo;
 
-        /// <summary>
-        /// A text element displaying the device's IP Address.
-        /// </summary>
-        public Text IPAddressText;
 
-        /// <summary>
-        /// The host anchor mode button.
-        /// </summary>
-        public Button HostAnchorModeButton;
+        [SerializeField] GameObject createRoomButton;
+        [SerializeField] GameObject joinRoomButton;
+
+        [SerializeField] GameObject startButton;
+        [SerializeField] Button backButton;
+        Color backButtonColor;
+
+        // time
+        [SerializeField] GameObject scoreBoard;
+        [SerializeField] TextMeshProUGUI timer;
+        [SerializeField] float totalTime;
+        string min;
+        string sec;
+
+        // room info
+
 
         /// <summary>
         /// The resolve anchor mode button.
@@ -54,24 +60,35 @@ namespace Love.Core
         /// </summary>
         public Toggle ResolveOnDeviceToggle;
 
-        /// <summary>
-        /// The Unity Start() method.
-        /// </summary>
-        public void Start()
+        [SerializeField] GameObject background;
+
+        void Awake()
         {
-            IPAddressText.text = "My IP Address: " + _GetDeviceIpAddress();
+            EventManager.StartListening("OnGameReady", OnGameReady);
+            EventManager.StartListening("OnGameStart", OnGameStart);
+            EventManager.StartListening("OnGameEnd", OnGameEnd);
         }
 
-        /// <summary>
-        /// Shows UI for application "Ready Mode".
-        /// </summary>
+        public void Start()
+        {
+            IPAdressInfo.GetComponentInChildren<TextMeshProUGUI>().text = "My IP Address: " + _GetDeviceIpAddress();
+            backButtonColor = backButton.GetComponent<Image>().color;
+            DisableBackButton();
+        }
+
+        // ready mode
         public void ShowReadyMode()
         {
-            HostAnchorModeButton.GetComponentInChildren<Text>().text = "Host";
-            HostAnchorModeButton.interactable = true;
-            ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Resolve";
-            ResolveAnchorModeButton.interactable = true;
-            SnackbarText.text = "Please select Host or Resolve to continue";
+            if (!createRoomButton.activeSelf || !joinRoomButton.activeSelf)
+            {
+                createRoomButton.SetActive(true);
+                joinRoomButton.SetActive(true);
+            }
+            startButton.SetActive(false);
+            background.SetActive(true);
+            scoreBoard.SetActive(false);
+
+            SnackbarText.text = "Please create or join a room";
             InputRoot.SetActive(false);
         }
 
@@ -81,15 +98,16 @@ namespace Love.Core
         /// <param name="snackbarText">Optional text to put in the snackbar.</param>
         public void ShowHostingModeBegin(string snackbarText = null)
         {
-            HostAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
-            HostAnchorModeButton.interactable = true;
-            ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Resolve";
-            ResolveAnchorModeButton.interactable = false;
+            // remove buttons and background image
+            createRoomButton.SetActive(false);
+            joinRoomButton.SetActive(false);
+            background.SetActive(false);
+            EnableBackButton();
 
             if (string.IsNullOrEmpty(snackbarText))
             {
                 SnackbarText.text =
-                    "The room code is now available. Please place an anchor to host, press Cancel to Exit.";
+                    "The room code is now available. Please place a grid wall to host the game, press back to exit.";
             }
             else
             {
@@ -104,11 +122,8 @@ namespace Love.Core
         /// </summary>
         public void ShowHostingModeAttemptingHost()
         {
-            HostAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
-            HostAnchorModeButton.interactable = false;
-            ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Resolve";
-            ResolveAnchorModeButton.interactable = false;
-            SnackbarText.text = "Attempting to host anchor...";
+            backButton.interactable = false;
+            SnackbarText.text = "Attempting to host...";
             InputRoot.SetActive(false);
         }
 
@@ -118,8 +133,8 @@ namespace Love.Core
         /// <param name="snackbarText">Optional text to put in the snackbar.</param>
         public void ShowResolvingModeBegin(string snackbarText = null)
         {
-            HostAnchorModeButton.GetComponentInChildren<Text>().text = "Host";
-            HostAnchorModeButton.interactable = false;
+            backButton.GetComponentInChildren<Text>().text = "Host";
+            backButton.interactable = false;
             ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
             ResolveAnchorModeButton.interactable = true;
 
@@ -140,8 +155,8 @@ namespace Love.Core
         /// </summary>
         public void ShowResolvingModeAttemptingResolve()
         {
-            HostAnchorModeButton.GetComponentInChildren<Text>().text = "Host";
-            HostAnchorModeButton.interactable = false;
+            backButton.GetComponentInChildren<Text>().text = "Host";
+            backButton.interactable = false;
             ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
             ResolveAnchorModeButton.interactable = false;
             SnackbarText.text = "Attempting to resolve anchor.";
@@ -153,8 +168,8 @@ namespace Love.Core
         /// </summary>
         public void ShowResolvingModeSuccess()
         {
-            HostAnchorModeButton.GetComponentInChildren<Text>().text = "Host";
-            HostAnchorModeButton.interactable = false;
+            backButton.GetComponentInChildren<Text>().text = "Host";
+            backButton.interactable = false;
             ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
             ResolveAnchorModeButton.interactable = true;
             SnackbarText.text = "The anchor was successfully resolved.";
@@ -167,7 +182,7 @@ namespace Love.Core
         /// <param name="roomNumber">The room number to set.</param>
         public void SetRoomTextValue(int roomNumber)
         {
-            RoomText.text = "Room: " + roomNumber;
+            roomInfo.GetComponentInChildren<TextMeshProUGUI>().text = "Room: " + roomNumber;
         }
 
         /// <summary>
@@ -235,6 +250,75 @@ namespace Love.Core
             ipAddress = Network.player.ipAddress;
 #endif
             return ipAddress;
+        }
+
+        void DisableBackButton()
+        {
+            backButton.interactable = false;
+            backButton.GetComponentInChildren<Text>().text = "";
+            backButton.GetComponent<Image>().color = Color.clear;
+        }
+
+        void EnableBackButton()
+        {
+            backButton.interactable = true;
+            backButton.GetComponentInChildren<Text>().text = "BACK";
+            backButton.GetComponent<Image>().color = backButtonColor;
+        }
+
+        void OnGameReady(object data)
+        {
+            // enable start button
+            startButton.SetActive(true);
+        }
+
+        void OnGameStart(object data)
+        {
+            // change ui
+            Debug.Log("Game start! and start count down");
+            StartCoroutine(ChangeToInGameUI());
+            StartCoroutine(CountDown());
+        }
+
+        IEnumerator ChangeToInGameUI()
+        {
+            yield return new WaitForSeconds(0.2f);
+            DisableBackButton();
+            startButton.SetActive(false);
+            roomInfo.SetActive(false);
+            IPAdressInfo.SetActive(false);
+            scoreBoard.SetActive(true);
+
+            yield break;
+        }
+
+        void OnGameEnd(object data)
+        {
+            // display score and replay button
+            scoreBoard.SetActive(false);
+            // score active and replay active
+            Debug.Log("display score and replay button");
+        }
+
+        IEnumerator CountDown()
+        {
+            while (totalTime > 0f)
+            {
+                totalTime--;
+                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
+                sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
+                // Debug.Log(min +":" +sec);
+                timer.text = (min + ":" + sec);
+                yield return new WaitForSeconds(1f);
+
+                if (totalTime <= 0f)
+                {
+                    // final
+                    EventManager.TriggerEvent("OnGameEnd");
+                    timer.text = "00:00";
+                    yield break;
+                }
+            }
         }
     }
 }
