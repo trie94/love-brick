@@ -4242,6 +4242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4161986316737958}
+  - component: {fileID: 114861581318120928}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -10185,3 +10186,35 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1014460702371726}
   m_Mesh: {fileID: 4300024, guid: 70ab5564091b07244867773d4aeb4ce4, type: 3}
+--- !u!114 &114861581318120928
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1866149333863800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 146
+    i1: 145
+    i2: 151
+    i3: 49
+    i4: 68
+    i5: 235
+    i6: 239
+    i7: 180
+    i8: 42
+    i9: 210
+    i10: 45
+    i11: 231
+    i12: 9
+    i13: 60
+    i14: 190
+    i15: 18
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0

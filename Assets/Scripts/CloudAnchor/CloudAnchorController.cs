@@ -1,11 +1,13 @@
 ﻿namespace Love.Core
 {
+    using System.Collections;
     using System.Collections.Generic;
     using GoogleARCore;
     using GoogleARCore.CrossPlatform;
     using Love.Common;
     using UnityEngine;
     using UnityEngine.UI;
+    using UnityEngine.Networking;
 
 #if UNITY_EDITOR
     using Input = GoogleARCore.InstantPreviewInput;
@@ -53,6 +55,7 @@
 
         ApplicationMode m_CurrentMode = ApplicationMode.Ready;
         GameMode gameStatus = GameMode.Lobby;
+        GameObject player;
 
         int m_CurrentRoom;
 
@@ -71,22 +74,19 @@
             End
         }
 
-        void Awake()
-        {
-            EventManager.StartListening("OnGameEnd", OnGameEnd);
-        }
-
         public void Start()
         {
             if (Application.platform != RuntimePlatform.IPhonePlayer)
             {
                 ARCoreRoot.SetActive(true);
                 ARKitRoot.SetActive(false);
+                player = ARCoreRoot;
             }
             else
             {
                 ARCoreRoot.SetActive(false);
                 ARKitRoot.SetActive(true);
+                player = ARKitRoot;
             }
 
             _ResetStatus();
@@ -148,7 +148,7 @@
             }
         }
 
-        // host --- assign color here
+        // host
         public void OnEnterHostingModeClick()
         {
             if (m_CurrentMode == ApplicationMode.Hosting)
@@ -162,9 +162,10 @@
             m_CurrentRoom = Random.Range(1, 9999);
             UIController.SetRoomTextValue(m_CurrentRoom);
             UIController.ShowHostingModeBegin();
+            player.tag = "player1";
         }
 
-        // client --- assign color here
+        // client
         public void OnEnterResolvingModeClick()
         {
             if (m_CurrentMode == ApplicationMode.Resolving)
@@ -176,11 +177,9 @@
 
             m_CurrentMode = ApplicationMode.Resolving;
             UIController.ShowResolvingModeBegin();
+            player.tag = "player2";
         }
 
-        /// <summary>
-        /// Handles the user intent to resolve the cloud anchor associated with a room they have typed into the UI.
-        /// </summary>
         public void OnResolveRoomClick()
         {
             var roomToResolve = UIController.GetRoomInputValue();
@@ -210,9 +209,7 @@
             });
         }
 
-        /// <summary>
-        /// Hosts the user placed cloud anchor and associates the resulting Id with the current room.
-        /// </summary>
+        // host -- color and ui
         private void _HostLastPlacedAnchor()
         {
 #if !UNITY_IOS || ARCORE_IOS_SUPPORT
@@ -234,15 +231,13 @@
 
                 RoomSharingServer.SaveCloudAnchorToRoom(m_CurrentRoom, result.Anchor);
                 UIController.ShowHostingModeBegin("Cloud anchor was created and saved.");
-                EventManager.TriggerEvent("OnGameReady");
+                UIController.ShowHostReadyUI(); // for host
+                AssignColors();
             });
 #endif
         }
 
-        /// <summary>
-        /// Resolves an anchor id and instantiates a prefab on it.
-        /// </summary>
-        /// <param name="cloudAnchorId">Cloud anchor id to be resolved.</param>
+        // client -- color and ui
         private void _ResolveAnchorFromId(string cloudAnchorId)
         {
             XPSession.ResolveCloudAnchor(cloudAnchorId).ThenAction((System.Action<CloudAnchorResult>)(result =>
@@ -261,6 +256,7 @@
                 light1.transform.Rotate(0, 180, 0);
 
                 UIController.ShowResolvingModeSuccess();
+                AssignColors();
             }));
         }
 
@@ -286,7 +282,8 @@
             }
 
             m_LastResolvedAnchor = null;
-            UIController.ShowReadyMode();
+            player.tag = "Untagged";
+            UIController.ShowLobbyUI();
         }
 
         /// <summary>
@@ -343,18 +340,11 @@
             }
         }
 
-        /// <summary>
-        /// Actually quit the application.
-        /// </summary>
         private void _DoQuit()
         {
             Application.Quit();
         }
 
-        /// <summary>
-        /// Show an Android toast message.
-        /// </summary>
-        /// <param name="message">Message string to show in the toast.</param>
         private void _ShowAndroidToastMessage(string message)
         {
             AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -380,13 +370,26 @@
         public void StartGame()
         {
             gameStatus = GameMode.Start;
-            EventManager.TriggerEvent("OnGameStart");
+            UIController.ShowGameUI();
         }
 
-        void OnGameEnd(object data)
+        void OnGameEnd()
         {
             gameStatus = GameMode.End;
             Debug.Log("End");
+        }
+
+        void AssignColors()
+        {
+            // show color ui
+            if (player.tag == "player1")
+            {
+                UIController.GetHostColor();
+            }
+            else if (player.tag == "player2")
+            {
+                UIController.GetClientColor();
+            }
         }
     }
 }

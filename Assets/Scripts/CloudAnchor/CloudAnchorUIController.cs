@@ -9,10 +9,8 @@ namespace Love.Core
 
     public class CloudAnchorUIController : MonoBehaviour
     {
-        /// <summary>
-        /// A gameobject parenting UI for displaying feedback and errors.
-        /// </summary>
-        public Text SnackbarText;
+        [SerializeField] GameObject snackbar;
+        [SerializeField] Text SnackbarText;
 
         [SerializeField] GameObject roomInfo;
         [SerializeField] GameObject IPAdressInfo;
@@ -27,47 +25,21 @@ namespace Love.Core
 
         // time
         [SerializeField] GameObject scoreBoard;
-        [SerializeField] TextMeshProUGUI timer;
-        [SerializeField] float totalTime;
-        string min;
-        string sec;
+        public TextMeshProUGUI timer;
 
-        // room info
+        // color ui
+        [SerializeField] GameObject HostColor;
+        [SerializeField] GameObject ClientColor;
 
+        [SerializeField] GameObject InputRoot;
 
-        /// <summary>
-        /// The resolve anchor mode button.
-        /// </summary>
-        public Button ResolveAnchorModeButton;
+        [SerializeField] InputField RoomInputField;
 
-        /// <summary>
-        /// The root for the input interface.
-        /// </summary>
-        public GameObject InputRoot;
+        [SerializeField] InputField IpAddressInputField;
 
-        /// <summary>
-        /// The input field for the room.
-        /// </summary>
-        public InputField RoomInputField;
-
-        /// <summary>
-        /// The input field for the ip address.
-        /// </summary>
-        public InputField IpAddressInputField;
-
-        /// <summary>
-        /// The field for toggling loopback (local) anchor resoltion.
-        /// </summary>
-        public Toggle ResolveOnDeviceToggle;
+        [SerializeField] Toggle ResolveOnDeviceToggle;
 
         [SerializeField] GameObject background;
-
-        void Awake()
-        {
-            EventManager.StartListening("OnGameReady", OnGameReady);
-            EventManager.StartListening("OnGameStart", OnGameStart);
-            EventManager.StartListening("OnGameEnd", OnGameEnd);
-        }
 
         public void Start()
         {
@@ -76,26 +48,20 @@ namespace Love.Core
             DisableBackButton();
         }
 
-        // ready mode
-        public void ShowReadyMode()
+        // Lobby mode
+        public void ShowLobbyUI()
         {
-            if (!createRoomButton.activeSelf || !joinRoomButton.activeSelf)
-            {
-                createRoomButton.SetActive(true);
-                joinRoomButton.SetActive(true);
-            }
             startButton.SetActive(false);
             background.SetActive(true);
+            createRoomButton.SetActive(true);
+            joinRoomButton.SetActive(true);
             scoreBoard.SetActive(false);
+            snackbar.SetActive(true);
 
             SnackbarText.text = "Please create or join a room";
             InputRoot.SetActive(false);
         }
 
-        /// <summary>
-        /// Shows UI for the beginning phase of application "Hosting Mode".
-        /// </summary>
-        /// <param name="snackbarText">Optional text to put in the snackbar.</param>
         public void ShowHostingModeBegin(string snackbarText = null)
         {
             // remove buttons and background image
@@ -117,87 +83,55 @@ namespace Love.Core
             InputRoot.SetActive(false);
         }
 
-        /// <summary>
-        /// Shows UI for the attempting to host phase of application "Hosting Mode".
-        /// </summary>
         public void ShowHostingModeAttemptingHost()
         {
-            backButton.interactable = false;
+            DisableBackButton();
             SnackbarText.text = "Attempting to host...";
             InputRoot.SetActive(false);
         }
 
-        /// <summary>
-        /// Shows UI for the beginning phase of application "Resolving Mode".
-        /// </summary>
-        /// <param name="snackbarText">Optional text to put in the snackbar.</param>
         public void ShowResolvingModeBegin(string snackbarText = null)
         {
-            backButton.GetComponentInChildren<Text>().text = "Host";
-            backButton.interactable = false;
-            ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
-            ResolveAnchorModeButton.interactable = true;
+            EnableBackButton();
 
             if (string.IsNullOrEmpty(snackbarText))
             {
-                SnackbarText.text = "Input Room and IP address to resolve anchor.";
+                SnackbarText.text = "Input Room and IP address to join the game!";
             }
             else
             {
                 SnackbarText.text = snackbarText;
             }
 
+            createRoomButton.SetActive(false);
+            joinRoomButton.SetActive(false);
             InputRoot.SetActive(true);
         }
 
-        /// <summary>
-        /// Shows UI for the attempting to resolve phase of application "Resolving Mode".
-        /// </summary>
         public void ShowResolvingModeAttemptingResolve()
         {
-            backButton.GetComponentInChildren<Text>().text = "Host";
-            backButton.interactable = false;
-            ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
-            ResolveAnchorModeButton.interactable = false;
-            SnackbarText.text = "Attempting to resolve anchor.";
+            DisableBackButton();
+            SnackbarText.text = "Attempting to join...";
             InputRoot.SetActive(false);
         }
 
-        /// <summary>
-        /// Shows UI for the successful resolve phase of application "Resolving Mode".
-        /// </summary>
         public void ShowResolvingModeSuccess()
         {
-            backButton.GetComponentInChildren<Text>().text = "Host";
-            backButton.interactable = false;
-            ResolveAnchorModeButton.GetComponentInChildren<Text>().text = "Cancel";
-            ResolveAnchorModeButton.interactable = true;
-            SnackbarText.text = "The anchor was successfully resolved.";
+            SnackbarText.text = "Successfully joined!";
             InputRoot.SetActive(false);
+            StartCoroutine(ChangeToInGameUI());
         }
 
-        /// <summary>
-        /// Sets the room number in the UI.
-        /// </summary>
-        /// <param name="roomNumber">The room number to set.</param>
         public void SetRoomTextValue(int roomNumber)
         {
             roomInfo.GetComponentInChildren<TextMeshProUGUI>().text = "Room: " + roomNumber;
         }
 
-        /// <summary>
-        /// Gets the value of the resolve on device checkbox.
-        /// </summary>
-        /// <returns>The value of the resolve on device checkbox.</returns>
         public bool GetResolveOnDeviceValue()
         {
             return ResolveOnDeviceToggle.isOn;
         }
 
-        /// <summary>
-        /// Gets the value of the room number input field.
-        /// </summary>
-        /// <returns>The value of the room number input field.</returns>
         public int GetRoomInputValue()
         {
             int roomNumber;
@@ -209,28 +143,16 @@ namespace Love.Core
             return 0;
         }
 
-        /// <summary>
-        /// Gets the value of the ip address input field.
-        /// </summary>
-        /// <returns>The value of the ip address input field.</returns>
         public string GetIpAddressInputValue()
         {
             return IpAddressInputField.text;
         }
 
-        /// <summary>
-        /// Handles a change to the "Resolve on Device" checkbox.
-        /// </summary>
-        /// <param name="isResolveOnDevice">If set to <c>true</c> resolve on device.</param>
         public void OnResolveOnDeviceValueChanged(bool isResolveOnDevice)
         {
             IpAddressInputField.interactable = !isResolveOnDevice;
         }
 
-        /// <summary>
-        /// Gets the device ip address.
-        /// </summary>
-        /// <returns>The device ip address.</returns>
         private string _GetDeviceIpAddress()
         {
             string ipAddress = "Unknown";
@@ -266,59 +188,56 @@ namespace Love.Core
             backButton.GetComponent<Image>().color = backButtonColor;
         }
 
-        void OnGameReady(object data)
+        public void ShowHostReadyUI()
         {
             // enable start button
             startButton.SetActive(true);
         }
 
-        void OnGameStart(object data)
+        // where the actual game starts
+        public void ShowGameUI()
         {
-            // change ui
-            Debug.Log("Game start! and start count down");
             StartCoroutine(ChangeToInGameUI());
-            StartCoroutine(CountDown());
         }
 
+        // when change ui, add some delay
         IEnumerator ChangeToInGameUI()
         {
             yield return new WaitForSeconds(0.2f);
             DisableBackButton();
+            background.SetActive(false);
             startButton.SetActive(false);
+            createRoomButton.SetActive(false);
+            joinRoomButton.SetActive(false);
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
             scoreBoard.SetActive(true);
+            snackbar.SetActive(false);
 
             yield break;
         }
 
-        void OnGameEnd(object data)
+        public void ShowEndUI()
         {
             // display score and replay button
-            scoreBoard.SetActive(false);
+            background.SetActive(false);
+            scoreBoard.SetActive(true);
             // score active and replay active
             Debug.Log("display score and replay button");
         }
 
-        IEnumerator CountDown()
+        public void GetHostColor()
         {
-            while (totalTime > 0f)
-            {
-                totalTime--;
-                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
-                sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-                // Debug.Log(min +":" +sec);
-                timer.text = (min + ":" + sec);
-                yield return new WaitForSeconds(1f);
+            Debug.Log("Get host(player1) color");
+            ClientColor.SetActive(false);
+            HostColor.SetActive(true);
+        }
 
-                if (totalTime <= 0f)
-                {
-                    // final
-                    EventManager.TriggerEvent("OnGameEnd");
-                    timer.text = "00:00";
-                    yield break;
-                }
-            }
+        public void GetClientColor()
+        {
+            Debug.Log("Get client(player2) color");
+            HostColor.SetActive(false);
+            ClientColor.SetActive(true);
         }
     }
 }
