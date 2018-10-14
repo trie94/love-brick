@@ -7,20 +7,7 @@
     using TMPro;
     using GoogleARCore;
 
-    public class GameController : NetworkBehaviour
+    public class GameController : MonoBehaviour
     {
-        [SerializeField] NetworkManager networkManager;
-		
-        void Start()
-        {
-            if (!isServer)
-            {
-                this.enabled = false;
-            }
-            else
-            {
-                Debug.Log("game controller: this is server");
-            }
-        }
     }
 }

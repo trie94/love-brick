@@ -5,9 +5,9 @@ using UnityEngine.Networking;
 using Love.Core;
 using TMPro;
 
-public class Timer : NetworkBehaviour
+public class Timer : MonoBehaviour
 {
-    [SyncVar] public float totalTime = 60f;
+    public float totalTime = 60f;
     string min;
     string sec;
 
@@ -19,14 +19,9 @@ public class Timer : NetworkBehaviour
         Debug.Log("on count down");
     }
 
-    [ClientRpc]
-    void RpcUpdateTime(float time)
+    void UpdateTime(float time)
     {
         totalTime = time;
-        if (!isServer)
-        {
-            UIController.timer.text = (min + ":" + sec);
-        }
         Debug.Log(totalTime);
     }
 
@@ -37,7 +32,7 @@ public class Timer : NetworkBehaviour
             totalTime--;
             min = Mathf.FloorToInt(totalTime / 60).ToString("00");
             sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-            RpcUpdateTime(totalTime);
+            UpdateTime(totalTime);
             UIController.timer.text = (min + ":" + sec);
             yield return new WaitForSeconds(1f);
 

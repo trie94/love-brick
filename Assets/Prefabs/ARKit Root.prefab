@@ -38,7 +38,6 @@ GameObject:
   - component: {fileID: 4267820955538102}
   - component: {fileID: 114220631035155094}
   - component: {fileID: 114991479446828922}
-  - component: {fileID: 114786115573623320}
   m_Layer: 0
   m_Name: ARKit Root
   m_TagString: Untagged
@@ -360,38 +359,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DetectedPlanePrefab: {fileID: 1654175882956584, guid: 6a35c744e5010405c847fad90282d2be,
     type: 2}
---- !u!114 &114786115573623320
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1078160040786826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 114
-    i1: 125
-    i2: 123
-    i3: 206
-    i4: 101
-    i5: 142
-    i6: 110
-    i7: 36
-    i8: 8
-    i9: 176
-    i10: 56
-    i11: 9
-    i12: 20
-    i13: 193
-    i14: 181
-    i15: 218
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114979931554836872
 MonoBehaviour:
   m_ObjectHideFlags: 1

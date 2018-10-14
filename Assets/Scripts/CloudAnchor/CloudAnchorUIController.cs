@@ -43,12 +43,10 @@ namespace Love.Core
 
         [SerializeField] GameObject background;
 
-        [SerializeField] NetworkManager networkManager;
-
         void Awake()
         {
-            NetworkServer.Reset();
-            NetworkServer.ResetConnectionStats();
+            // NetworkServer.Reset();
+            // NetworkServer.ResetConnectionStats();
         }
 
         public void Start()
@@ -87,7 +85,7 @@ namespace Love.Core
                     "The room code is now available. Please place a grid wall to host the game, press back to exit.";
 
                 // host the server
-                networkManager.StartHost();
+                // networkManager.StartHost();
             }
             else
             {
@@ -134,8 +132,6 @@ namespace Love.Core
             SnackbarText.text = "Successfully joined!";
             InputRoot.SetActive(false);
             StartCoroutine(ChangeToInGameUI());
-            // join as a client
-            networkManager.matchMaker.JoinMatch(networkManager.matches[networkManager.matches.Count - 1].networkId, "", "", "", 0, 0, networkManager.OnMatchJoined);
         }
 
         public void SetRoomTextValue(int roomNumber)
@@ -259,21 +255,6 @@ namespace Love.Core
             Debug.Log("Get client(player2) color");
             HostColor.SetActive(false);
             ClientColor.SetActive(true);
-        }
-
-        IEnumerator FindMatch()
-        {
-            yield return new WaitForSeconds(1f);
-            networkManager.matchName = this.GetRoomInputValue().ToString();
-
-            // foreach (var match in networkManager.matches)
-            // {
-            //     Debug.Log("match name: " + networkManager.matchName);
-
-            //     networkManager.matchName = this.GetRoomInputValue().ToString();
-            //     networkManager.matchSize = (uint)match.currentSize;
-            // }
-            yield break;
         }
     }
 }

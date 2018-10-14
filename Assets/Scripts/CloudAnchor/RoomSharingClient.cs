@@ -9,8 +9,6 @@ namespace Love.Core
     /// </summary>
     public class RoomSharingClient : NetworkClient
     {
-
-        CustomNetworkManager customNetworkManager;
         /// <summary>
         /// The callback to call after the anchor id is received.
         /// </summary>
@@ -42,11 +40,12 @@ namespace Love.Core
             RegisterHandler(RoomSharingMsgType.AnchorIdFromRoomResponse, OnGetAnchorIdFromRoomResponse);
             RegisterHandler(MsgType.Disconnect, OnDisconnected);
             RegisterHandler(MsgType.Error, OnError);
-            NetworkManager.singleton.networkAddress = ipAddress;
-            NetworkManager.singleton.networkPort = 8888;
-            NetworkManager.singleton.StartClient();
-            Debug.Log("get anchor id from room");
-            // Connect(ipAddress, 8888);
+            // custome handler
+            RegisterHandler(RoomSharingMsgType.MyResponse, OnStartGame);
+            // NetworkManager.singleton.networkAddress = ipAddress;
+            // NetworkManager.singleton.networkPort = 8888;
+            // NetworkManager.singleton.StartClient();
+            Connect(ipAddress, 8888);
         }
 
         /// <summary>
@@ -60,7 +59,6 @@ namespace Love.Core
             {
                 RoomId = m_RoomId
             };
-            customNetworkManager.OnConnected(m_RoomId);
             Send(RoomSharingMsgType.AnchorIdFromRoomRequest, anchorIdRequestMessage);
         }
 
@@ -106,6 +104,13 @@ namespace Love.Core
 
             m_GetAnchorIdFromRoomCallback = null;
             Debug.Log("on get anchor id from room response: " + response.AnchorId);
+        }
+
+        // custom message
+        void OnStartGame(NetworkMessage networkMessage)
+        {
+            var msg = networkMessage.ReadMessage<TimerMessage>();
+            Debug.Log("on start game: " + msg.totalTime);
         }
     }
 }

@@ -19,7 +19,6 @@
         /// Manages sharing Anchor Ids across the local network to clients using Unity's NetworkServer.  There
         /// are many ways to share this data and this not part of the ARCore Cloud Anchors API surface.
         /// </summary>
-        [SerializeField] CustomNetworkManager networkManager;
         [SerializeField] RoomSharingServer RoomSharingServer;
         [SerializeField] CloudAnchorUIController UIController;
         [SerializeField] GameObject lightPrefab;
@@ -196,12 +195,10 @@
                 UIController.GetResolveOnDeviceValue() ? k_LoopbackIpAddress : UIController.GetIpAddressInputValue();
 
             UIController.ShowResolvingModeAttemptingResolve();
-            Debug.Log("on resolve room click, now make a client instance");
+
             RoomSharingClient roomSharingClient = new RoomSharingClient();
             roomSharingClient.GetAnchorIdFromRoom(roomToResolve, ipAddress, (bool found, string cloudAnchorId) =>
             {
-                Debug.Log("try to get an anchor in the loop");
-
                 if (!found)
                 {
                     UIController.ShowResolvingModeBegin("Anchor resolve failed due to invalid room code, " +
@@ -376,6 +373,7 @@
         {
             gameStatus = GameMode.Start;
             UIController.ShowGameUI();
+            RoomSharingServer.StartGame(120f);
         }
 
         void OnGameEnd()
