@@ -16,5 +16,8 @@ namespace Love.Core
         /// The Anchor id from room response message type.
         /// </summary>
         public const short AnchorIdFromRoomResponse = MsgType.Highest + 2;
+
+        // custom
+        public const short MyResponse = MsgType.Highest + 3;
     }
 }

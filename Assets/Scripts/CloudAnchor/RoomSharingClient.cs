@@ -9,6 +9,8 @@ namespace Love.Core
     /// </summary>
     public class RoomSharingClient : NetworkClient
     {
+
+        CustomNetworkManager customNetworkManager;
         /// <summary>
         /// The callback to call after the anchor id is received.
         /// </summary>
@@ -40,7 +42,11 @@ namespace Love.Core
             RegisterHandler(RoomSharingMsgType.AnchorIdFromRoomResponse, OnGetAnchorIdFromRoomResponse);
             RegisterHandler(MsgType.Disconnect, OnDisconnected);
             RegisterHandler(MsgType.Error, OnError);
-            Connect(ipAddress, 8888);
+            NetworkManager.singleton.networkAddress = ipAddress;
+            NetworkManager.singleton.networkPort = 8888;
+            NetworkManager.singleton.StartClient();
+            Debug.Log("get anchor id from room");
+            // Connect(ipAddress, 8888);
         }
 
         /// <summary>
@@ -49,11 +55,12 @@ namespace Love.Core
         /// <param name="networkMessage">The Connect response.</param>
         private void OnConnected(NetworkMessage networkMessage)
         {
+            Debug.Log("On connected from room shring client");
             AnchorIdFromRoomRequestMessage anchorIdRequestMessage = new AnchorIdFromRoomRequestMessage
             {
                 RoomId = m_RoomId
             };
-
+            customNetworkManager.OnConnected(m_RoomId);
             Send(RoomSharingMsgType.AnchorIdFromRoomRequest, anchorIdRequestMessage);
         }
 
@@ -68,6 +75,7 @@ namespace Love.Core
             {
                 m_GetAnchorIdFromRoomCallback(false, null);
             }
+            Debug.Log("On error");
         }
 
         /// <summary>
@@ -81,6 +89,7 @@ namespace Love.Core
             {
                 m_GetAnchorIdFromRoomCallback(false, null);
             }
+            Debug.Log("On disconnected");
         }
 
         /// <summary>
@@ -96,6 +105,7 @@ namespace Love.Core
             }
 
             m_GetAnchorIdFromRoomCallback = null;
+            Debug.Log("on get anchor id from room response: " + response.AnchorId);
         }
     }
 }

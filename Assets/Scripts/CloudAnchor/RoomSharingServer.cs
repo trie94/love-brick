@@ -21,7 +21,7 @@ namespace Love.Core
         /// </summary>
         public void Start()
         {
-            NetworkServer.Listen(8888);
+            // NetworkServer.Listen(8888);
             NetworkServer.RegisterHandler(RoomSharingMsgType.AnchorIdFromRoomRequest, OnGetAnchorIdFromRoomRequest);
         }
 

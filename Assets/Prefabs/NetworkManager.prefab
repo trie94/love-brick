@@ -19,7 +19,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4462672373659534}
-  - component: {fileID: 114118094187485214}
+  - component: {fileID: 114508568325400808}
+  - component: {fileID: 114009200985833316}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -40,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114118094187485214
+--- !u!114 &114009200985833316
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,7 +49,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1424193608301116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  showGUI: 1
+  offsetX: 0
+  offsetY: 0
+--- !u!114 &114508568325400808
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424193608301116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433507deabc22804fa615e8c1c496c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetworkPort: 8888
@@ -60,19 +76,12 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1826283069845524, guid: 0c269bff012f85a4baa38a45f920df5c,
-    type: 2}
+  m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 
-  m_SpawnPrefabs:
-  - {fileID: 1237054700287142, guid: ad2172e31f9c68645953cda8bead7dca, type: 2}
-  - {fileID: 1147326554190294, guid: 0c3460d470fc53241b194b0ee3cd49d8, type: 2}
-  - {fileID: 1740970778754688, guid: 266338e7c65f9c1489f6e001eb7dfc64, type: 2}
-  - {fileID: 1162980339723718, guid: 15abcb3dd044b894595f558a35263161, type: 2}
-  - {fileID: 1826283069845524, guid: 0c269bff012f85a4baa38a45f920df5c, type: 2}
-  - {fileID: 1078160040786826, guid: 727d7bce658e6e2408b0380914c1b5da, type: 2}
+  m_SpawnPrefabs: []
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:

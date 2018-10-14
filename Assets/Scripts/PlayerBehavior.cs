@@ -1,30 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-
-public class PlayerBehavior : NetworkBehaviour
+﻿namespace Love.Core
 {
-    Timer timer;
-    void Awake()
-    {
-        Debug.Log("this is a player");
-        NetworkServer.Spawn(this.gameObject);
-        timer = GetComponent<Timer>();
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Networking;
 
-        if (isServer)
+    public class PlayerBehavior : MonoBehaviour
+    {
+        Timer timer;
+
+        void Awake()
         {
-            Debug.Log("This is server");
         }
-        else
+
+        public void OnStartGame()
         {
-            Debug.Log("This is not server");
+            Debug.Log("on start");
         }
     }
 
-    public void OnStartGame()
-    {
-        Debug.Log("from player behavior: game start!");
-        timer.OnCountDown();
-    }
 }
