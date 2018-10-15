@@ -56,15 +56,5 @@ namespace Love.Core
 
             NetworkServer.SendToClient(netMsg.conn.connectionId, RoomSharingMsgType.AnchorIdFromRoomResponse, response);
         }
-
-        // custom message
-        public void StartGame(float time)
-        {
-            // send time
-            TimerMessage msg = new TimerMessage();
-            msg.totalTime = time;
-            NetworkServer.SendToAll(RoomSharingMsgType.MyResponse, msg);
-            Debug.Log("start game from the server!: " + msg.totalTime);
-        }
     }
 }

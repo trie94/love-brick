@@ -368,14 +368,7 @@
         {
             _ResetStatus();
         }
-
-        public void StartGame()
-        {
-            gameStatus = GameMode.Start;
-            UIController.ShowGameUI();
-            RoomSharingServer.StartGame(120f);
-        }
-
+        
         void OnGameEnd()
         {
             gameStatus = GameMode.End;

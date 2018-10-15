@@ -18,6 +18,6 @@ namespace Love.Core
         public const short AnchorIdFromRoomResponse = MsgType.Highest + 2;
 
         // custom
-        public const short MyResponse = MsgType.Highest + 3;
+        public const short timer = MsgType.Highest + 3;
     }
 }

@@ -1,48 +1,54 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-using Love.Core;
-using TMPro;
-
-public class Timer : MonoBehaviour
+﻿namespace Love.Core
 {
-    public float totalTime = 60f;
-    string min;
-    string sec;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Networking;
+    using TMPro;
 
-    [SerializeField] CloudAnchorUIController UIController;
-
-    public void OnCountDown()
+    public class Timer : MonoBehaviour
     {
-        StartCoroutine(CountDown());
-        Debug.Log("on count down");
-    }
+        [SerializeField] float totalTime = 120f;
+        string min;
+        string sec;
 
-    void UpdateTime(float time)
-    {
-        totalTime = time;
-        Debug.Log(totalTime);
-    }
+        [SerializeField] CloudAnchorUIController UIController;
+        [SerializeField] RoomSharingServer RoomSharingServer;
 
-    IEnumerator CountDown()
-    {
-        while (totalTime > 0f)
+        public void StartGame()
         {
-            totalTime--;
-            min = Mathf.FloorToInt(totalTime / 60).ToString("00");
-            sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-            UpdateTime(totalTime);
-            UIController.timer.text = (min + ":" + sec);
-            yield return new WaitForSeconds(1f);
+            OnTimerStart();
+            UIController.ShowGameUI();
+        }
 
-            if (totalTime <= 0f)
+        void OnTimerStart()
+        {
+            TimerMessage msg = new TimerMessage();
+            msg.totalTime = totalTime;
+
+            NetworkServer.SendToAll(RoomSharingMsgType.timer, msg);
+            Debug.Log("on timer start: " + msg.totalTime);
+            StartCoroutine(CountDown());
+        }
+
+        IEnumerator CountDown()
+        {
+            while (totalTime > 0f)
             {
-                // final
-                UIController.timer.text = "00:00";
-                Debug.Log("game end");
-                UIController.ShowEndUI();
-                yield break;
+                totalTime--;
+                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
+                sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
+                UIController.timer.text = (min + ":" + sec);
+                yield return new WaitForSeconds(1f);
+
+                if (totalTime <= 0f)
+                {
+                    // final
+                    UIController.timer.text = "00:00";
+                    Debug.Log("game end");
+                    UIController.ShowEndUI();
+                    yield break;
+                }
             }
         }
     }

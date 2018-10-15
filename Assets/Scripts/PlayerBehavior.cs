@@ -12,11 +12,6 @@
         void Awake()
         {
         }
-
-        public void OnStartGame()
-        {
-            Debug.Log("on start");
-        }
     }
 
 }

@@ -6,8 +6,14 @@ namespace Love.Core
     public class InGameMessage : MessageBase
     {
     }
+
     public class TimerMessage : MessageBase
     {
         public float totalTime;
+    }
+
+    public class Score : MessageBase
+    {
+        public float totalScore;
     }
 }
