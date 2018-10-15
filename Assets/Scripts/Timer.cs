@@ -15,19 +15,20 @@
         [SerializeField] CloudAnchorUIController UIController;
         [SerializeField] RoomSharingServer RoomSharingServer;
 
-        public void StartGame()
-        {
-            OnTimerStart();
-            UIController.ShowGameUI();
-        }
-
-        void OnTimerStart()
+        public void OnTimerStart()
         {
             TimerMessage msg = new TimerMessage();
             msg.totalTime = totalTime;
 
             NetworkServer.SendToAll(RoomSharingMsgType.timer, msg);
             Debug.Log("on timer start: " + msg.totalTime);
+
+            UIController.ShowGameUI();
+            StartCoroutine(CountDown());
+        }
+
+        public void StartCountDown()
+        {
             StartCoroutine(CountDown());
         }
 

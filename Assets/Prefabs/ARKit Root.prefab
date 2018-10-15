@@ -382,5 +382,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40fe1754535df0e4a855f7afb25f3727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalTime: 60
+  totalTime: 120
   UIController: {fileID: 0}
+  RoomSharingServer: {fileID: 0}

@@ -9,6 +9,7 @@ namespace Love.Core
     /// </summary>
     public class RoomSharingClient : NetworkClient
     {
+
         /// <summary>
         /// The callback to call after the anchor id is received.
         /// </summary>
@@ -18,6 +19,7 @@ namespace Love.Core
         /// The room id to resolve.
         /// </summary>
         private int m_RoomId;
+        public float totalTime;
 
         /// <summary>
         /// Get anchor identifier from room delegate.
@@ -25,6 +27,17 @@ namespace Love.Core
         /// <param name="found">Tells if the Anchor id was found or not.</param>
         /// <param name="anchorId">The anchor id of the room.</param>
         public delegate void GetAnchorIdFromRoomDelegate(bool found, string anchorId);
+
+        TimerDelegate timerDelegate;
+        public delegate void TimerDelegate(float time);
+        public event TimerDelegate OnTimerReceived;
+        // public void GetTime(float time, TimerDelegate TimerCallback)
+        // {
+        //     timerDelegate = TimerCallback;
+        //     totalTime = time;
+        //     // custom handler
+        //     RegisterHandler(RoomSharingMsgType.timer, OnTimerResponse);
+        // }
 
         /// <summary>
         /// Gets the anchor id of a room.
@@ -41,7 +54,7 @@ namespace Love.Core
             RegisterHandler(MsgType.Disconnect, OnDisconnected);
             RegisterHandler(MsgType.Error, OnError);
 
-            // custome handler
+            // custom handler
             RegisterHandler(RoomSharingMsgType.timer, OnTimerResponse);
             // NetworkManager.singleton.networkAddress = ipAddress;
             // NetworkManager.singleton.networkPort = 8888;
@@ -68,7 +81,6 @@ namespace Love.Core
         /// <param name="networkMessage">Error message.</param>
         private void OnError(NetworkMessage networkMessage)
         {
-            Debug.Log("Error connecting to Room Sharing Server");
             if (m_GetAnchorIdFromRoomCallback != null)
             {
                 m_GetAnchorIdFromRoomCallback(false, null);
@@ -81,7 +93,6 @@ namespace Love.Core
         /// <param name="networkMessage">Disconnection message.</param>
         private void OnDisconnected(NetworkMessage networkMessage)
         {
-            Debug.Log("Disconnected from Room Sharing Server");
             if (m_GetAnchorIdFromRoomCallback != null)
             {
                 m_GetAnchorIdFromRoomCallback(false, null);
@@ -109,6 +120,10 @@ namespace Love.Core
         {
             var response = networkMessage.ReadMessage<TimerMessage>();
             Debug.Log("on timer response: " + response.totalTime);
+            if (OnTimerReceived != null)
+            {
+                OnTimerReceived(response.totalTime);
+            }
         }
     }
 }

@@ -123,6 +123,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1826283069845524, guid: 0c269bff012f85a4baa38a45f920df5c,
     type: 2}
   m_PrefabInternal: {fileID: 1707961140}
+--- !u!114 &206424433 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114065959587322184, guid: 0c269bff012f85a4baa38a45f920df5c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1707961140}
+  m_Script: {fileID: 11500000, guid: 40fe1754535df0e4a855f7afb25f3727, type: 3}
 --- !u!1001 &462973533
 Prefab:
   m_ObjectHideFlags: 0
@@ -227,6 +233,12 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1125322127}
   m_Script: {fileID: 11500000, guid: de03f166c1d09ac48a9c177ee84b0cfd, type: 3}
+--- !u!114 &983501282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114537826118884586, guid: fd7c16a80291c064fbce2ba5752906e4,
+    type: 2}
+  m_PrefabInternal: {fileID: 1103966578}
+  m_Script: {fileID: 11500000, guid: f5adf4d07e9439d4da84fbf8c0f1fdc2, type: 3}
 --- !u!1001 &1103966578
 Prefab:
   m_ObjectHideFlags: 0
@@ -291,6 +303,11 @@ Prefab:
       propertyPath: ARKitWallPrefab
       value: 
       objectReference: {fileID: 20248482}
+    - target: {fileID: 114949847129572834, guid: fd7c16a80291c064fbce2ba5752906e4,
+        type: 2}
+      propertyPath: timer
+      value: 
+      objectReference: {fileID: 206424433}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd7c16a80291c064fbce2ba5752906e4, type: 2}
   m_IsPrefabAsset: 0
@@ -405,7 +422,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1142878898}
+      objectReference: {fileID: 206424433}
     - target: {fileID: 114821036303069112, guid: f177297a86b28ca48814efb68c063843,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -426,22 +443,22 @@ Prefab:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114489615372608114, guid: f177297a86b28ca48814efb68c063843,
+    - target: {fileID: 114066115499479016, guid: f177297a86b28ca48814efb68c063843,
         type: 2}
       propertyPath: m_havePropertiesChanged
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114489615372608114, guid: f177297a86b28ca48814efb68c063843,
+    - target: {fileID: 114066115499479016, guid: f177297a86b28ca48814efb68c063843,
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114066115499479016, guid: f177297a86b28ca48814efb68c063843,
+    - target: {fileID: 114489615372608114, guid: f177297a86b28ca48814efb68c063843,
         type: 2}
       propertyPath: m_havePropertiesChanged
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114066115499479016, guid: f177297a86b28ca48814efb68c063843,
+    - target: {fileID: 114489615372608114, guid: f177297a86b28ca48814efb68c063843,
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1
@@ -566,6 +583,11 @@ Prefab:
       propertyPath: UIController
       value: 
       objectReference: {fileID: 588427968}
+    - target: {fileID: 114991479446828922, guid: 727d7bce658e6e2408b0380914c1b5da,
+        type: 2}
+      propertyPath: RoomSharingServer
+      value: 
+      objectReference: {fileID: 983501282}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 727d7bce658e6e2408b0380914c1b5da, type: 2}
   m_IsPrefabAsset: 0
@@ -613,6 +635,16 @@ Prefab:
       propertyPath: UIController
       value: 
       objectReference: {fileID: 588427968}
+    - target: {fileID: 114065959587322184, guid: 0c269bff012f85a4baa38a45f920df5c,
+        type: 2}
+      propertyPath: RoomSharingServer
+      value: 
+      objectReference: {fileID: 983501282}
+    - target: {fileID: 114065959587322184, guid: 0c269bff012f85a4baa38a45f920df5c,
+        type: 2}
+      propertyPath: totalTime
+      value: 120
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c269bff012f85a4baa38a45f920df5c, type: 2}
   m_IsPrefabAsset: 0

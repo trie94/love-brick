@@ -58,7 +58,7 @@
         GameObject player;
 
         int m_CurrentRoom;
-        Timer timer;
+        [SerializeField] Timer timer;
 
         public enum ApplicationMode
         {
@@ -197,6 +197,7 @@
             UIController.ShowResolvingModeAttemptingResolve();
 
             RoomSharingClient roomSharingClient = new RoomSharingClient();
+            roomSharingClient.OnTimerReceived += OnTimerReceived;
             roomSharingClient.GetAnchorIdFromRoom(roomToResolve, ipAddress, (bool found, string cloudAnchorId) =>
             {
                 if (!found)
@@ -209,6 +210,11 @@
                     _ResolveAnchorFromId(cloudAnchorId);
                 }
             });
+        }
+
+        private void OnTimerReceived(float time)
+        {
+            timer.StartCountDown();
         }
 
         // host -- color and ui
@@ -368,7 +374,7 @@
         {
             _ResetStatus();
         }
-        
+
         void OnGameEnd()
         {
             gameStatus = GameMode.End;

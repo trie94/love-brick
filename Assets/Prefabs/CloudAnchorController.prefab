@@ -75,4 +75,4 @@ MonoBehaviour:
   ARKitWallPrefab: {fileID: 0}
   rotation: 180
   height: 1.2
-  totalTime: 60
+  timer: {fileID: 0}
