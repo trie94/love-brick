@@ -19,5 +19,6 @@ namespace Love.Core
 
         // custom
         public const short timer = MsgType.Highest + 3;
+        public const short blockSpawner = MsgType.Highest + 4;
     }
 }

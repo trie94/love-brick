@@ -28,16 +28,16 @@ namespace Love.Core
         /// <param name="anchorId">The anchor id of the room.</param>
         public delegate void GetAnchorIdFromRoomDelegate(bool found, string anchorId);
 
+        // timer
         TimerDelegate timerDelegate;
         public delegate void TimerDelegate(float time);
         public event TimerDelegate OnTimerReceived;
-        // public void GetTime(float time, TimerDelegate TimerCallback)
-        // {
-        //     timerDelegate = TimerCallback;
-        //     totalTime = time;
-        //     // custom handler
-        //     RegisterHandler(RoomSharingMsgType.timer, OnTimerResponse);
-        // }
+
+        // block spawner
+        BlockSpawnerDelegate blockSpawnerDelegate;
+        public delegate void BlockSpawnerDelegate(int number);
+        public event BlockSpawnerDelegate OnSpawnerReady;
+        
 
         /// <summary>
         /// Gets the anchor id of a room.
@@ -124,6 +124,12 @@ namespace Love.Core
             {
                 OnTimerReceived(response.totalTime);
             }
+        }
+
+        void OnBlockResponse(NetworkMessage networkMessage)
+        {
+            var response = networkMessage.ReadMessage<BlockSpawner>();
+            Debug.Log("on block response: " + response.totalBlock);
         }
     }
 }

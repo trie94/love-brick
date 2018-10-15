@@ -17,19 +17,27 @@
 
         public void OnTimerStart()
         {
-            TimerMessage msg = new TimerMessage();
-            msg.totalTime = totalTime;
-
-            NetworkServer.SendToAll(RoomSharingMsgType.timer, msg);
-            Debug.Log("on timer start: " + msg.totalTime);
-
-            UIController.ShowGameUI();
-            StartCoroutine(CountDown());
+            if (this.gameObject.activeSelf)
+            {
+                TimerMessage msg = new TimerMessage();
+                msg.totalTime = totalTime;
+                NetworkServer.SendToAll(RoomSharingMsgType.timer, msg);
+                Debug.Log("on timer start: " + msg.totalTime);
+                UIController.ShowGameUI();
+                StartCoroutine(CountDown());
+            }
+            else
+            {
+                Debug.Log("this device is not activated: " + this.gameObject);
+            }
         }
 
         public void StartCountDown()
         {
-            StartCoroutine(CountDown());
+            if (this.gameObject.activeSelf)
+            {
+                StartCoroutine(CountDown());
+            }
         }
 
         IEnumerator CountDown()

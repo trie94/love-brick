@@ -58,7 +58,15 @@
         GameObject player;
 
         int m_CurrentRoom;
-        [SerializeField] Timer timer;
+        Timer timer;
+
+        // blocks
+        [SerializeField] GameObject block1;
+        [SerializeField] GameObject block2;
+        [SerializeField] GameObject block3;
+        [SerializeField] GameObject block4;
+
+        [SerializeField] int blockNum;
 
         public enum ApplicationMode
         {
@@ -90,6 +98,7 @@
                 player = ARKitRoot;
             }
 
+            timer = player.GetComponent<Timer>();
             _ResetStatus();
         }
 
@@ -262,9 +271,10 @@
                 GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
                 GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
                 light1.transform.Rotate(0, 180, 0);
-
                 UIController.ShowResolvingModeSuccess();
                 AssignColors();
+                // spawn blocks
+                StartCoroutine(SpawnBlocks());
             }));
         }
 
@@ -392,6 +402,12 @@
             {
                 UIController.GetClientColor();
             }
+        }
+
+        IEnumerator SpawnBlocks()
+        {
+            yield return new WaitForSeconds(1f);
+            Debug.Log("spawn blocks");
         }
     }
 }

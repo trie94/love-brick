@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 33126712754778198}
   - component: {fileID: 23297059679074130}
   - component: {fileID: 65745269041707272}
-  - component: {fileID: 114800285812985716}
   m_Layer: 0
   m_Name: piece1_1
   m_TagString: piece1
@@ -97,35 +96,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.01, y: 0.01, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114800285812985716
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1237054700287142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 173
-    i1: 33
-    i2: 114
-    i3: 227
-    i4: 31
-    i5: 156
-    i6: 104
-    i7: 100
-    i8: 89
-    i9: 83
-    i10: 205
-    i11: 168
-    i12: 190
-    i13: 173
-    i14: 125
-    i15: 202
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
