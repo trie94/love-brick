@@ -190,6 +190,8 @@
 
         public void OnResolveRoomClick()
         {
+            blockPositions.Clear();
+
             var roomToResolve = UIController.GetRoomInputValue();
             if (roomToResolve == 0)
             {
@@ -227,14 +229,13 @@
 
         private void OnSpawnerReady(Vector3 position)
         {
-            Debug.Log("On spawner ready: " + position);
+            // blockPositions.Add(m_LastResolvedAnchor.transform.position + position);
             blockPositions.Add(position);
             if (blockPositions.Count >= blockNum)
             {
                 Debug.Log("spawn!");
                 ClientSpawnBlocks(blockPositions);
             }
-            // blockPositions.Add(position);
         }
 
         public void OnStartHostSpawn()
@@ -254,11 +255,15 @@
                 float zRange = Random.Range(-2f, 2f);
 
                 int index = i % blocksPrefab.Length;
-                GameObject block = Instantiate(blocksPrefab[index], m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange), Random.rotation);
+                GameObject block = Instantiate(blocksPrefab[index],
+                m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange),
+                Quaternion.identity);
                 // push spawn positions to the list
                 blockPositions.Add(block.transform.position);
                 SendPosition(blockPositions[i]);
-                // yield return new WaitForSeconds(1f);
+
+                // blockPositions.Add(new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange));
+                // SendPosition(blockPositions[i]);
             }
         }
 
@@ -325,6 +330,7 @@
                 m_LastResolvedAnchor = result.Anchor;
                 GameObject wall = Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0),
                 result.Anchor.transform.rotation);
+
                 GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
                 GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
                 light1.transform.Rotate(0, 180, 0);
