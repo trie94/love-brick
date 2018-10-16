@@ -65,6 +65,7 @@
 
         [SerializeField] int blockNum;
         List<Vector3> blockPositions = new List<Vector3>();
+        List<Quaternion> blockRotations = new List<Quaternion>();
 
         public enum ApplicationMode
         {
@@ -191,6 +192,7 @@
         public void OnResolveRoomClick()
         {
             blockPositions.Clear();
+            blockRotations.Clear();
 
             var roomToResolve = UIController.GetRoomInputValue();
             if (roomToResolve == 0)
@@ -227,14 +229,14 @@
             timer.StartCountDown();
         }
 
-        private void OnSpawnerReady(Vector3 position)
+        private void OnSpawnerReady(Vector3 position, Quaternion rotation)
         {
-            // blockPositions.Add(m_LastResolvedAnchor.transform.position + position);
             blockPositions.Add(position);
-            if (blockPositions.Count >= blockNum)
+            blockRotations.Add(rotation);
+            if ((blockPositions.Count >= blockNum) && (blockRotations.Count >= blockNum))
             {
                 Debug.Log("spawn!");
-                ClientSpawnBlocks(blockPositions);
+                ClientSpawnBlocks(blockPositions, blockRotations);
             }
         }
 
@@ -257,33 +259,33 @@
                 int index = i % blocksPrefab.Length;
                 GameObject block = Instantiate(blocksPrefab[index],
                 m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange),
-                Quaternion.identity);
+                Random.rotation);
                 // push spawn positions to the list
                 blockPositions.Add(block.transform.position);
-                SendPosition(blockPositions[i]);
-
-                // blockPositions.Add(new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange));
-                // SendPosition(blockPositions[i]);
+                blockRotations.Add(block.transform.rotation);
+                SendPosition(blockPositions[i], blockRotations[i]);
             }
         }
 
-        void SendPosition(Vector3 position)
+        void SendPosition(Vector3 position, Quaternion rotation)
         {
             // send message to the client
             BlockSpawner msg = new BlockSpawner();
             msg.blockPos = position;
+            msg.blockRot = rotation;
             NetworkServer.SendToAll(RoomSharingMsgType.blockSpawner, msg);
             Debug.Log("spawn blocks from the host" + msg.blockPos);
         }
 
-        void ClientSpawnBlocks(List<Vector3> position)
+        void ClientSpawnBlocks(List<Vector3> position, List<Quaternion> rotation)
         {
             // CHANGE THIS PART
             for (int i = 0; i < position.Count; i++)
             {
                 Debug.Log(blockPositions[i]);
+                Debug.Log(blockRotations[i]);
                 int index = i % blocksPrefab.Length;
-                GameObject block = Instantiate(blocksPrefab[index], blockPositions[i], Quaternion.identity);
+                GameObject block = Instantiate(blocksPrefab[index], blockPositions[i], blockRotations[i]);
             }
             Debug.Log("spawn blocks from the client");
         }

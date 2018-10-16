@@ -36,7 +36,7 @@ namespace Love.Core
 
         // block spawner
         BlockSpawnerDelegate blockSpawnerDelegate;
-        public delegate void BlockSpawnerDelegate(Vector3 position);
+        public delegate void BlockSpawnerDelegate(Vector3 position, Quaternion rotation);
         public event BlockSpawnerDelegate OnSpawnerReady;
         
 
@@ -135,7 +135,7 @@ namespace Love.Core
             // Debug.Log("on block response: " + response.blockPos);
             if(OnSpawnerReady != null)
             {
-                OnSpawnerReady(response.blockPos);
+                OnSpawnerReady(response.blockPos, response.blockRot);
             }
         }
     }

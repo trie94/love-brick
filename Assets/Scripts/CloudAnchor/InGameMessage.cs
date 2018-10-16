@@ -11,19 +11,22 @@ namespace Love.Core
     public class BlockSpawner : MessageBase
     {
         public Vector3 blockPos;
+        public Quaternion blockRot;
 
         public override void Serialize(NetworkWriter writer)
         {
             base.Serialize(writer);
             writer.Write(blockPos);
-            Debug.Log("serializing: " + blockPos);
+            writer.Write(blockRot);
+            // Debug.Log("serializing: " + blockPos + ", " + blockRot);
         }
 
         public override void Deserialize(NetworkReader reader)
         {
             base.Deserialize(reader);
             blockPos = reader.ReadVector3();
-            Debug.Log("deserializing: " + blockPos);
+            blockRot = reader.ReadQuaternion();
+            // Debug.Log("deserializing: " + blockPos + ", " + blockRot);
         }
     }
 
