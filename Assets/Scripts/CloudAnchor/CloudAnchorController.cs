@@ -61,12 +61,10 @@
         Timer timer;
 
         // blocks
-        [SerializeField] GameObject block1;
-        [SerializeField] GameObject block2;
-        [SerializeField] GameObject block3;
-        [SerializeField] GameObject block4;
+        [SerializeField] GameObject[] blocksPrefab;
 
         [SerializeField] int blockNum;
+        List<Vector3> blockPositions = new List<Vector3>();
 
         public enum ApplicationMode
         {
@@ -207,6 +205,7 @@
 
             RoomSharingClient roomSharingClient = new RoomSharingClient();
             roomSharingClient.OnTimerReceived += OnTimerReceived;
+            roomSharingClient.OnSpawnerReady += OnSpawnerReady;
             roomSharingClient.GetAnchorIdFromRoom(roomToResolve, ipAddress, (bool found, string cloudAnchorId) =>
             {
                 if (!found)
@@ -224,6 +223,64 @@
         private void OnTimerReceived(float time)
         {
             timer.StartCountDown();
+        }
+
+        private void OnSpawnerReady(Vector3 position)
+        {
+            Debug.Log("On spawner ready: " + position);
+            blockPositions.Add(position);
+            if (blockPositions.Count >= blockNum)
+            {
+                Debug.Log("spawn!");
+                ClientSpawnBlocks(blockPositions);
+            }
+            // blockPositions.Add(position);
+        }
+
+        public void OnStartHostSpawn()
+        {
+            Debug.Log("On start button trigger host spawn");
+            HostSpawnBlocks();
+            // StartCoroutine(HostSpawnBlocks());
+        }
+
+        // on start host spawns blocks
+        void HostSpawnBlocks()
+        {
+            for (int i = 0; i < blockNum; i++)
+            {
+                float xRange = Random.Range(-2f, 2f);
+                float yRange = Random.Range(0, 1.5f);
+                float zRange = Random.Range(-2f, 2f);
+
+                int index = i % blocksPrefab.Length;
+                GameObject block = Instantiate(blocksPrefab[index], m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange), Random.rotation);
+                // push spawn positions to the list
+                blockPositions.Add(block.transform.position);
+                SendPosition(blockPositions[i]);
+                // yield return new WaitForSeconds(1f);
+            }
+        }
+
+        void SendPosition(Vector3 position)
+        {
+            // send message to the client
+            BlockSpawner msg = new BlockSpawner();
+            msg.blockPos = position;
+            NetworkServer.SendToAll(RoomSharingMsgType.blockSpawner, msg);
+            Debug.Log("spawn blocks from the host" + msg.blockPos);
+        }
+
+        void ClientSpawnBlocks(List<Vector3> position)
+        {
+            // CHANGE THIS PART
+            for (int i = 0; i < position.Count; i++)
+            {
+                Debug.Log(blockPositions[i]);
+                int index = i % blocksPrefab.Length;
+                GameObject block = Instantiate(blocksPrefab[index], blockPositions[i], Quaternion.identity);
+            }
+            Debug.Log("spawn blocks from the client");
         }
 
         // host -- color and ui
@@ -273,8 +330,9 @@
                 light1.transform.Rotate(0, 180, 0);
                 UIController.ShowResolvingModeSuccess();
                 AssignColors();
+                // Debug.Log("now call the client spawn blocks: " + blockTransform + " : " + blockTransform[0].position);
                 // spawn blocks
-                StartCoroutine(SpawnBlocks());
+                // ClientSpawnBlocks(blockTransform);
             }));
         }
 
@@ -402,12 +460,6 @@
             {
                 UIController.GetClientColor();
             }
-        }
-
-        IEnumerator SpawnBlocks()
-        {
-            yield return new WaitForSeconds(1f);
-            Debug.Log("spawn blocks");
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace Love.Core
 {
     using System;
+    using System.Collections;
     using UnityEngine;
     using UnityEngine.Networking;
 
@@ -35,7 +36,7 @@ namespace Love.Core
 
         // block spawner
         BlockSpawnerDelegate blockSpawnerDelegate;
-        public delegate void BlockSpawnerDelegate(int number);
+        public delegate void BlockSpawnerDelegate(Vector3 position);
         public event BlockSpawnerDelegate OnSpawnerReady;
         
 
@@ -56,6 +57,8 @@ namespace Love.Core
 
             // custom handler
             RegisterHandler(RoomSharingMsgType.timer, OnTimerResponse);
+            RegisterHandler(RoomSharingMsgType.blockSpawner, OnSpawnerResponse);
+
             // NetworkManager.singleton.networkAddress = ipAddress;
             // NetworkManager.singleton.networkPort = 8888;
             // NetworkManager.singleton.StartClient();
@@ -126,10 +129,14 @@ namespace Love.Core
             }
         }
 
-        void OnBlockResponse(NetworkMessage networkMessage)
+        void OnSpawnerResponse(NetworkMessage networkMessage)
         {
             var response = networkMessage.ReadMessage<BlockSpawner>();
-            Debug.Log("on block response: " + response.totalBlock);
+            // Debug.Log("on block response: " + response.blockPos);
+            if(OnSpawnerReady != null)
+            {
+                OnSpawnerReady(response.blockPos);
+            }
         }
     }
 }
