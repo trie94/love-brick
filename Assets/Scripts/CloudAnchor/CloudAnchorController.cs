@@ -242,9 +242,7 @@
 
         public void OnStartHostSpawn()
         {
-            Debug.Log("On start button trigger host spawn");
             HostSpawnBlocks();
-            // StartCoroutine(HostSpawnBlocks());
         }
 
         // on start host spawns blocks
@@ -260,6 +258,7 @@
                 GameObject block = Instantiate(blocksPrefab[index],
                 m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0) + new Vector3(xRange, yRange, zRange),
                 Random.rotation);
+
                 // push spawn positions to the list
                 blockPositions.Add(block.transform.position);
                 blockRotations.Add(block.transform.rotation);
@@ -274,20 +273,15 @@
             msg.blockPos = position;
             msg.blockRot = rotation;
             NetworkServer.SendToAll(RoomSharingMsgType.blockSpawner, msg);
-            Debug.Log("spawn blocks from the host" + msg.blockPos);
         }
 
         void ClientSpawnBlocks(List<Vector3> position, List<Quaternion> rotation)
         {
-            // CHANGE THIS PART
             for (int i = 0; i < position.Count; i++)
             {
-                Debug.Log(blockPositions[i]);
-                Debug.Log(blockRotations[i]);
                 int index = i % blocksPrefab.Length;
                 GameObject block = Instantiate(blocksPrefab[index], blockPositions[i], blockRotations[i]);
             }
-            Debug.Log("spawn blocks from the client");
         }
 
         // host -- color and ui
@@ -338,9 +332,6 @@
                 light1.transform.Rotate(0, 180, 0);
                 UIController.ShowResolvingModeSuccess();
                 AssignColors();
-                // Debug.Log("now call the client spawn blocks: " + blockTransform + " : " + blockTransform[0].position);
-                // spawn blocks
-                // ClientSpawnBlocks(blockTransform);
             }));
         }
 
