@@ -81,3 +81,4 @@ MonoBehaviour:
   - {fileID: 1740970778754688, guid: 266338e7c65f9c1489f6e001eb7dfc64, type: 2}
   - {fileID: 1162980339723718, guid: 15abcb3dd044b894595f558a35263161, type: 2}
   blockNum: 12
+  bgm: {fileID: 0}

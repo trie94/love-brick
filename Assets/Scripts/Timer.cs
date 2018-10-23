@@ -14,6 +14,7 @@
 
         [SerializeField] CloudAnchorUIController UIController;
         [SerializeField] RoomSharingServer RoomSharingServer;
+        [SerializeField] AudioSource bgm;
 
         public void OnTimerStart()
         {
@@ -23,6 +24,7 @@
                 msg.totalTime = totalTime;
                 NetworkServer.SendToAll(RoomSharingMsgType.timer, msg);
                 Debug.Log("on timer start: " + msg.totalTime);
+                bgm.Play();
                 UIController.ShowGameUI();
                 StartCoroutine(CountDown());
             }

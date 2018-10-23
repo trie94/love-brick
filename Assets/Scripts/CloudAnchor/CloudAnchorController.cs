@@ -66,6 +66,7 @@
         [SerializeField] int blockNum;
         List<Vector3> blockPositions = new List<Vector3>();
         List<Quaternion> blockRotations = new List<Quaternion>();
+        [SerializeField] AudioSource bgm;
 
         public enum ApplicationMode
         {
@@ -227,6 +228,7 @@
         private void OnTimerReceived(float time)
         {
             timer.StartCountDown();
+            bgm.Play();
         }
 
         private void OnSpawnerReady(Vector3 position, Quaternion rotation)

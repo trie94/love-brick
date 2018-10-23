@@ -303,6 +303,11 @@ Prefab:
       propertyPath: ARKitWallPrefab
       value: 
       objectReference: {fileID: 20248482}
+    - target: {fileID: 114949847129572834, guid: fd7c16a80291c064fbce2ba5752906e4,
+        type: 2}
+      propertyPath: bgm
+      value: 
+      objectReference: {fileID: 1229050977}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd7c16a80291c064fbce2ba5752906e4, type: 2}
   m_IsPrefabAsset: 0
@@ -477,6 +482,53 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1103966578}
   m_Script: {fileID: 11500000, guid: 33439f6163f0dec4086a8151af45514a, type: 3}
+--- !u!1001 &1229050976
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4453503283037056, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bf0f56ea71a91aa4782f48659787d979, type: 2}
+  m_IsPrefabAsset: 0
+--- !u!82 &1229050977 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 82735489771539396, guid: bf0f56ea71a91aa4782f48659787d979,
+    type: 2}
+  m_PrefabInternal: {fileID: 1229050976}
 --- !u!1 &1354226101
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +645,16 @@ Prefab:
       propertyPath: RoomSharingServer
       value: 
       objectReference: {fileID: 983501282}
+    - target: {fileID: 114991479446828922, guid: 727d7bce658e6e2408b0380914c1b5da,
+        type: 2}
+      propertyPath: bgm
+      value: 
+      objectReference: {fileID: 1229050977}
+    - target: {fileID: 114220631035155094, guid: 727d7bce658e6e2408b0380914c1b5da,
+        type: 2}
+      propertyPath: hoverDis
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 727d7bce658e6e2408b0380914c1b5da, type: 2}
   m_IsPrefabAsset: 0
@@ -647,9 +709,9 @@ Prefab:
       objectReference: {fileID: 983501282}
     - target: {fileID: 114065959587322184, guid: 0c269bff012f85a4baa38a45f920df5c,
         type: 2}
-      propertyPath: totalTime
-      value: 120
-      objectReference: {fileID: 0}
+      propertyPath: bgm
+      value: 
+      objectReference: {fileID: 1229050977}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c269bff012f85a4baa38a45f920df5c, type: 2}
   m_IsPrefabAsset: 0

@@ -335,6 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb2acf192f44efb418144078d96e97c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverDis: 0.5
 --- !u!114 &114285093366728024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -385,3 +386,4 @@ MonoBehaviour:
   totalTime: 120
   UIController: {fileID: 0}
   RoomSharingServer: {fileID: 0}
+  bgm: {fileID: 0}
