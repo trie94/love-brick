@@ -13,7 +13,6 @@
         string sec;
 
         [SerializeField] CloudAnchorUIController UIController;
-        [SerializeField] RoomSharingServer RoomSharingServer;
         [SerializeField] AudioSource bgm;
 
         private void Awake()

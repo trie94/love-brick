@@ -209,8 +209,9 @@
             UIController.ShowResolvingModeAttemptingResolve();
 
             RoomSharingClient roomSharingClient = new RoomSharingClient();
-            roomSharingClient.OnTimerReceived += OnTimerReceived;
-            roomSharingClient.OnSpawnerReady += OnSpawnerReady;
+            roomSharingClient.TimerResponse += OnTimerReceived;
+            roomSharingClient.SpawnerResponse += OnSpawnerReady;
+            roomSharingClient.BlockHover += OnBlockHover;
             roomSharingClient.GetAnchorIdFromRoom(roomToResolve, ipAddress, (bool found, string cloudAnchorId) =>
             {
                 if (!found)
@@ -240,6 +241,11 @@
                 Debug.Log("spawn!");
                 ClientSpawnBlocks(blockPositions, blockRotations);
             }
+        }
+
+        private void OnBlockHover(bool isHit, GameObject block)
+        {
+            GameObject.Find(block.name).GetComponent<BlockBehavior>().isHit = isHit;
         }
 
         public void OnStartHostSpawn()

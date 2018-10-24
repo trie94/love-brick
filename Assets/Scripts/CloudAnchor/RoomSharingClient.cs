@@ -32,12 +32,16 @@ namespace Love.Core
         // timer
         TimerDelegate timerDelegate;
         public delegate void TimerDelegate(float time);
-        public event TimerDelegate OnTimerReceived;
+        public event TimerDelegate TimerResponse;
 
         // block spawner
         BlockSpawnerDelegate blockSpawnerDelegate;
         public delegate void BlockSpawnerDelegate(Vector3 position, Quaternion rotation);
-        public event BlockSpawnerDelegate OnSpawnerReady;
+        public event BlockSpawnerDelegate SpawnerResponse;
+
+        BlockStatusDelegate blockStatusDelegate;
+        public delegate void BlockStatusDelegate(bool isHit, GameObject block);
+        public event BlockStatusDelegate BlockHover;
         
 
         /// <summary>
@@ -58,6 +62,7 @@ namespace Love.Core
             // custom handler
             RegisterHandler(RoomSharingMsgType.timer, OnTimerResponse);
             RegisterHandler(RoomSharingMsgType.blockSpawner, OnSpawnerResponse);
+            RegisterHandler(RoomSharingMsgType.blockHover, OnBlockHover);
 
             // NetworkManager.singleton.networkAddress = ipAddress;
             // NetworkManager.singleton.networkPort = 8888;
@@ -119,23 +124,32 @@ namespace Love.Core
         }
 
         // custom message
-        void OnTimerResponse(NetworkMessage networkMessage)
+        private void OnTimerResponse(NetworkMessage networkMessage)
         {
             var response = networkMessage.ReadMessage<TimerMessage>();
             Debug.Log("on timer response: " + response.totalTime);
-            if (OnTimerReceived != null)
+            if (TimerResponse != null)
             {
-                OnTimerReceived(response.totalTime);
+                TimerResponse(response.totalTime);
             }
         }
 
-        void OnSpawnerResponse(NetworkMessage networkMessage)
+        private void OnSpawnerResponse(NetworkMessage networkMessage)
         {
             var response = networkMessage.ReadMessage<BlockSpawner>();
             // Debug.Log("on block response: " + response.blockPos);
-            if(OnSpawnerReady != null)
+            if(SpawnerResponse != null)
             {
-                OnSpawnerReady(response.blockPos, response.blockRot);
+                SpawnerResponse(response.blockPos, response.blockRot);
+            }
+        }
+
+        private void OnBlockHover(NetworkMessage networkMessage)
+        {
+            var response = networkMessage.ReadMessage<BlockHover>();
+            if(BlockHover != null)
+            {
+                BlockHover(response.isHit, response.block);
             }
         }
     }
