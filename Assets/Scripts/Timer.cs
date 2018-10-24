@@ -16,6 +16,11 @@
         [SerializeField] RoomSharingServer RoomSharingServer;
         [SerializeField] AudioSource bgm;
 
+        private void Awake()
+        {
+            GetComponent<PlayerBehavior>().enabled = false;
+        }
+
         public void OnTimerStart()
         {
             if (this.gameObject.activeSelf)
@@ -44,6 +49,8 @@
 
         IEnumerator CountDown()
         {
+            GetComponent<PlayerBehavior>().enabled = true;
+            
             while (totalTime > 0f)
             {
                 totalTime--;

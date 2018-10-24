@@ -5,6 +5,10 @@
     using UnityEngine;
     using UnityEngine.Networking;
 
+#if UNITY_EDITOR
+    using Input = GoogleARCore.InstantPreviewInput;
+#endif
+
     public enum playerState
     {
         grab,
@@ -18,34 +22,31 @@
         [SerializeField] float hoverDis;
         playerState state = playerState.release;
         GameObject interactiveBlock;
-        Color originalColor;
 
         private void Update()
         {
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
             RaycastHit hit;
-            Touch touch = Input.GetTouch(0);
+            // Touch touch = Input.GetTouch(0);
 
             if (Physics.Raycast(ray, out hit, hoverDis))
             {
-                if (hit.transform.tag == this.tag)
+                if (hit.collider.tag == this.tag)
                 {
-                    Debug.Log("interactable");
                     state = playerState.grabbable;
-                    interactiveBlock = hit.transform.gameObject;
-                    originalColor = interactiveBlock.GetComponent<MeshRenderer>().material.color;
-                    interactiveBlock.GetComponent<MeshRenderer>().material.color = Color.red;
+                    interactiveBlock = hit.collider.gameObject;
+                    interactiveBlock.GetComponent<BlockBehavior>().isHit = true;
 
-                    if ((touch.phase == TouchPhase.Began) || (touch.phase == TouchPhase.Stationary) || (touch.phase == TouchPhase.Moved))
-                    {
-                        Debug.Log("gatcha");
-                        state = playerState.grab;
-                    }
+                    // if ((touch.phase == TouchPhase.Began) || (touch.phase == TouchPhase.Stationary) || (touch.phase == TouchPhase.Moved))
+                    // {
+                    //     Debug.Log("gatcha");
+                    //     state = playerState.grab;
+                    // }
                 }
             }
             else if (interactiveBlock != null)
             {
-                interactiveBlock.GetComponent<MeshRenderer>().material.color = originalColor;
+                interactiveBlock.GetComponent<BlockBehavior>().isHit = false;
             }
         }
         void DrawGizmos()
