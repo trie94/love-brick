@@ -5,64 +5,65 @@ using UnityEngine;
 public class BlockBehavior : MonoBehaviour
 {
     public bool isHit { get; set; }
+    bool isGlowing;
+
     MeshRenderer meshRenderer;
-	Renderer renderer;
+
     Color originalColor;
     [SerializeField] float lerpFactor = 1f;
 
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-		renderer = GetComponent<Renderer>();
+        meshRenderer.material.SetFloat("_MKGlowTexStrength", 0f);
+        meshRenderer.material.SetFloat("_MKGlowPower", 0f);
         originalColor = meshRenderer.material.color;
-		StartCoroutine(Glow());
     }
 
     private void Update()
     {
-        if (isHit)
+        if (isHit && !isGlowing)
         {
             // hover effect
-            meshRenderer.material.color = Color.red;
-            Debug.Log(this.gameObject.name + "is hit");
+            StartCoroutine(Glow());
         }
-        else if (meshRenderer.material.color != originalColor)
+        else if (meshRenderer.material.GetFloat("_MKGlowTexStrength") != 0f
+        || meshRenderer.material.GetFloat("_MKGlowPower") != 0f)
         {
-            // static
-            meshRenderer.material.color = originalColor;
-            Debug.Log(this.gameObject.name + "is no more hit");
+            meshRenderer.material.SetFloat("_MKGlowTexStrength", 0f);
+            meshRenderer.material.SetFloat("_MKGlowPower", 0f);
         }
     }
 
     private IEnumerator Glow()
     {
-		float lerpTime = 0f;
+        isGlowing = true;
+        float lerpTime = 0f;
         float glowPower = 0f;
-		float minGlowPower = 0f;
-		float maxGlowPower = 1f;
+        float minGlowPower = 0f;
+        float maxGlowPower = 1f;
 
-		// float glowTexPower = 0f;
-		// float minGlowTexPower = 0f;
-		// float maxGlowTexPower = 5f;
-
-		// this should be changed
+        // this should be changed
         while (true)
         {
-			lerpTime += lerpFactor * Time.deltaTime;
+            lerpTime += lerpFactor * Time.deltaTime;
             glowPower = Mathf.Lerp(minGlowPower, maxGlowPower, lerpTime);
+            meshRenderer.material.SetFloat("_MKGlowTexStrength", glowPower);
             meshRenderer.material.SetFloat("_MKGlowPower", glowPower);
-            // meshRenderer.material.SetFloat("_MKGlowTexStrength", glowTexPower);
 
             if (lerpTime >= 1f)
             {
-				float temp = minGlowPower;
-				minGlowPower = maxGlowPower;
-				maxGlowPower = temp;
+                float temp = minGlowPower;
+                minGlowPower = maxGlowPower;
+                maxGlowPower = temp;
 
-				// float temp2 = minGlowTexPower;
-				// minGlowPower = maxGlowTexPower;
-				// maxGlowTexPower = temp2;
-				lerpTime = 0f;
+                lerpTime = 0f;
+            }
+
+            if (!isHit)
+            {
+                isGlowing = false;
+                yield break;
             }
 
             yield return null;
