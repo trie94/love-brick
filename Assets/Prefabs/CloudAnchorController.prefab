@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33439f6163f0dec4086a8151af45514a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 0}
   RoomSharingServer: {fileID: 114537826118884586}
   UIController: {fileID: 0}
   lightPrefab: {fileID: 1379870097045792, guid: 931e13d1b89f7bc408894a99b84032e4,
@@ -72,7 +73,7 @@ MonoBehaviour:
   WallPrefab: {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12, type: 2}
   ARKitRoot: {fileID: 0}
   ARKitFirstPersonCamera: {fileID: 0}
-  ARKitWallPrefab: {fileID: 0}
+  ARKitWallPrefab: {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12,
+    type: 2}
   rotation: 180
   height: 1.2
-  totalTime: 60
