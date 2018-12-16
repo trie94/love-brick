@@ -19,5 +19,8 @@ namespace Love.Core
 
         // custom
         public const short MyResponse = MsgType.Highest + 3;
+
+        // network transform anchor message type
+        public const short NetworkTransformAnchor = MsgType.Highest + 4;
     }
 }
