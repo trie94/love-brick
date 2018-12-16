@@ -8,30 +8,19 @@
 
     public class CustomNetworkManager : NetworkManager
     {
-		
 		RoomSharingClient roomSharingClient;
 
         public override void OnServerConnect(NetworkConnection conn)
         {
             Debug.Log("server connected");
+            base.OnServerConnect(conn);
         }
 
         public override void OnClientConnect(NetworkConnection conn)
         {
             Debug.Log("On client connected");
-			// networkClient.Send();
+            base.OnClientConnect(conn);
+			// roomSharingClient.Send();
         }
-
-		public void OnConnected(Int32 m_RoomId)
-        {
-            AnchorIdFromRoomRequestMessage anchorIdRequestMessage = new AnchorIdFromRoomRequestMessage
-            {
-                RoomId = m_RoomId
-            };
-
-            // roomSharingClient.Send(RoomSharingMsgType.AnchorIdFromRoomRequest, anchorIdRequestMessage);
-            Debug.Log("[custom network manager] On connected: " + m_RoomId);
-        }
-
     }
 }

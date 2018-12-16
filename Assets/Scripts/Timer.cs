@@ -1,33 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using Love.Core;
 using TMPro;
 
-public class Timer : NetworkBehaviour
+public class Timer : MonoBehaviour
 {
-    [SyncVar] public float totalTime = 60f;
+    [SerializeField] float totalTime = 60f;
     string min;
     string sec;
 
-    [SerializeField] CloudAnchorUIController UIController;
+    CloudAnchorController cloudAnchorController;
+    UIController UIController;
+
+    void Awake()
+    {
+        cloudAnchorController = FindObjectOfType<CloudAnchorController>();
+        UIController = FindObjectOfType<UIController>();
+    }
 
     public void OnCountDown()
     {
         StartCoroutine(CountDown());
         Debug.Log("on count down");
-    }
-
-    [ClientRpc]
-    void RpcUpdateTime(float time)
-    {
-        totalTime = time;
-        if (!isServer)
-        {
-            UIController.timer.text = (min + ":" + sec);
-        }
-        Debug.Log(totalTime);
     }
 
     IEnumerator CountDown()
@@ -37,7 +32,6 @@ public class Timer : NetworkBehaviour
             totalTime--;
             min = Mathf.FloorToInt(totalTime / 60).ToString("00");
             sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-            RpcUpdateTime(totalTime);
             UIController.timer.text = (min + ":" + sec);
             yield return new WaitForSeconds(1f);
 

@@ -9,7 +9,7 @@ namespace Love.Core
     using UnityEngine.Networking;
     using UnityEngine.Networking.Match;
 
-    public class CloudAnchorUIController : NetworkBehaviour
+    public class UIController : NetworkBehaviour
     {
         [SerializeField] GameObject snackbar;
         [SerializeField] Text SnackbarText;
@@ -42,8 +42,6 @@ namespace Love.Core
         [SerializeField] Toggle ResolveOnDeviceToggle;
 
         [SerializeField] GameObject background;
-
-        [SerializeField] NetworkManager networkManager;
 
         void Awake()
         {
@@ -85,9 +83,6 @@ namespace Love.Core
             {
                 SnackbarText.text =
                     "The room code is now available. Please place a grid wall to host the game, press back to exit.";
-
-                // host the server
-                networkManager.StartHost();
             }
             else
             {
@@ -104,6 +99,7 @@ namespace Love.Core
             InputRoot.SetActive(false);
         }
 
+        // join the game
         public void ShowResolvingModeBegin(string snackbarText = null)
         {
             EnableBackButton();
@@ -133,9 +129,7 @@ namespace Love.Core
         {
             SnackbarText.text = "Successfully joined!";
             InputRoot.SetActive(false);
-            StartCoroutine(ChangeToInGameUI());
-            // join as a client
-            networkManager.matchMaker.JoinMatch(networkManager.matches[networkManager.matches.Count - 1].networkId, "", "", "", 0, 0, networkManager.OnMatchJoined);
+            StartGameUI();
         }
 
         public void SetRoomTextValue(int roomNumber)
@@ -145,7 +139,7 @@ namespace Love.Core
 
         void GetRoomTextValue()
         {
-            
+
         }
 
         public bool GetResolveOnDeviceValue()
@@ -216,15 +210,8 @@ namespace Love.Core
         }
 
         // where the actual game starts
-        public void ShowGameUI()
+        public void StartGameUI()
         {
-            StartCoroutine(ChangeToInGameUI());
-        }
-
-        // when change ui, add some delay
-        IEnumerator ChangeToInGameUI()
-        {
-            yield return new WaitForSeconds(0.2f);
             DisableBackButton();
             background.SetActive(false);
             startButton.SetActive(false);
@@ -234,8 +221,6 @@ namespace Love.Core
             IPAdressInfo.SetActive(false);
             scoreBoard.SetActive(true);
             snackbar.SetActive(false);
-
-            yield break;
         }
 
         public void ShowEndUI()
@@ -259,21 +244,6 @@ namespace Love.Core
             Debug.Log("Get client(player2) color");
             HostColor.SetActive(false);
             ClientColor.SetActive(true);
-        }
-
-        IEnumerator FindMatch()
-        {
-            yield return new WaitForSeconds(1f);
-            networkManager.matchName = this.GetRoomInputValue().ToString();
-
-            // foreach (var match in networkManager.matches)
-            // {
-            //     Debug.Log("match name: " + networkManager.matchName);
-
-            //     networkManager.matchName = this.GetRoomInputValue().ToString();
-            //     networkManager.matchSize = (uint)match.currentSize;
-            // }
-            yield break;
         }
     }
 }

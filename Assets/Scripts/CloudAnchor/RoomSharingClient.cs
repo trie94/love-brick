@@ -7,10 +7,8 @@ namespace Love.Core
     /// <summary>
     /// Network Client that resolves rooms to anchor id on other devices.
     /// </summary>
-    public class RoomSharingClient : NetworkClient
+    public class RoomSharingClient
     {
-
-        CustomNetworkManager customNetworkManager;
         /// <summary>
         /// The callback to call after the anchor id is received.
         /// </summary>
@@ -38,15 +36,15 @@ namespace Love.Core
         {
             m_GetAnchorIdFromRoomCallback = GetAnchorIdFromRoomCallback;
             m_RoomId = roomId;
-            RegisterHandler(MsgType.Connect, OnConnected);
-            RegisterHandler(RoomSharingMsgType.AnchorIdFromRoomResponse, OnGetAnchorIdFromRoomResponse);
-            RegisterHandler(MsgType.Disconnect, OnDisconnected);
-            RegisterHandler(MsgType.Error, OnError);
-            NetworkManager.singleton.networkAddress = ipAddress;
-            NetworkManager.singleton.networkPort = 8888;
-            NetworkManager.singleton.StartClient();
+            NetworkManager.singleton.client.RegisterHandler(MsgType.Connect, OnConnected);
+            NetworkManager.singleton.client.RegisterHandler(RoomSharingMsgType.AnchorIdFromRoomResponse, OnGetAnchorIdFromRoomResponse);
+            NetworkManager.singleton.client.RegisterHandler(MsgType.Disconnect, OnDisconnected);
+            NetworkManager.singleton.client.RegisterHandler(MsgType.Error, OnError);
+            // NetworkManager.singleton.networkAddress = ipAddress;
+            // NetworkManager.singleton.networkPort = 8888;
+            // NetworkManager.singleton.StartClient();
             Debug.Log("get anchor id from room");
-            // Connect(ipAddress, 8888);
+            // NetworkManager.singleton.client.Connect(ipAddress, 8888);
         }
 
         /// <summary>
@@ -60,8 +58,7 @@ namespace Love.Core
             {
                 RoomId = m_RoomId
             };
-            customNetworkManager.OnConnected(m_RoomId);
-            Send(RoomSharingMsgType.AnchorIdFromRoomRequest, anchorIdRequestMessage);
+            NetworkManager.singleton.client.Send(RoomSharingMsgType.AnchorIdFromRoomRequest, anchorIdRequestMessage);
         }
 
         /// <summary>
@@ -89,7 +86,6 @@ namespace Love.Core
             {
                 m_GetAnchorIdFromRoomCallback(false, null);
             }
-            Debug.Log("On disconnected");
         }
 
         /// <summary>

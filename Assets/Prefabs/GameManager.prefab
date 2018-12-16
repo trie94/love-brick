@@ -9,31 +9,31 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1423581543129414}
+  m_RootGameObject: {fileID: 1958157674258088}
   m_IsPrefabAsset: 1
---- !u!1 &1423581543129414
+--- !u!1 &1958157674258088
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4050217923871546}
-  - component: {fileID: 114457753445134430}
-  - component: {fileID: 114536526388536250}
+  - component: {fileID: 4528013665727804}
+  - component: {fileID: 114687379029148440}
+  - component: {fileID: 114808040104585096}
   m_Layer: 0
-  m_Name: Player
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4050217923871546
+--- !u!4 &4528013665727804
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1423581543129414}
+  m_GameObject: {fileID: 1958157674258088}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -41,12 +41,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114457753445134430
+--- !u!114 &114687379029148440
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1423581543129414}
+  m_GameObject: {fileID: 1958157674258088}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
@@ -55,32 +55,41 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 54
-    i1: 145
-    i2: 86
-    i3: 238
-    i4: 72
-    i5: 102
-    i6: 183
-    i7: 212
-    i8: 122
-    i9: 232
-    i10: 124
-    i11: 196
-    i12: 15
-    i13: 67
-    i14: 104
-    i15: 5
+    i0: 193
+    i1: 75
+    i2: 131
+    i3: 32
+    i4: 205
+    i5: 246
+    i6: 116
+    i7: 149
+    i8: 168
+    i9: 167
+    i10: 240
+    i11: 71
+    i12: 242
+    i13: 180
+    i14: 67
+    i15: 119
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114536526388536250
+--- !u!114 &114808040104585096
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1423581543129414}
+  m_GameObject: {fileID: 1958157674258088}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2acf192f44efb418144078d96e97c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 94282c1e2804a4f63881599e65579709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 0}
+  cloudAnchorController: {fileID: 0}
+  lightPrefab: {fileID: 1379870097045792, guid: 931e13d1b89f7bc408894a99b84032e4,
+    type: 2}
+  block1: {fileID: 1237054700287142, guid: ad2172e31f9c68645953cda8bead7dca, type: 2}
+  wallPrefab: {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12, type: 2}
+  lightDistance: 1
+  wallHeight: 1
+  cloudAnchor: {fileID: 0}

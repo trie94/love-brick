@@ -7,15 +7,12 @@
 
     public class PlayerBehavior : MonoBehaviour
     {
-        Timer timer;
+        int playerIndex = -1;
 
         void Awake()
         {
-        }
-
-        public void OnStartGame()
-        {
-            Debug.Log("on start");
+            // assign player index
+            playerIndex = FindObjectsOfType<PlayerBehavior>().Length -1;
         }
     }
 

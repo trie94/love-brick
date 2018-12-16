@@ -19,9 +19,8 @@
         /// Manages sharing Anchor Ids across the local network to clients using Unity's NetworkServer.  There
         /// are many ways to share this data and this not part of the ARCore Cloud Anchors API surface.
         /// </summary>
-        [SerializeField] CustomNetworkManager networkManager;
         [SerializeField] RoomSharingServer RoomSharingServer;
-        [SerializeField] CloudAnchorUIController UIController;
+        [SerializeField] UIController UIController;
         [SerializeField] GameObject lightPrefab;
         [SerializeField] float lightDistance = 1f;
 
@@ -50,16 +49,15 @@
         // True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
         bool m_IsQuitting = false;
 
-        Component m_LastPlacedAnchor = null;
+        public Component m_LastPlacedAnchor = null;
 
-        XPAnchor m_LastResolvedAnchor = null;
+        public XPAnchor m_LastResolvedAnchor = null;
 
         ApplicationMode m_CurrentMode = ApplicationMode.Ready;
-        GameMode gameStatus = GameMode.Lobby;
+
         GameObject player;
 
         int m_CurrentRoom;
-        Timer timer;
 
         public enum ApplicationMode
         {
@@ -68,13 +66,12 @@
             Resolving,
         }
 
-        public enum GameMode
-        {
-            Lobby,
-            Idle,
-            Start,
-            End
-        }
+        [SerializeField] float totalTime = 60f;
+        string min;
+        string sec;
+
+        public delegate void AnchorSavedCallback(Transform anchor);
+        public event AnchorSavedCallback OnAnchorSaved;
 
         public void Start()
         {
@@ -130,29 +127,29 @@
 
             if (m_LastPlacedAnchor != null)
             {
-                // spawn a wall
-                GameObject wall = Instantiate(_GetWallPrefab(), m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0),
-                m_LastPlacedAnchor.transform.rotation);
-                GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
-                GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
-                light1.transform.Rotate(0, 180, 0);
+                // // spawn a wall
+                // GameObject wall = Instantiate(_GetWallPrefab(), m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0),
+                // m_LastPlacedAnchor.transform.rotation);
+                // GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
+                // GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
+                // light1.transform.Rotate(0, 180, 0);
 
-                // Make the wall a child of the anchor.
-                wall.transform.parent = m_LastPlacedAnchor.transform;
-                light1.transform.parent = m_LastPlacedAnchor.transform;
-                light2.transform.parent = m_LastPlacedAnchor.transform;
+                // // Make the wall a child of the anchor.
+                // wall.transform.parent = m_LastPlacedAnchor.transform;
+                // light1.transform.parent = m_LastPlacedAnchor.transform;
+                // light2.transform.parent = m_LastPlacedAnchor.transform;
 
                 // Save cloud anchor.
                 _HostLastPlacedAnchor();
-
-                // change game status -- wait for other player
-                gameStatus = GameMode.Idle;
             }
         }
 
         // host
         public void OnEnterHostingModeClick()
         {
+            // host the server
+            NetworkManager.singleton.StartHost();
+            
             if (m_CurrentMode == ApplicationMode.Hosting)
             {
                 m_CurrentMode = ApplicationMode.Ready;
@@ -196,7 +193,13 @@
                 UIController.GetResolveOnDeviceValue() ? k_LoopbackIpAddress : UIController.GetIpAddressInputValue();
 
             UIController.ShowResolvingModeAttemptingResolve();
-            Debug.Log("on resolve room click, now make a client instance");
+
+            // join as a client
+            NetworkManager.singleton.networkAddress = ipAddress;
+            NetworkManager.singleton.networkPort = 8888;
+            NetworkManager.singleton.StartClient();
+            // NetworkManager.singleton.client.Connect(ipAddress, 8888);
+
             RoomSharingClient roomSharingClient = new RoomSharingClient();
             roomSharingClient.GetAnchorIdFromRoom(roomToResolve, ipAddress, (bool found, string cloudAnchorId) =>
             {
@@ -235,6 +238,10 @@
                 }
 
                 RoomSharingServer.SaveCloudAnchorToRoom(m_CurrentRoom, result.Anchor);
+                if(OnAnchorSaved != null)
+                {
+                    OnAnchorSaved(anchor.transform);
+                }
                 UIController.ShowHostingModeBegin("Cloud anchor was created and saved.");
                 UIController.ShowHostReadyUI(); // for host
                 AssignColors();
@@ -272,8 +279,6 @@
         {
             // Reset internal status.
             m_CurrentMode = ApplicationMode.Ready;
-            // reset game status
-            gameStatus = GameMode.Lobby;
 
             if (m_LastPlacedAnchor != null)
             {
@@ -289,16 +294,6 @@
             m_LastResolvedAnchor = null;
             player.tag = "Untagged";
             UIController.ShowLobbyUI();
-        }
-
-        /// <summary>
-        /// Gets the platform-specific Andy the android prefab.
-        /// </summary>
-        /// <returns>The platform-specific Andy the android prefab.</returns>
-        private GameObject _GetWallPrefab()
-        {
-            return Application.platform != RuntimePlatform.IPhonePlayer ?
-                WallPrefab : ARKitWallPrefab;
         }
 
         /// <summary>
@@ -374,14 +369,9 @@
 
         public void StartGame()
         {
-            gameStatus = GameMode.Start;
-            UIController.ShowGameUI();
-        }
-
-        void OnGameEnd()
-        {
-            gameStatus = GameMode.End;
-            Debug.Log("End");
+            UIController.StartGameUI();
+            StartCoroutine(CountDown());
+            Debug.Log("on count down");
         }
 
         void AssignColors()
@@ -394,6 +384,27 @@
             else if (player.tag == "player2")
             {
                 UIController.GetClientColor();
+            }
+        }
+
+        IEnumerator CountDown()
+        {
+            while (totalTime > 0f)
+            {
+                totalTime--;
+                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
+                sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
+                UIController.timer.text = (min + ":" + sec);
+                yield return new WaitForSeconds(1f);
+
+                if (totalTime <= 0f)
+                {
+                    // final
+                    UIController.timer.text = "00:00";
+                    Debug.Log("game end");
+                    UIController.ShowEndUI();
+                    yield break;
+                }
             }
         }
     }
