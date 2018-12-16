@@ -21,23 +21,15 @@
         /// </summary>
         [SerializeField] RoomSharingServer RoomSharingServer;
         [SerializeField] UIController UIController;
-        [SerializeField] GameObject lightPrefab;
-        [SerializeField] float lightDistance = 1f;
 
         [Header("ARCore")]
 
         [SerializeField] GameObject ARCoreRoot;
 
-        // use lighting estimation shaders
-        [SerializeField] GameObject WallPrefab;
-
         [Header("ARKit")]
 
         [SerializeField] GameObject ARKitRoot;
         [SerializeField] Camera ARKitFirstPersonCamera;
-
-        // diffuse shader --- future implmentation
-        [SerializeField] GameObject ARKitWallPrefab;
 
         const string k_LoopbackIpAddress = "127.0.0.1";
 
@@ -95,6 +87,16 @@
         {
             _UpdateApplicationLifecycle();
 
+            if (m_CurrentMode != ApplicationMode.Hosting && NetworkManager.singleton.IsClientConnected() && !ClientScene.ready)
+            {
+                ClientScene.Ready(NetworkManager.singleton.client.connection);
+
+                if (ClientScene.localPlayers.Count == 0)
+                {
+                    ClientScene.AddPlayer(0);
+                }
+            }
+
             if (m_CurrentMode != ApplicationMode.Hosting || m_LastPlacedAnchor != null)
             {
                 return;
@@ -149,7 +151,7 @@
         {
             // host the server
             NetworkManager.singleton.StartHost();
-            
+
             if (m_CurrentMode == ApplicationMode.Hosting)
             {
                 m_CurrentMode = ApplicationMode.Ready;
@@ -238,9 +240,9 @@
                 }
 
                 RoomSharingServer.SaveCloudAnchorToRoom(m_CurrentRoom, result.Anchor);
-                if(OnAnchorSaved != null)
+                if (OnAnchorSaved != null)
                 {
-                    OnAnchorSaved(anchor.transform);
+                    OnAnchorSaved(result.Anchor.transform);
                 }
                 UIController.ShowHostingModeBegin("Cloud anchor was created and saved.");
                 UIController.ShowHostReadyUI(); // for host
@@ -261,11 +263,11 @@
                 }
 
                 m_LastResolvedAnchor = result.Anchor;
-                GameObject wall = Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0),
-                result.Anchor.transform.rotation);
-                GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
-                GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
-                light1.transform.Rotate(0, 180, 0);
+                // GameObject wall = Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0),
+                // result.Anchor.transform.rotation);
+                // GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
+                // GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
+                // light1.transform.Rotate(0, 180, 0);
 
                 UIController.ShowResolvingModeSuccess();
                 AssignColors();

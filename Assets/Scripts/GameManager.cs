@@ -1,6 +1,5 @@
 ﻿namespace Love.Core
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -85,7 +84,7 @@
             // NetworkServer.Spawn(light1);
             // NetworkServer.Spawn(light2);
 
-            GameObject testBlock = Instantiate(block1);
+            GameObject testBlock = Instantiate(block1, cloudAnchor.transform.position, Random.rotation);
             NetworkServer.Spawn(testBlock);
             Debug.Log("the anchor position: " + cloudAnchor.transform.position);
         }
