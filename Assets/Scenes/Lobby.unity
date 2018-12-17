@@ -781,11 +781,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114808040104585096, guid: c14b8320cdf67495a8a7f047f2b44377,
         type: 2}
-      propertyPath: networkManager
-      value: 
-      objectReference: {fileID: 53373921}
-    - target: {fileID: 114808040104585096, guid: c14b8320cdf67495a8a7f047f2b44377,
-        type: 2}
       propertyPath: cloudAnchorController
       value: 
       objectReference: {fileID: 1142878898}

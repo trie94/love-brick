@@ -72,11 +72,14 @@
         {
             // get the anchor and spawn objects(wall and the blocks)
             cloudAnchor = anchor;
-            // GameObject wall = Instantiate(wallPrefab, cloudAnchor.transform.position + new Vector3(0, wallHeight, 0), cloudAnchor.transform.rotation);
-            // NetworkServer.Spawn(wall);
+            GameObject wall = Instantiate(wallPrefab, cloudAnchor.transform.position + new Vector3(0, wallHeight, 0), Quaternion.identity);
+            NetworkServer.Spawn(wall);
 
-            GameObject block = Instantiate(block1, anchor.transform.position, Random.rotation);
-            NetworkServer.Spawn(block);
+            Debug.Log("anchor pos: " + anchor.transform.position);
+            Debug.Log("wall pos: " + wall.transform.position);
+
+            // GameObject block = Instantiate(block1, anchor.transform.position, Random.rotation);
+            // NetworkServer.Spawn(block);
         }
 
         void OnStart()

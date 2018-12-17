@@ -23,11 +23,7 @@
         void Start()
         {
             identity = GetComponent<NetworkIdentity>();
-            if (!isLocalPlayer)
-            {
-                Debug.Log("is not local player?");
-                return;
-            }
+            if (!isLocalPlayer) return;
 
             if (s_localPlayer != null)
             {
