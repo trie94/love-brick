@@ -43,17 +43,32 @@ namespace Love.Core
 
         [SerializeField] GameObject background;
 
-        void Awake()
+        static UIController s_instance;
+        public static UIController Instance
         {
-            NetworkServer.Reset();
-            NetworkServer.ResetConnectionStats();
+            get
+            {
+                if (s_instance == null)
+                {
+                    s_instance = FindObjectOfType<UIController>();
+                }
+                return s_instance;
+            }
         }
 
-        public void Start()
+        void Awake()
+        {
+            if (s_instance != null)
+            {
+                Debug.Log("UI controller already exists");
+            }
+            s_instance = this;
+        }
+
+        void Start()
         {
             IPAdressInfo.GetComponentInChildren<TextMeshProUGUI>().text = "My IP Address: " + _GetDeviceIpAddress();
             backButtonColor = backButton.GetComponent<Image>().color;
-            DisableBackButton();
         }
 
         // Lobby mode
@@ -64,8 +79,12 @@ namespace Love.Core
             background.SetActive(true);
             createRoomButton.SetActive(true);
             joinRoomButton.SetActive(true);
+            // scoreBoard.SetActive(false);
+            roomInfo.SetActive(false);
+            IPAdressInfo.SetActive(false);
             scoreBoard.SetActive(false);
             snackbar.SetActive(true);
+            DisableBackButton();
 
             SnackbarText.text = "Please create or join a room";
             InputRoot.SetActive(false);
@@ -77,7 +96,10 @@ namespace Love.Core
             createRoomButton.SetActive(false);
             joinRoomButton.SetActive(false);
             background.SetActive(false);
-            EnableBackButton();
+            scoreBoard.SetActive(true);
+            roomInfo.SetActive(true);
+            IPAdressInfo.SetActive(true);
+            // EnableBackButton();
 
             if (string.IsNullOrEmpty(snackbarText))
             {
@@ -102,7 +124,7 @@ namespace Love.Core
         // join the game
         public void ShowResolvingModeBegin(string snackbarText = null)
         {
-            EnableBackButton();
+            // EnableBackButton();
 
             if (string.IsNullOrEmpty(snackbarText))
             {

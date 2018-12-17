@@ -4,15 +4,14 @@
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.Networking;
-	using System;
+    using System;
 
     public class CustomNetworkManager : NetworkManager
     {
-		RoomSharingClient roomSharingClient;
-
+        [SerializeField] CloudAnchorController cloudAnchorController;
         public override void OnServerConnect(NetworkConnection conn)
         {
-            Debug.Log("server connected");
+            Debug.Log("server connected: " + conn);
             base.OnServerConnect(conn);
         }
 
@@ -20,7 +19,12 @@
         {
             Debug.Log("On client connected");
             base.OnClientConnect(conn);
-			// roomSharingClient.Send();
+        }
+
+        public override void OnServerDisconnect(NetworkConnection conn)
+        {
+            Debug.Log("Client disconnected: " + conn.lastError);
+            base.OnServerDisconnect(conn);
         }
     }
 }

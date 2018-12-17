@@ -12,7 +12,16 @@
         void Awake()
         {
             // assign player index
-            playerIndex = FindObjectsOfType<PlayerBehavior>().Length -1;
+            playerIndex = FindObjectsOfType<PlayerBehavior>().Length - 1;
+            Debug.Log("player index: " + playerIndex);
+            if (playerIndex == 0)
+            {
+                UIController.Instance.GetHostColor();
+            }
+            else
+            {
+                UIController.Instance.GetClientColor();
+            }
         }
     }
 

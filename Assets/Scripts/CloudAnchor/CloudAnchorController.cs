@@ -20,7 +20,6 @@
         /// are many ways to share this data and this not part of the ARCore Cloud Anchors API surface.
         /// </summary>
         [SerializeField] RoomSharingServer RoomSharingServer;
-        [SerializeField] UIController UIController;
 
         [Header("ARCore")]
 
@@ -65,7 +64,14 @@
         public delegate void AnchorSavedCallback(Transform anchor);
         public event AnchorSavedCallback OnAnchorSaved;
 
-        public void Start()
+
+        // void Awake()
+        // {
+        //     NetworkServer.Reset();
+        //     NetworkServer.ResetConnectionStats();
+        // }
+
+        void Start()
         {
             if (Application.platform != RuntimePlatform.IPhonePlayer)
             {
@@ -83,7 +89,7 @@
             _ResetStatus();
         }
 
-        public void Update()
+        void Update()
         {
             _UpdateApplicationLifecycle();
 
@@ -129,18 +135,6 @@
 
             if (m_LastPlacedAnchor != null)
             {
-                // // spawn a wall
-                // GameObject wall = Instantiate(_GetWallPrefab(), m_LastPlacedAnchor.transform.position + new Vector3(0, height, 0),
-                // m_LastPlacedAnchor.transform.rotation);
-                // GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
-                // GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
-                // light1.transform.Rotate(0, 180, 0);
-
-                // // Make the wall a child of the anchor.
-                // wall.transform.parent = m_LastPlacedAnchor.transform;
-                // light1.transform.parent = m_LastPlacedAnchor.transform;
-                // light2.transform.parent = m_LastPlacedAnchor.transform;
-
                 // Save cloud anchor.
                 _HostLastPlacedAnchor();
             }
@@ -161,9 +155,8 @@
 
             m_CurrentMode = ApplicationMode.Hosting;
             m_CurrentRoom = Random.Range(1, 9999);
-            UIController.SetRoomTextValue(m_CurrentRoom);
-            UIController.ShowHostingModeBegin();
-            player.tag = "player1";
+            UIController.Instance.SetRoomTextValue(m_CurrentRoom);
+            UIController.Instance.ShowHostingModeBegin();
         }
 
         // client
@@ -177,24 +170,23 @@
             }
 
             m_CurrentMode = ApplicationMode.Resolving;
-            UIController.ShowResolvingModeBegin();
-            player.tag = "player2";
+            UIController.Instance.ShowResolvingModeBegin();
         }
 
         public void OnResolveRoomClick()
         {
-            var roomToResolve = UIController.GetRoomInputValue();
+            var roomToResolve = UIController.Instance.GetRoomInputValue();
             if (roomToResolve == 0)
             {
-                UIController.ShowResolvingModeBegin("Anchor resolve failed due to invalid room code.");
+                UIController.Instance.ShowResolvingModeBegin("Anchor resolve failed due to invalid room code.");
                 return;
             }
 
-            UIController.SetRoomTextValue(roomToResolve);
+            UIController.Instance.SetRoomTextValue(roomToResolve);
             string ipAddress =
-                UIController.GetResolveOnDeviceValue() ? k_LoopbackIpAddress : UIController.GetIpAddressInputValue();
+                UIController.Instance.GetResolveOnDeviceValue() ? k_LoopbackIpAddress : UIController.Instance.GetIpAddressInputValue();
 
-            UIController.ShowResolvingModeAttemptingResolve();
+            UIController.Instance.ShowResolvingModeAttemptingResolve();
 
             // join as a client
             NetworkManager.singleton.networkAddress = ipAddress;
@@ -209,7 +201,7 @@
 
                 if (!found)
                 {
-                    UIController.ShowResolvingModeBegin("Anchor resolve failed due to invalid room code, " +
+                    UIController.Instance.ShowResolvingModeBegin("Anchor resolve failed due to invalid room code, " +
                                                         "ip address or network error.");
                 }
                 else
@@ -229,12 +221,12 @@
 #else
             var anchor = (UnityEngine.XR.iOS.UnityARUserAnchorComponent)m_LastPlacedAnchor;
 #endif
-            UIController.ShowHostingModeAttemptingHost();
+            UIController.Instance.ShowHostingModeAttemptingHost();
             XPSession.CreateCloudAnchor(anchor).ThenAction(result =>
             {
                 if (result.Response != CloudServiceResponse.Success)
                 {
-                    UIController.ShowHostingModeBegin(
+                    UIController.Instance.ShowHostingModeBegin(
                         string.Format("Failed to host cloud anchor: {0}", result.Response));
                     return;
                 }
@@ -244,9 +236,8 @@
                 {
                     OnAnchorSaved(result.Anchor.transform);
                 }
-                UIController.ShowHostingModeBegin("Cloud anchor was created and saved.");
-                UIController.ShowHostReadyUI(); // for host
-                AssignColors();
+                UIController.Instance.ShowHostingModeBegin("cloud anchor is saved, tap on the screen to move the wall to a different location.");
+                UIController.Instance.ShowHostReadyUI(); // for host
             });
 #endif
         }
@@ -258,7 +249,7 @@
             {
                 if (result.Response != CloudServiceResponse.Success)
                 {
-                    UIController.ShowResolvingModeBegin(string.Format("Resolving Error: {0}.", result.Response));
+                    UIController.Instance.ShowResolvingModeBegin(string.Format("Resolving Error: {0}.", result.Response));
                     return;
                 }
 
@@ -269,8 +260,7 @@
                 // GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
                 // light1.transform.Rotate(0, 180, 0);
 
-                UIController.ShowResolvingModeSuccess();
-                AssignColors();
+                UIController.Instance.ShowResolvingModeSuccess();
             }));
         }
 
@@ -294,8 +284,11 @@
             }
 
             m_LastResolvedAnchor = null;
-            player.tag = "Untagged";
-            UIController.ShowLobbyUI();
+
+            // NetworkServer.Reset();
+            // NetworkServer.ResetConnectionStats();
+
+            UIController.Instance.ShowLobbyUI();
         }
 
         /// <summary>
@@ -371,22 +364,9 @@
 
         public void StartGame()
         {
-            UIController.StartGameUI();
+            UIController.Instance.StartGameUI();
             StartCoroutine(CountDown());
             Debug.Log("on count down");
-        }
-
-        void AssignColors()
-        {
-            // show color ui
-            if (player.tag == "player1")
-            {
-                UIController.GetHostColor();
-            }
-            else if (player.tag == "player2")
-            {
-                UIController.GetClientColor();
-            }
         }
 
         IEnumerator CountDown()
@@ -396,15 +376,15 @@
                 totalTime--;
                 min = Mathf.FloorToInt(totalTime / 60).ToString("00");
                 sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-                UIController.timer.text = (min + ":" + sec);
+                UIController.Instance.timer.text = (min + ":" + sec);
                 yield return new WaitForSeconds(1f);
 
                 if (totalTime <= 0f)
                 {
                     // final
-                    UIController.timer.text = "00:00";
+                    UIController.Instance.timer.text = "00:00";
                     Debug.Log("game end");
-                    UIController.ShowEndUI();
+                    UIController.Instance.ShowEndUI();
                     yield break;
                 }
             }
