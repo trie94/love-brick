@@ -89,6 +89,15 @@
         {
             _UpdateApplicationLifecycle();
 
+            if (m_CurrentMode != ApplicationMode.Hosting && NetworkManager.singleton.IsClientConnected() && !ClientScene.ready)
+            {
+                ClientScene.Ready(NetworkManager.singleton.client.connection);
+                if (ClientScene.localPlayers.Count == 0)
+                {
+                    ClientScene.AddPlayer(0);
+                }
+            }
+
             if (m_CurrentMode != ApplicationMode.Hosting || m_LastPlacedAnchor != null)
             {
                 return;
@@ -131,7 +140,7 @@
         {
             // host the server
             NetworkManager.singleton.StartHost();
-            
+
             if (m_CurrentMode == ApplicationMode.Hosting)
             {
                 m_CurrentMode = ApplicationMode.Ready;
@@ -218,7 +227,7 @@
                 }
 
                 RoomSharingServer.SaveCloudAnchorToRoom(m_CurrentRoom, result.Anchor);
-                if(OnAnchorSaved != null)
+                if (OnAnchorSaved != null)
                 {
                     OnAnchorSaved(anchor.transform);
                 }

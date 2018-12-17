@@ -20,10 +20,14 @@
             get { return _playerIndex; }
         }
 
-        void Awake()
+        void Start()
         {
             identity = GetComponent<NetworkIdentity>();
-            if (!isLocalPlayer) return;
+            if (!isLocalPlayer)
+            {
+                Debug.Log("is not local player?");
+                return;
+            }
 
             if (s_localPlayer != null)
             {
@@ -39,7 +43,6 @@
         public override void OnStartClient()
         {
             base.OnStartClient();
-            Debug.Log("on start client");
         }
 
         void AssignColor()

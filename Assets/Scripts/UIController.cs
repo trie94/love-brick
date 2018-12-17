@@ -63,12 +63,12 @@ namespace Love.Core
                 Debug.Log("UI controller already exists");
             }
             s_instance = this;
+            IPAdressInfo.GetComponentInChildren<TextMeshProUGUI>().text = "My IP Address: " + _GetDeviceIpAddress();
         }
 
         void Start()
         {
-            IPAdressInfo.GetComponentInChildren<TextMeshProUGUI>().text = "My IP Address: " + _GetDeviceIpAddress();
-            backButtonColor = backButton.GetComponent<Image>().color;
+            // backButtonColor = backButton.GetComponent<Image>().color;
         }
 
         // Lobby mode
@@ -194,6 +194,7 @@ namespace Love.Core
             string ipAddress = "Unknown";
 #if UNITY_2018_2_OR_NEWER
             string hostName = Dns.GetHostName();
+            // Debug.Log("hostname: " + hostName);
             IPAddress[] addresses = Dns.GetHostAddresses(hostName);
 
             foreach (IPAddress address in addresses)

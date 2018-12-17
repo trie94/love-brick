@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
-  showGUI: 0
+  showGUI: 1
   offsetX: 0
   offsetY: 0
 --- !u!114 &114508568325400808
@@ -84,7 +84,6 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12, type: 2}
-  - {fileID: 1379870097045792, guid: 931e13d1b89f7bc408894a99b84032e4, type: 2}
   - {fileID: 1237054700287142, guid: ad2172e31f9c68645953cda8bead7dca, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
@@ -141,3 +140,4 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  cloudAnchorController: {fileID: 0}
