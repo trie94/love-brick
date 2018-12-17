@@ -36,9 +36,18 @@
             AssignColor();
         }
 
+        void OnDestroy()
+        {
+            if (this == s_localPlayer)
+            {
+                s_localPlayer = null;
+            }
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
+            Debug.Log("client start");
         }
 
         void AssignColor()
@@ -53,12 +62,9 @@
             }
         }
 
-        void OnDestroy()
+        void SpawnBlocks()
         {
-            if (this == s_localPlayer)
-            {
-                s_localPlayer = null;
-            }
+            // spawn blocks with client authority
         }
     }
 

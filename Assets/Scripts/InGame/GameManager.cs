@@ -71,9 +71,7 @@
         {
             // get the anchor and spawn objects(wall and the blocks)
             cloudAnchor = anchor;
-            GameObject wall = Instantiate(wallPrefab, anchor.transform.position + new Vector3(0, wallHeight, 0), Quaternion.identity);
-
-            // GameObject wall = Instantiate(wallPrefab);
+            GameObject wall = Instantiate(wallPrefab, new Vector3(0, wallHeight, 0), Quaternion.identity);
             NetworkServer.Spawn(wall);
         }
 

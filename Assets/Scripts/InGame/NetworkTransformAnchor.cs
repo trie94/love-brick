@@ -135,8 +135,8 @@ namespace Love.Core
 
         void Awake()
         {
-            m_PrevPosition = transform.position;
-            m_PrevRotation = transform.rotation;
+            m_PrevPosition = m_TargetSyncPosition = transform.position;
+            m_PrevRotation = m_TargetSyncRotation3D = transform.rotation;
 
             // cache these to avoid per-frame allocations.
             if (localPlayerAuthority)
