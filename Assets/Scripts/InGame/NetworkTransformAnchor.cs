@@ -38,16 +38,16 @@ namespace Love.Core
         public delegate bool ClientMoveCallback3D(ref Vector3 position, ref Vector3 velocity, ref Quaternion rotation);
         public delegate bool ClientMoveCallback2D(ref Vector2 position, ref Vector2 velocity, ref float rotation);
 
-        [SerializeField] TransformSyncMode  m_TransformSyncMode = TransformSyncMode.SyncNone;
-        [SerializeField] float              m_SendInterval = 0.1f;
-        [SerializeField] AxisSyncMode       m_SyncRotationAxis = AxisSyncMode.AxisXYZ;
+        [SerializeField] TransformSyncMode m_TransformSyncMode = TransformSyncMode.SyncNone;
+        [SerializeField] float m_SendInterval = 0.1f;
+        [SerializeField] AxisSyncMode m_SyncRotationAxis = AxisSyncMode.AxisXYZ;
         [SerializeField] CompressionSyncMode m_RotationSyncCompression = CompressionSyncMode.None;
-        [SerializeField] bool               m_SyncSpin;
-        [SerializeField] float              m_MovementTheshold = 0.001f;
+        [SerializeField] bool m_SyncSpin;
+        [SerializeField] float m_MovementTheshold = 0.001f;
 
-        [SerializeField] float              m_SnapThreshold = 5.0f;
-        [SerializeField] float              m_InterpolateRotation = 1.0f;
-        [SerializeField] float              m_InterpolateMovement = 1.0f;
+        [SerializeField] float m_SnapThreshold = 5.0f;
+        [SerializeField] float m_InterpolateRotation = 1.0f;
+        [SerializeField] float m_InterpolateMovement = 1.0f;
         [SerializeField] ClientMoveCallback3D m_ClientMoveCallback3D;
         [SerializeField] ClientMoveCallback2D m_ClientMoveCallback2D;
 
@@ -55,43 +55,43 @@ namespace Love.Core
 
         // movement smoothing
 
-        Vector3         m_TargetSyncPosition;
+        Vector3 m_TargetSyncPosition;
 
-        Quaternion      m_TargetSyncRotation3D;
+        Quaternion m_TargetSyncRotation3D;
 
-        float           m_LastClientSyncTime; // last time client received a sync from server
-        float           m_LastClientSendTime; // last time client send a sync to server
+        float m_LastClientSyncTime; // last time client received a sync from server
+        float m_LastClientSendTime; // last time client send a sync to server
 
-        Vector3         m_PrevPosition;
-        Quaternion      m_PrevRotation;
+        Vector3 m_PrevPosition;
+        Quaternion m_PrevRotation;
 
-        const float     k_LocalMovementThreshold = 0.00001f;
-        const float     k_LocalRotationThreshold = 0.00001f;
-        const float     k_LocalVelocityThreshold = 0.00001f;
-        const float     k_MoveAheadRatio = 0.1f;
+        const float k_LocalMovementThreshold = 0.00001f;
+        const float k_LocalRotationThreshold = 0.00001f;
+        const float k_LocalVelocityThreshold = 0.00001f;
+        const float k_MoveAheadRatio = 0.1f;
 
-        NetworkWriter   m_LocalTransformWriter;
+        NetworkWriter m_LocalTransformWriter;
 
         // settings
 
-        public TransformSyncMode    transformSyncMode { get { return m_TransformSyncMode; } set { m_TransformSyncMode = value; } }
-        public float                sendInterval { get { return m_SendInterval; } set { m_SendInterval = value; } }
-        public AxisSyncMode         syncRotationAxis { get { return m_SyncRotationAxis; } set { m_SyncRotationAxis = value; } }
-        public CompressionSyncMode  rotationSyncCompression { get { return m_RotationSyncCompression; } set { m_RotationSyncCompression = value; } }
-        public bool                 syncSpin { get { return m_SyncSpin; }  set { m_SyncSpin = value; } }
-        public float                movementTheshold { get { return m_MovementTheshold; } set { m_MovementTheshold = value; } }
-        public float                snapThreshold { get { return m_SnapThreshold; } set { m_SnapThreshold = value; } }
-        public float                interpolateRotation { get { return m_InterpolateRotation; } set { m_InterpolateRotation = value; } }
-        public float                interpolateMovement { get { return m_InterpolateMovement; } set { m_InterpolateMovement = value; } }
+        public TransformSyncMode transformSyncMode { get { return m_TransformSyncMode; } set { m_TransformSyncMode = value; } }
+        public float sendInterval { get { return m_SendInterval; } set { m_SendInterval = value; } }
+        public AxisSyncMode syncRotationAxis { get { return m_SyncRotationAxis; } set { m_SyncRotationAxis = value; } }
+        public CompressionSyncMode rotationSyncCompression { get { return m_RotationSyncCompression; } set { m_RotationSyncCompression = value; } }
+        public bool syncSpin { get { return m_SyncSpin; } set { m_SyncSpin = value; } }
+        public float movementTheshold { get { return m_MovementTheshold; } set { m_MovementTheshold = value; } }
+        public float snapThreshold { get { return m_SnapThreshold; } set { m_SnapThreshold = value; } }
+        public float interpolateRotation { get { return m_InterpolateRotation; } set { m_InterpolateRotation = value; } }
+        public float interpolateMovement { get { return m_InterpolateMovement; } set { m_InterpolateMovement = value; } }
         public ClientMoveCallback3D clientMoveCallback3D { get { return m_ClientMoveCallback3D; } set { m_ClientMoveCallback3D = value; } }
         public ClientMoveCallback2D clientMoveCallback2D { get { return m_ClientMoveCallback2D; } set { m_ClientMoveCallback2D = value; } }
 
         // runtime data
 
-        public float                lastSyncTime { get { return m_LastClientSyncTime; } }
-        public Vector3              targetSyncPosition { get { return m_TargetSyncPosition; } }
-        public Quaternion           targetSyncRotation3D { get { return m_TargetSyncRotation3D; } }
-        public bool                 grounded { get { return m_Grounded; } set { m_Grounded = value; } }
+        public float lastSyncTime { get { return m_LastClientSyncTime; } }
+        public Vector3 targetSyncPosition { get { return m_TargetSyncPosition; } }
+        public Quaternion targetSyncRotation3D { get { return m_TargetSyncRotation3D; } }
+        public bool grounded { get { return m_Grounded; } set { m_Grounded = value; } }
 
         public Transform anchor;
 
@@ -129,7 +129,7 @@ namespace Love.Core
 
             if (m_InterpolateMovement < 0)
             {
-                m_InterpolateMovement  = 0.01f;
+                m_InterpolateMovement = 0.01f;
             }
         }
 
@@ -183,14 +183,14 @@ namespace Love.Core
             switch (transformSyncMode)
             {
                 case TransformSyncMode.SyncNone:
-                {
-                    return false;
-                }
+                    {
+                        return false;
+                    }
                 case TransformSyncMode.SyncTransform:
-                {
-                    SerializeModeTransform(writer);
-                    break;
-                }
+                    {
+                        SerializeModeTransform(writer);
+                        break;
+                    }
             }
             return true;
         }
@@ -237,14 +237,14 @@ namespace Love.Core
             switch (transformSyncMode)
             {
                 case TransformSyncMode.SyncNone:
-                {
-                    return;
-                }
+                    {
+                        return;
+                    }
                 case TransformSyncMode.SyncTransform:
-                {
-                    UnserializeModeTransform(reader, initialState);
-                    break;
-                }
+                    {
+                        UnserializeModeTransform(reader, initialState);
+                        break;
+                    }
             }
             m_LastClientSyncTime = Time.time;
         }
@@ -257,7 +257,7 @@ namespace Love.Core
                 // otherwise the NetworkReader stream will still contain that data for the next component.
 
                 // position
-                reader.ReadVector3();
+                var temp = reader.ReadVector3();
 
                 if (syncRotationAxis != AxisSyncMode.None)
                 {
@@ -279,7 +279,7 @@ namespace Love.Core
                 if (m_ClientMoveCallback3D(ref pos, ref vel, ref rot))
                 {
                     m_TargetSyncPosition = pos;
-                    
+
                     // transform.position = anchor.TransformPoint(pos);
                     if (syncRotationAxis != AxisSyncMode.None)
                     {
@@ -381,13 +381,13 @@ namespace Love.Core
             switch (transformSyncMode)
             {
                 case TransformSyncMode.SyncNone:
-                {
-                    return;
-                }
+                    {
+                        return;
+                    }
                 case TransformSyncMode.SyncTransform:
-                {
-                    return;
-                }
+                    {
+                        return;
+                    }
             }
         }
 
@@ -473,14 +473,14 @@ namespace Love.Core
             switch (transformSyncMode)
             {
                 case TransformSyncMode.SyncNone:
-                {
-                    return;
-                }
+                    {
+                        return;
+                    }
                 case TransformSyncMode.SyncTransform:
-                {
-                    SerializeModeTransform(m_LocalTransformWriter);
-                    break;
-                }
+                    {
+                        SerializeModeTransform(m_LocalTransformWriter);
+                        break;
+                    }
             }
 
             {
@@ -492,8 +492,8 @@ namespace Love.Core
 
 #if UNITY_EDITOR
             // UnityEditor.NetworkDetailStats.IncrementStat(
-                // UnityEditor.NetworkDetailStats.NetworkDirection.Outgoing,
-                // MsgType.LocalPlayerTransform, "6:LocalPlayerTransform", 1);
+            // UnityEditor.NetworkDetailStats.NetworkDirection.Outgoing,
+            // MsgType.LocalPlayerTransform, "6:LocalPlayerTransform", 1);
 #endif
             ClientScene.readyConnection.SendWriter(m_LocalTransformWriter, GetNetworkChannel());
         }
@@ -504,8 +504,8 @@ namespace Love.Core
 
 #if UNITY_EDITOR
             // UnityEditor.NetworkDetailStats.IncrementStat(
-                // UnityEditor.NetworkDetailStats.NetworkDirection.Incoming,
-                // MsgType.LocalPlayerTransform, "6:LocalPlayerTransform", 1);
+            // UnityEditor.NetworkDetailStats.NetworkDirection.Incoming,
+            // MsgType.LocalPlayerTransform, "6:LocalPlayerTransform", 1);
 #endif
 
             GameObject foundObj = NetworkServer.FindLocalObject(netId);
@@ -536,14 +536,14 @@ namespace Love.Core
                 switch (foundSync.transformSyncMode)
                 {
                     case TransformSyncMode.SyncNone:
-                    {
-                        return;
-                    }
+                        {
+                            return;
+                        }
                     case TransformSyncMode.SyncTransform:
-                    {
-                        foundSync.UnserializeModeTransform(netMsg.reader, false);
-                        break;
-                    }
+                        {
+                            foundSync.UnserializeModeTransform(netMsg.reader, false);
+                            break;
+                        }
                 }
                 foundSync.m_LastClientSyncTime = Time.time;
                 return;
@@ -559,20 +559,20 @@ namespace Love.Core
             switch (compression)
             {
                 case CompressionSyncMode.None:
-                {
-                    writer.Write(angle);
-                    break;
-                }
+                    {
+                        writer.Write(angle);
+                        break;
+                    }
                 case CompressionSyncMode.Low:
-                {
-                    writer.Write((short)angle);
-                    break;
-                }
+                    {
+                        writer.Write((short)angle);
+                        break;
+                    }
                 case CompressionSyncMode.High:
-                {
-                    writer.Write((short)angle);
-                    break;
-                }
+                    {
+                        writer.Write((short)angle);
+                        break;
+                    }
             }
         }
 
@@ -581,17 +581,17 @@ namespace Love.Core
             switch (compression)
             {
                 case CompressionSyncMode.None:
-                {
-                    return reader.ReadSingle();
-                }
+                    {
+                        return reader.ReadSingle();
+                    }
                 case CompressionSyncMode.Low:
-                {
-                    return reader.ReadInt16();
-                }
+                    {
+                        return reader.ReadInt16();
+                    }
                 case CompressionSyncMode.High:
-                {
-                    return reader.ReadInt16();
-                }
+                    {
+                        return reader.ReadInt16();
+                    }
             }
             return 0;
         }
