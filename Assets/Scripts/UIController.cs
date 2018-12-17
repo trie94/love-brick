@@ -79,7 +79,6 @@ namespace Love.Core
             background.SetActive(true);
             createRoomButton.SetActive(true);
             joinRoomButton.SetActive(true);
-            // scoreBoard.SetActive(false);
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
             scoreBoard.SetActive(false);
@@ -241,15 +240,14 @@ namespace Love.Core
             joinRoomButton.SetActive(false);
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
-            scoreBoard.SetActive(true);
             snackbar.SetActive(false);
+            scoreBoard.SetActive(true);
         }
 
         public void ShowEndUI()
         {
             // display score and replay button
             background.SetActive(false);
-            scoreBoard.SetActive(true);
             // score active and replay active
             Debug.Log("display score and replay button");
         }
@@ -266,6 +264,11 @@ namespace Love.Core
             Debug.Log("Get client(player2) color");
             HostColor.SetActive(false);
             ClientColor.SetActive(true);
+        }
+
+        public void SetSnackbarText(string text)
+        {
+            SnackbarText.text = text;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace Love.Core
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -76,9 +75,8 @@
             // GameObject wall = Instantiate(wallPrefab, cloudAnchor.transform.position + new Vector3(0, wallHeight, 0), cloudAnchor.transform.rotation);
             // NetworkServer.Spawn(wall);
 
-            GameObject testBlock = Instantiate(block1);
-            NetworkServer.Spawn(testBlock);
-            Debug.Log("the anchor position: " + cloudAnchor.transform.position);
+            GameObject block = Instantiate(block1, anchor.transform.position, Random.rotation);
+            NetworkServer.Spawn(block);
         }
 
         void OnStart()
