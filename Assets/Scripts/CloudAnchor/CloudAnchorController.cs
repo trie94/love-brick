@@ -32,9 +32,6 @@
 
         const string k_LoopbackIpAddress = "127.0.0.1";
 
-        [SerializeField] float rotation = 180.0f;
-        [SerializeField] float height = 1.2f;
-
         ARKitHelper m_ARKit = new ARKitHelper();
 
         // True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
@@ -64,12 +61,11 @@
         public delegate void AnchorSavedCallback(Transform anchor);
         public event AnchorSavedCallback OnAnchorSaved;
 
-
-        // void Awake()
-        // {
-        //     NetworkServer.Reset();
-        //     NetworkServer.ResetConnectionStats();
-        // }
+        void Awake()
+        {
+            NetworkServer.Reset();
+            NetworkServer.ResetConnectionStats();
+        }
 
         void Start()
         {
@@ -92,16 +88,6 @@
         void Update()
         {
             _UpdateApplicationLifecycle();
-
-            if (m_CurrentMode != ApplicationMode.Hosting && NetworkManager.singleton.IsClientConnected() && !ClientScene.ready)
-            {
-                ClientScene.Ready(NetworkManager.singleton.client.connection);
-
-                if (ClientScene.localPlayers.Count == 0)
-                {
-                    ClientScene.AddPlayer(0);
-                }
-            }
 
             if (m_CurrentMode != ApplicationMode.Hosting || m_LastPlacedAnchor != null)
             {
@@ -145,7 +131,7 @@
         {
             // host the server
             NetworkManager.singleton.StartHost();
-
+            
             if (m_CurrentMode == ApplicationMode.Hosting)
             {
                 m_CurrentMode = ApplicationMode.Ready;
@@ -232,9 +218,9 @@
                 }
 
                 RoomSharingServer.SaveCloudAnchorToRoom(m_CurrentRoom, result.Anchor);
-                if (OnAnchorSaved != null)
+                if(OnAnchorSaved != null)
                 {
-                    OnAnchorSaved(result.Anchor.transform);
+                    OnAnchorSaved(anchor.transform);
                 }
                 UIController.Instance.ShowHostingModeBegin("cloud anchor is saved, tap on the screen to move the wall to a different location.");
                 UIController.Instance.ShowHostReadyUI(); // for host
@@ -254,12 +240,6 @@
                 }
 
                 m_LastResolvedAnchor = result.Anchor;
-                // GameObject wall = Instantiate(WallPrefab, result.Anchor.transform.position + new Vector3(0, height, 0),
-                // result.Anchor.transform.rotation);
-                // GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
-                // GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
-                // light1.transform.Rotate(0, 180, 0);
-
                 UIController.Instance.ShowResolvingModeSuccess();
             }));
         }

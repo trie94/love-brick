@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
-using UnityEngine.Networking;
 
-namespace Love.Core
+namespace UnityEngine.Networking
 {
     [DisallowMultipleComponent]
+    [AddComponentMenu("Network/NetworkTransform")]
     public class NetworkTransformAnchor : NetworkBehaviour
     {
         public enum TransformSyncMode
@@ -56,14 +56,23 @@ namespace Love.Core
         // movement smoothing
 
         Vector3         m_TargetSyncPosition;
+        Vector3         m_TargetSyncVelocity;
+
+        Vector3         m_FixedPosDiff;
 
         Quaternion      m_TargetSyncRotation3D;
+        Vector3         m_TargetSyncAngularVelocity3D;
+
+        float           m_TargetSyncRotation2D;
+        float           m_TargetSyncAngularVelocity2D;
 
         float           m_LastClientSyncTime; // last time client received a sync from server
         float           m_LastClientSendTime; // last time client send a sync to server
 
         Vector3         m_PrevPosition;
         Quaternion      m_PrevRotation;
+        float           m_PrevRotation2D;
+        float           m_PrevVelocity;
 
         const float     k_LocalMovementThreshold = 0.00001f;
         const float     k_LocalRotationThreshold = 0.00001f;
@@ -90,7 +99,9 @@ namespace Love.Core
 
         public float                lastSyncTime { get { return m_LastClientSyncTime; } }
         public Vector3              targetSyncPosition { get { return m_TargetSyncPosition; } }
+        public Vector3              targetSyncVelocity { get { return m_TargetSyncVelocity; } }
         public Quaternion           targetSyncRotation3D { get { return m_TargetSyncRotation3D; } }
+        public float                targetSyncRotation2D { get { return m_TargetSyncRotation2D; } }
         public bool                 grounded { get { return m_Grounded; } set { m_Grounded = value; } }
 
         public Transform anchor;
@@ -137,6 +148,7 @@ namespace Love.Core
         {
             m_PrevPosition = transform.position;
             m_PrevRotation = transform.rotation;
+            m_PrevVelocity = 0;
 
             // cache these to avoid per-frame allocations.
             if (localPlayerAuthority)
@@ -153,7 +165,7 @@ namespace Love.Core
 
             if (!s_registered)
             {
-                NetworkServer.RegisterHandler(RoomSharingMsgType.NetworkTransformAnchor, HandleTransform);
+                NetworkServer.RegisterHandler(Love.Core.RoomSharingMsgType.NetworkTransformAnchor, HandleTransform);
                 s_registered = true;
             }
         }
@@ -212,6 +224,7 @@ namespace Love.Core
 
             m_PrevPosition = transform.position;
             m_PrevRotation = transform.rotation;
+            m_PrevVelocity = 0;
         }
 
         public override void OnDeserialize(NetworkReader reader, bool initialState)
@@ -278,13 +291,10 @@ namespace Love.Core
 
                 if (m_ClientMoveCallback3D(ref pos, ref vel, ref rot))
                 {
-                    m_TargetSyncPosition = pos;
-                    
-                    // transform.position = anchor.TransformPoint(pos);
+                    transform.position = anchor.TransformPoint(pos);
                     if (syncRotationAxis != AxisSyncMode.None)
                     {
-                        m_TargetSyncRotation3D = rot;
-                        // transform.rotation = anchor.rotation * rot;
+                        transform.rotation = anchor.rotation * rot;
                     }
                 }
                 else
@@ -296,16 +306,14 @@ namespace Love.Core
             else
             {
                 // position
-                var pos = m_TargetSyncPosition = reader.ReadVector3();
-                // transform.position = anchor.TransformPoint(pos);
+                transform.position = anchor.TransformPoint(reader.ReadVector3());
 
                 // no velocity
 
                 // rotation
                 if (syncRotationAxis != AxisSyncMode.None)
                 {
-                    var rot = m_TargetSyncRotation3D = UnserializeRotation3D(reader, syncRotationAxis, rotationSyncCompression);
-                    // transform.rotation = anchor.rotation * rot;
+                    transform.rotation = anchor.rotation * UnserializeRotation3D(reader, syncRotationAxis, rotationSyncCompression);
                 }
 
                 // no spin
@@ -395,34 +403,34 @@ namespace Love.Core
 
         void Update()
         {
+            if (!hasAuthority)
+                return;
+
+            if (!localPlayerAuthority)
+                return;
+
+            if (NetworkServer.active)
+                return;
+
             if (anchor == null)
             {
                 var anchorObj = FindObjectOfType<GoogleARCore.CrossPlatform.XPAnchor>();
                 if (anchorObj != null)
                 {
                     anchor = anchorObj.transform;
-                    transform.position = anchor.TransformPoint(m_TargetSyncPosition);
-                    transform.rotation = anchor.rotation * m_TargetSyncRotation3D;
-                }
-                else
-                {
-                    Debug.LogWarning("Cannot find XPAnchor");
-                    return;
                 }
             }
 
-            if (hasAuthority && localPlayerAuthority && !NetworkServer.active)
+            if (anchor == null)
             {
-                if (Time.time - m_LastClientSendTime > GetNetworkSendInterval())
-                {
-                    SendTransform();
-                    m_LastClientSendTime = Time.time;
-                }
+                Debug.LogWarning("Cannot find XPAnchor");
+                return;
             }
-            else if (!isServer)
+
+            if (Time.time - m_LastClientSendTime > GetNetworkSendInterval())
             {
-                transform.position = Vector3.Lerp(transform.position, anchor.TransformPoint(m_TargetSyncPosition), m_InterpolateMovement);
-                transform.rotation = Quaternion.Slerp(transform.rotation, anchor.rotation * m_TargetSyncRotation3D, m_InterpolateRotation);
+                SendTransform();
+                m_LastClientSendTime = Time.time;
             }
         }
 
@@ -467,7 +475,7 @@ namespace Love.Core
                 return;
             }
 
-            m_LocalTransformWriter.StartMessage(RoomSharingMsgType.NetworkTransformAnchor);
+            m_LocalTransformWriter.StartMessage(Love.Core.RoomSharingMsgType.NetworkTransformAnchor);
             m_LocalTransformWriter.Write(netId);
 
             switch (transformSyncMode)

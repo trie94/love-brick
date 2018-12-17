@@ -1,5 +1,6 @@
 ﻿namespace Love.Core
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -16,10 +17,8 @@
         [SerializeField] CloudAnchorController cloudAnchorController;
 
         [Header("GameObjects")]
-        [SerializeField] GameObject lightPrefab;
-        [SerializeField] GameObject block1;
         [SerializeField] GameObject wallPrefab;
-        [SerializeField] float lightDistance = .3f;
+        [SerializeField] GameObject block1;
         [SerializeField] float wallHeight = 1f;
 
         static GameManager s_instance;
@@ -74,19 +73,12 @@
         {
             // get the anchor and spawn objects(wall and the blocks)
             cloudAnchor = anchor;
-            GameObject wall = Instantiate(wallPrefab, cloudAnchor.transform.position + new Vector3(0, wallHeight, 0), cloudAnchor.transform.rotation);
-            GameObject light1 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, lightDistance), Quaternion.identity);
-            GameObject light2 = Instantiate(lightPrefab, wall.transform.position + new Vector3(0, 0, -lightDistance), Quaternion.identity);
-            light1.transform.Rotate(0, 180, 0);
+            // GameObject wall = Instantiate(wallPrefab, cloudAnchor.transform.position + new Vector3(0, wallHeight, 0), cloudAnchor.transform.rotation);
+            // NetworkServer.Spawn(wall);
 
-            Debug.Log("spawn wall group");
-            NetworkServer.Spawn(wall);
-            NetworkServer.Spawn(light1);
-            NetworkServer.Spawn(light2);
-
-            // GameObject testBlock = Instantiate(block1, cloudAnchor.transform.position, Random.rotation);
-            // NetworkServer.Spawn(testBlock);
-            // Debug.Log("the anchor position: " + cloudAnchor.transform.position);
+            GameObject testBlock = Instantiate(block1);
+            NetworkServer.Spawn(testBlock);
+            Debug.Log("the anchor position: " + cloudAnchor.transform.position);
         }
 
         void OnStart()
