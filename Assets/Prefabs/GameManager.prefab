@@ -87,5 +87,6 @@ MonoBehaviour:
   cloudAnchorController: {fileID: 0}
   wallPrefab: {fileID: 1866149333863800, guid: 9291973144ebefb42ad22de7093cbe12, type: 2}
   block1: {fileID: 1237054700287142, guid: ad2172e31f9c68645953cda8bead7dca, type: 2}
+  block2: {fileID: 1147326554190294, guid: 0c3460d470fc53241b194b0ee3cd49d8, type: 2}
   wallHeight: 1
   cloudAnchor: {fileID: 0}

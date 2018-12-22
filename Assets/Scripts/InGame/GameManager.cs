@@ -17,6 +17,7 @@
         [Header("GameObjects")]
         [SerializeField] GameObject wallPrefab;
         [SerializeField] GameObject block1;
+        [SerializeField] GameObject block2;
         [SerializeField] float wallHeight = 1f;
 
         static GameManager s_instance;
@@ -43,6 +44,7 @@
         }
 
         GameMode gameStatus = GameMode.Lobby;
+        bool isSpawned;
 
         #region Unity methods
 
@@ -71,8 +73,11 @@
         {
             // get the anchor and spawn objects(wall and the blocks)
             cloudAnchor = anchor;
-            GameObject wall = Instantiate(wallPrefab, new Vector3(0, wallHeight, 0), Quaternion.identity);
-            NetworkServer.Spawn(wall);
+            // GameObject wall = Instantiate(wallPrefab, anchor.transform.position + new Vector3(0, wallHeight, 0), Quaternion.identity);
+            // NetworkServer.Spawn(wall);
+
+            GameObject anchorPos = Instantiate(block1, anchor.position, Quaternion.identity);
+            NetworkServer.Spawn(anchorPos);
         }
 
         void OnStart()

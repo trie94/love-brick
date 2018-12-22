@@ -135,8 +135,19 @@ namespace Love.Core
 
         void Awake()
         {
-            m_PrevPosition = m_TargetSyncPosition = transform.position;
-            m_PrevRotation = m_TargetSyncRotation3D = transform.rotation;
+            // if (anchor == null)
+            // {
+            //     var anchorObj = FindObjectOfType<GoogleARCore.CrossPlatform.XPAnchor>();
+            //     if (anchorObj != null)
+            //     {
+            //         anchor = anchorObj.transform;
+            //         m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
+            //         m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
+            //         Debug.Log("On awake/ anchor: " + anchor.transform.position + " / target pos: " + m_TargetSyncPosition);
+            //     }
+            // }
+            m_PrevPosition = transform.position;
+            m_PrevRotation = transform.rotation;
 
             // cache these to avoid per-frame allocations.
             if (localPlayerAuthority)
@@ -165,9 +176,10 @@ namespace Love.Core
                 return false;
             }
 
-            if (initialState)
+            if (initialState)   // force update
             {
                 // always write initial state, no dirty bits
+                writer.WritePackedUInt32(0);
             }
             else if (syncVarDirtyBits == 0)
             {
@@ -232,6 +244,10 @@ namespace Love.Core
                 {
                     anchor = anchorObj.transform;
                 }
+                else
+                {
+                    return;
+                }
             }
 
             switch (transformSyncMode)
@@ -251,7 +267,7 @@ namespace Love.Core
 
         void UnserializeModeTransform(NetworkReader reader, bool initialState)
         {
-            if (hasAuthority || anchor == null)
+            if (hasAuthority)
             {
                 // this component must read the data that the server wrote, even if it ignores it.
                 // otherwise the NetworkReader stream will still contain that data for the next component.
@@ -296,7 +312,8 @@ namespace Love.Core
             else
             {
                 // position
-                var pos = m_TargetSyncPosition = reader.ReadVector3();
+                var pos = reader.ReadVector3();
+                m_TargetSyncPosition = anchor.TransformPoint(pos);
                 // transform.position = anchor.TransformPoint(pos);
 
                 // no velocity
@@ -304,7 +321,8 @@ namespace Love.Core
                 // rotation
                 if (syncRotationAxis != AxisSyncMode.None)
                 {
-                    var rot = m_TargetSyncRotation3D = UnserializeRotation3D(reader, syncRotationAxis, rotationSyncCompression);
+                    var rot = UnserializeRotation3D(reader, syncRotationAxis, rotationSyncCompression);
+                    m_TargetSyncRotation3D = anchor.rotation * rot;
                     // transform.rotation = anchor.rotation * rot;
                 }
 
@@ -341,15 +359,15 @@ namespace Love.Core
             if (GetNetworkSendInterval() == 0)
                 return;
 
-            float distance = (transform.position - m_PrevPosition).magnitude;
-            if (distance < movementTheshold)
-            {
-                distance = Quaternion.Angle(m_PrevRotation, transform.rotation);
-                if (distance < movementTheshold)
-                {
-                    return;
-                }
-            }
+            // float distance = (transform.position - m_PrevPosition).magnitude;
+            // if (distance < movementTheshold)
+            // {
+            //     distance = Quaternion.Angle(m_PrevRotation, transform.rotation);
+            //     if (distance < movementTheshold)
+            //     {
+            //         return;
+            //     }
+            // }
 
             // This will cause transform to be sent
             SetDirtyBit(1);
@@ -401,8 +419,6 @@ namespace Love.Core
                 if (anchorObj != null)
                 {
                     anchor = anchorObj.transform;
-                    transform.position = anchor.TransformPoint(m_TargetSyncPosition);
-                    transform.rotation = anchor.rotation * m_TargetSyncRotation3D;
                 }
                 else
                 {
@@ -421,8 +437,8 @@ namespace Love.Core
             }
             else if (!isServer)
             {
-                transform.position = Vector3.Lerp(transform.position, anchor.TransformPoint(m_TargetSyncPosition), m_InterpolateMovement);
-                transform.rotation = Quaternion.Slerp(transform.rotation, anchor.rotation * m_TargetSyncRotation3D, m_InterpolateRotation);
+                transform.position = Vector3.Lerp(transform.position, m_TargetSyncPosition, m_InterpolateMovement);
+                transform.rotation = Quaternion.Slerp(transform.rotation, m_TargetSyncRotation3D, m_InterpolateRotation);
             }
         }
 
@@ -431,9 +447,7 @@ namespace Love.Core
             float diff = 0;
 
             // check if position has changed
-            {
-                diff = (transform.position - m_PrevPosition).magnitude;
-            }
+            diff = (transform.position - m_PrevPosition).magnitude;
 
             if (diff > k_LocalMovementThreshold)
             {
@@ -441,9 +455,8 @@ namespace Love.Core
             }
 
             // check if rotation has changed
-            {
-                diff = Quaternion.Angle(transform.rotation, m_PrevRotation);
-            }
+            diff = Quaternion.Angle(transform.rotation, m_PrevRotation);
+
             if (diff > k_LocalRotationThreshold)
             {
                 return true;
@@ -454,7 +467,6 @@ namespace Love.Core
             {
                 return true;
             }
-
 
             return false;
         }
