@@ -54,10 +54,6 @@
             Resolving,
         }
 
-        [SerializeField] float totalTime = 60f;
-        string min;
-        string sec;
-
         public delegate void AnchorSavedCallback(Transform anchor);
         public event AnchorSavedCallback OnAnchorSaved;
 
@@ -349,34 +345,6 @@
         public void ResetStatus()
         {
             _ResetStatus();
-        }
-
-        public void StartGame()
-        {
-            UIController.Instance.StartGameUI();
-            StartCoroutine(CountDown());
-            Debug.Log("on count down");
-        }
-
-        IEnumerator CountDown()
-        {
-            while (totalTime > 0f)
-            {
-                totalTime--;
-                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
-                sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-                UIController.Instance.timer.text = (min + ":" + sec);
-                yield return new WaitForSeconds(1f);
-
-                if (totalTime <= 0f)
-                {
-                    // final
-                    UIController.Instance.timer.text = "00:00";
-                    Debug.Log("game end");
-                    UIController.Instance.ShowEndUI();
-                    yield break;
-                }
-            }
         }
     }
 }

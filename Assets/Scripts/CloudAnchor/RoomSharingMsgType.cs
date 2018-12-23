@@ -17,8 +17,8 @@ namespace Love.Core
         /// </summary>
         public const short AnchorIdFromRoomResponse = MsgType.Highest + 2;
 
-        // custom
-        public const short MyResponse = MsgType.Highest + 3;
+        // start game
+        public const short StartMessage = MsgType.Highest + 3;
 
         // network transform anchor message type
         public const short NetworkTransformAnchor = MsgType.Highest + 4;

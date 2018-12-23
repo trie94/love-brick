@@ -67,5 +67,4 @@
             // spawn blocks with client authority
         }
     }
-
 }
