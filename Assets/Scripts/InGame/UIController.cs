@@ -241,7 +241,7 @@ namespace Love.Core
             joinRoomButton.SetActive(false);
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
-            snackbar.SetActive(false);
+            // snackbar.SetActive(false);
             scoreBoard.SetActive(true);
         }
 

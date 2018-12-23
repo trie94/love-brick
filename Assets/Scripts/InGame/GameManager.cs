@@ -37,9 +37,13 @@
         }
 
         public Transform cloudAnchor;
+        public bool isPlaying;
 
         public delegate void GameStartCallback();
         [SyncEvent] public event GameStartCallback EventOnGameStart;
+
+        public delegate void ClientJoinCallback();
+        public event ClientJoinCallback OnClientJoin;
 
         #region Unity methods
 
@@ -80,9 +84,16 @@
                 float xRange = Random.Range(-2f, 2f);
                 float yRange = Random.Range(0, 1.5f);
                 float zRange = Random.Range(-2f, 2f);
+                int index = i % blocks.Length;
 
-                GameObject block = Instantiate(blocks[i % blocks.Length], anchor.position + new Vector3(xRange, yRange, zRange), Random.rotation);
+                GameObject block = Instantiate(blocks[index], anchor.position + new Vector3(xRange, yRange, zRange), Random.rotation);
                 NetworkServer.Spawn(block);
+            }
+
+            if (isServer)
+            {
+                PlayerBehavior.LocalPlayer.GetColorBlocks();
+                Debug.Log("host/ getcolorblocks");
             }
         }
 
@@ -111,12 +122,15 @@
         void OnGameStart()
         {
             Debug.Log("game has been started! start timer");
+            UIController.Instance.SetSnackbarText("game has been started! start timer");
             StartCoroutine(CountDown());
+            isPlaying = true;
         }
 
         void EndGame()
         {
             Debug.Log("game over!");
+            isPlaying = false;
             UIController.Instance.ShowEndUI();
         }
     }
