@@ -83,8 +83,8 @@
                     //     CmdRequestToAddScore();
                     // }
                     playerState = PlayerStates.release;
-                    currentBlock.OnRelease();
                     UIController.Instance.SetSnackbarText("release! " + currentBlock.gameObject);
+                    currentBlock.OnRelease();
                     currentBlock = null;
                     Debug.Log("release");
                     return;
@@ -117,6 +117,10 @@
                 }
                 else if (playerState != PlayerStates.idle && playerState != PlayerStates.grab)   // not hitting anything
                 {
+                    if (currentBlock)
+                    {
+                        currentBlock.OnIdle();
+                    }
                     currentBlock = null;
                     playerState = PlayerStates.idle;
                     UIController.Instance.SetSnackbarText("idling! not hovering anything or non-interactable block!");

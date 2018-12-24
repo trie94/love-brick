@@ -133,8 +133,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockColor: 2
   blockState: 0
-  blinkSpeed: 0
-  shiverSpeed: 0
+  glowLerpSpeed: 5
+  shiverLerpSpeed: 10
   hoverSound: {fileID: 0}
 --- !u!114 &114833811983271976
 MonoBehaviour:
