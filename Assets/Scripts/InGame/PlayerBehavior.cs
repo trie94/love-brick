@@ -25,11 +25,12 @@
 
         public enum PlayerStates
         {
-            idle, hover, grab, release
+            idle, hover, grab, release, match
         }
 
         PlayerStates playerState = PlayerStates.idle;
-        GameObject currentBlock;
+        BlockBehavior currentBlock;
+        BlockBehavior currentBlockBehavior;
 
         [SerializeField] float hoverDistance = 0.5f;
 
@@ -74,9 +75,17 @@
                 // release
                 if (playerState == PlayerStates.grab && !isTouching)
                 {
+                    // if the slot is close enough, match the block with the slot
+                    // if (currentBlock.isMatchable)
+                    // {
+                    //     playerState = PlayerStates.match;
+                    //     currentBlock.OnMatch();
+                    //     CmdRequestToAddScore();
+                    // }
                     playerState = PlayerStates.release;
+                    currentBlock.OnRelease();
+                    UIController.Instance.SetSnackbarText("release! " + currentBlock.gameObject);
                     currentBlock = null;
-                    UIController.Instance.SetSnackbarText("release! " + currentBlock);
                     Debug.Log("release");
                     return;
                 }
@@ -85,7 +94,8 @@
                 if (playerState == PlayerStates.hover && isTouching)
                 {
                     playerState = PlayerStates.grab;
-                    UIController.Instance.SetSnackbarText("grab! " + currentBlock);
+                    currentBlock.OnGrab();
+                    UIController.Instance.SetSnackbarText("grab! " + currentBlock.gameObject);
                     Debug.Log("grab");
                     return;
                 }
@@ -94,16 +104,18 @@
                 {
                     // check if the block is interactable
                     GameObject temp = hit.collider.gameObject;
+                    if (playerState == PlayerStates.grab) return;
 
-                    if ((currentBlock == null || currentBlock != temp) && temp.GetComponent<NetworkIdentity>().hasAuthority)
+                    if ((currentBlock == null || currentBlock.gameObject != temp) && temp.GetComponent<NetworkIdentity>().hasAuthority)
                     {
-                        currentBlock = temp;
+                        currentBlock = temp.GetComponent<BlockBehavior>();
                         playerState = PlayerStates.hover;
+                        currentBlock.OnHover();
                         UIController.Instance.SetSnackbarText("hovering! " + currentBlock.name);
                         Debug.Log("hover");
                     }
                 }
-                else if (playerState != PlayerStates.idle)   // not hitting anything
+                else if (playerState != PlayerStates.idle && playerState != PlayerStates.grab)   // not hitting anything
                 {
                     currentBlock = null;
                     playerState = PlayerStates.idle;
@@ -169,7 +181,7 @@
 
                         // blocks[i].GetComponent<NetworkIdentity>().AssignClientAuthority(this.connectionToClient);
                     }
-                    Debug.Log("client assign authority!!");
+                    // Debug.Log("client assign authority!!");
                 }
             }
         }
@@ -184,6 +196,12 @@
         void CmdRemoveAuthority(NetworkIdentity objectID, NetworkIdentity playerID)
         {
             objectID.RemoveClientAuthority(playerID.connectionToClient);
+        }
+
+        [Command]
+        void CmdRequestToAddScore()
+        {
+            Debug.Log("client requests to add score");
         }
     }
 }

@@ -23,6 +23,8 @@
         string min;
         string sec;
 
+        [SyncVar] int score = 0;
+
         static GameManager s_instance;
         public static GameManager Instance
         {
@@ -132,6 +134,11 @@
             Debug.Log("game over!");
             isPlaying = false;
             UIController.Instance.ShowEndUI();
+        }
+
+        void AddScore()
+        {
+            score++;
         }
     }
 }

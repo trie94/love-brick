@@ -419,6 +419,8 @@ namespace Love.Core
                 if (anchorObj != null)
                 {
                     anchor = anchorObj.transform;
+                    m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
+                    m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
                 }
                 else
                 {
@@ -435,7 +437,7 @@ namespace Love.Core
                     m_LastClientSendTime = Time.time;
                 }
             }
-            else if (!isServer)
+            else if (!isServer || (localPlayerAuthority && !hasAuthority))
             {
                 transform.position = Vector3.Lerp(transform.position, m_TargetSyncPosition, m_InterpolateMovement);
                 transform.rotation = Quaternion.Slerp(transform.rotation, m_TargetSyncRotation3D, m_InterpolateRotation);
