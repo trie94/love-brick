@@ -68,7 +68,6 @@
             if (GameManager.Instance.isPlaying)
             {
                 // now able to play
-
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                 RaycastHit hit;
 
@@ -108,7 +107,6 @@
                 {
                     currentBlock = null;
                     playerState = PlayerStates.idle;
-                    // Debug.Log("idling! not hovering anything");
                     UIController.Instance.SetSnackbarText("idling! not hovering anything or non-interactable block!");
                     Debug.Log("idle");
                 }
@@ -177,15 +175,15 @@
         }
 
         [Command]
-        void CmdSetAuthority(NetworkIdentity grabID, NetworkIdentity playerID)
+        void CmdSetAuthority(NetworkIdentity objectID, NetworkIdentity playerID)
         {
-            grabID.AssignClientAuthority(playerID.connectionToClient);
+            objectID.AssignClientAuthority(playerID.connectionToClient);
         }
 
         [Command]
-        void CmdRemoveAuthority(NetworkIdentity grabID, NetworkIdentity playerID)
+        void CmdRemoveAuthority(NetworkIdentity objectID, NetworkIdentity playerID)
         {
-            grabID.RemoveClientAuthority(playerID.connectionToClient);
+            objectID.RemoveClientAuthority(playerID.connectionToClient);
         }
     }
 }

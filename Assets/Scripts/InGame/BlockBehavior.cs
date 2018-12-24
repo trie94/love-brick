@@ -19,6 +19,21 @@ public class BlockBehavior : NetworkBehaviour
 
     BlockStates blockState = BlockStates.idle;
 
+    Renderer rend;
+    [SerializeField] float blinkSpeed;
+    [SerializeField] float shiverSpeed;
+
+    AudioSource audioSource;
+    [SerializeField] AudioClip hoverSound;
+
+    void Awake()
+    {
+        rend = GetComponent<Renderer>();
+        audioSource = GetComponent<AudioSource>();
+        rend.material.SetFloat("_MKGlowPower", 0f);
+        rend.material.SetFloat("_MKGlowTexStrength", 1f);
+    }
+
     void OnHover()
     {
         // blink
