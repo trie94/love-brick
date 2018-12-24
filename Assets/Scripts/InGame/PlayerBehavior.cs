@@ -5,6 +5,9 @@
     using UnityEngine;
     using UnityEngine.Networking;
 
+#if UNITY_EDITOR
+    using Input = GoogleARCore.InstantPreviewInput;
+#endif
     public class PlayerBehavior : NetworkBehaviour
     {
         static PlayerBehavior s_localPlayer;
@@ -29,6 +32,8 @@
         GameObject currentBlock;
 
         [SerializeField] float hoverDistance = 0.5f;
+
+        bool isTouching;
 
         #region Unity methods
 
@@ -63,14 +68,31 @@
             if (GameManager.Instance.isPlaying)
             {
                 // now able to play
+
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                 RaycastHit hit;
 
+                // release
+                if (playerState == PlayerStates.grab && !isTouching)
+                {
+                    playerState = PlayerStates.release;
+                    currentBlock = null;
+                    UIController.Instance.SetSnackbarText("release! " + currentBlock);
+                    Debug.Log("release");
+                    return;
+                }
+
+                // when hover, if you touch, then grab
+                if (playerState == PlayerStates.hover && isTouching)
+                {
+                    playerState = PlayerStates.grab;
+                    UIController.Instance.SetSnackbarText("grab! " + currentBlock);
+                    Debug.Log("grab");
+                    return;
+                }
+
                 if (Physics.Raycast(ray, out hit, hoverDistance))
                 {
-                    // if holding something else, return
-                    if (playerState == PlayerStates.grab) return;
-
                     // check if the block is interactable
                     GameObject temp = hit.collider.gameObject;
 
@@ -78,8 +100,8 @@
                     {
                         currentBlock = temp;
                         playerState = PlayerStates.hover;
-                        // Debug.Log("hovering! " + currentBlock.name);
                         UIController.Instance.SetSnackbarText("hovering! " + currentBlock.name);
+                        Debug.Log("hover");
                     }
                 }
                 else if (playerState != PlayerStates.idle)   // not hitting anything
@@ -88,6 +110,24 @@
                     playerState = PlayerStates.idle;
                     // Debug.Log("idling! not hovering anything");
                     UIController.Instance.SetSnackbarText("idling! not hovering anything or non-interactable block!");
+                    Debug.Log("idle");
+                }
+
+                // touching?
+                if (Input.touchCount > 0)
+                {
+                    foreach (Touch t in Input.touches)
+                    {
+                        if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
+                        {
+                            // touch!
+                            isTouching = true;
+                        }
+                    }
+                }
+                else
+                {
+                    isTouching = false;
                 }
 
                 Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward);

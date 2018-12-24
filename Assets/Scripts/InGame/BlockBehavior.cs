@@ -5,18 +5,38 @@ using UnityEngine.Networking;
 
 public enum BlockColors
 {
-    purple,
-    white,
-    pink,
-    yellow
+    purple, white, pink, yellow
 }
 
 public class BlockBehavior : NetworkBehaviour
 {
     public BlockColors blockColor;
 
-    void Update()
+    public enum BlockStates
     {
-        // transform.position = Vector3.Lerp(transform.position, transform.position + new Vector3(0, 0.01f, 0), 0.1f);
+        idle, hovered, grabbed, released, matched
+    }
+
+    BlockStates blockState = BlockStates.idle;
+
+    void OnHover()
+    {
+        // blink
+        // shiver
+    }
+
+    void OnGrab()
+    {
+
+    }
+
+    void OnRelease()
+    {
+
+    }
+
+    void OnMatch()
+    {
+        // animation to the wall
     }
 }
