@@ -71,6 +71,7 @@
                 // now able to play
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                 RaycastHit hit;
+                Debug.Log("is touching?: " + isTouching);
 
                 // release
                 if (playerState == PlayerStates.grab && !isTouching)
@@ -100,11 +101,28 @@
                     return;
                 }
 
+                // touching?
+                if (Input.touchCount > 0)
+                {
+                    if (Input.GetTouch(0).phase == TouchPhase.Ended || Input.GetTouch(0).phase == TouchPhase.Canceled)
+                    {
+                        isTouching = false;
+                    }
+                    else
+                    {
+                        isTouching = true;
+                    }
+                }
+                else
+                {
+                    isTouching = false;
+                }
+
                 if (Physics.Raycast(ray, out hit, hoverDistance))
                 {
                     // check if the block is interactable
                     GameObject temp = hit.collider.gameObject;
-                    if (playerState == PlayerStates.grab) return;
+                    if (playerState == PlayerStates.grab || playerState == PlayerStates.release) return;
 
                     if ((currentBlock == null || currentBlock.gameObject != temp) && temp.GetComponent<NetworkIdentity>().hasAuthority)
                     {
@@ -125,23 +143,6 @@
                     playerState = PlayerStates.idle;
                     UIController.Instance.SetSnackbarText("idling! not hovering anything or non-interactable block!");
                     Debug.Log("idle");
-                }
-
-                // touching?
-                if (Input.touchCount > 0)
-                {
-                    foreach (Touch t in Input.touches)
-                    {
-                        if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
-                        {
-                            // touch!
-                            isTouching = true;
-                        }
-                    }
-                }
-                else
-                {
-                    isTouching = false;
                 }
 
                 Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward);
