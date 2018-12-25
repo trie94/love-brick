@@ -71,18 +71,26 @@
                 // now able to play
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                 RaycastHit hit;
-                Debug.Log("is touching?: " + isTouching);
+
+                if (playerState == PlayerStates.match)
+                {
+                    playerState = PlayerStates.idle;
+                }
 
                 // release
                 if (playerState == PlayerStates.grab && !isTouching)
                 {
                     // if the slot is close enough, match the block with the slot
-                    // if (currentBlock.isMatchable)
-                    // {
-                    //     playerState = PlayerStates.match;
-                    //     currentBlock.OnMatch();
-                    //     CmdRequestToAddScore();
-                    // }
+                    if (currentBlock.isMatchable)
+                    {
+                        playerState = PlayerStates.match;
+                        currentBlock.OnMatch();
+                        UIController.Instance.SetSnackbarText("match! " + currentBlock.gameObject);
+                        Debug.Log("match");
+                        return;
+                        // CmdRequestToAddScore();
+                    }
+
                     playerState = PlayerStates.release;
                     UIController.Instance.SetSnackbarText("release! " + currentBlock.gameObject);
                     currentBlock.OnRelease();

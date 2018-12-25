@@ -8,10 +8,10 @@
     {
         purple, white, pink, yellow
     }
-	
+
     public enum SlotStates
     {
-        idle, hover
+        idle, hover, matched
     }
 
     public class SlotBehavior : MonoBehaviour

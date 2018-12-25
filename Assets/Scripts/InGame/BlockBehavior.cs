@@ -85,6 +85,16 @@
                 GetMatchableSlot();
             }
 
+            if (blockState == BlockStates.matched)
+            {
+                curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
+                rend.material.SetFloat("_MKGlowPower", curGlow);
+
+                transform.position = Vector3.Lerp(transform.position, matchableSlot.transform.position, 0.3f);
+
+                transform.rotation = Quaternion.Lerp(transform.rotation, matchableSlot.transform.rotation, 0.3f);
+            }
+
             if (blockState == BlockStates.hovered)
             {
                 // hover effect
@@ -153,7 +163,10 @@
 
         public void OnMatch()
         {
-            // animation to the wall
+            // future work -- animation to the wall
+            blockState = BlockStates.matched;
+            curGlow = rend.material.GetFloat("_MKGlowPower");
+
             if (col)
             {
                 col.enabled = false;
@@ -161,8 +174,9 @@
 
             if (matchableSlot)
             {
-                matchableSlot.slotState = SlotStates.idle;
+                matchableSlot.slotState = SlotStates.matched;
             }
+
             Debug.Log("match");
         }
 
@@ -184,10 +198,11 @@
                     if (matchableSlot != s && matchableSlot != null)
                     {
                         matchableSlot.slotState = SlotStates.idle;
+                        isMatchable = false;
                         matchableSlot = null;
                     }
 
-                    if (dist <= matchableDistance)
+                    if (dist <= matchableDistance && s.slotState != SlotStates.matched)
                     {
                         matchableSlot = s;
                         minDist = dist;
@@ -198,6 +213,7 @@
             if (matchableSlot != null)
             {
                 matchableSlot.slotState = SlotStates.hover;
+                isMatchable = true;
             }
         }
     }
