@@ -84,3 +84,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb2acf192f44efb418144078d96e97c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverDistance: 0.5

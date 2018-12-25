@@ -39,7 +39,9 @@
         Collider col;
 
         AudioSource audioSource;
-        [SerializeField] AudioClip hoverSound;
+        [SerializeField] AudioClip grabSound;
+        [SerializeField] AudioClip releaseSound;
+        [SerializeField] AudioClip matchSound;
 
         SlotHelper slotHelper;
         List<SlotBehavior> potentialSlots = new List<SlotBehavior>();
@@ -144,6 +146,7 @@
         {
             if (blockState == BlockStates.released) return;
             blockState = BlockStates.grabbed;
+            audioSource.PlayOneShot(grabSound, 0.8f);
         }
 
         public void OnRelease()
@@ -153,6 +156,7 @@
                 matchableSlot.slotState = SlotStates.idle;
                 matchableSlot = null;
             }
+            audioSource.PlayOneShot(releaseSound, 0.3f);
             StartCoroutine(ReleaseToIdle());
         }
 
@@ -166,17 +170,10 @@
             // future work -- animation to the wall
             blockState = BlockStates.matched;
             curGlow = rend.material.GetFloat("_MKGlowPower");
+            audioSource.PlayOneShot(matchSound);
 
-            if (col)
-            {
-                col.enabled = false;
-            }
-
-            if (matchableSlot)
-            {
-                matchableSlot.slotState = SlotStates.matched;
-            }
-
+            if (col) col.enabled = false;
+            if (matchableSlot) matchableSlot.slotState = SlotStates.matched;
             Debug.Log("match");
         }
 
