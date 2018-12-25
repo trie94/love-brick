@@ -294,14 +294,14 @@ namespace Love.Core
 
                 if (m_ClientMoveCallback3D(ref pos, ref vel, ref rot))
                 {
-                    // m_TargetSyncPosition = pos;
-                    m_TargetSyncPosition = anchor.TransformPoint(pos);
+                    m_TargetSyncPosition = pos;
+                    // m_TargetSyncPosition = anchor.TransformPoint(pos);
 
                     // transform.position = anchor.TransformPoint(pos);
                     if (syncRotationAxis != AxisSyncMode.None)
                     {
-                        // m_TargetSyncRotation3D = rot;
-                        m_TargetSyncRotation3D = anchor.rotation * rot;
+                        m_TargetSyncRotation3D = rot;
+                        // m_TargetSyncRotation3D = anchor.rotation * rot;
                         // transform.rotation = anchor.rotation * rot;
                     }
                 }
@@ -421,8 +421,18 @@ namespace Love.Core
                 if (anchorObj != null)
                 {
                     anchor = anchorObj.transform;
-                    m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
-                    m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
+                    if (isServer)
+                    {
+                        m_TargetSyncPosition = transform.position;
+                        m_TargetSyncRotation3D = transform.rotation;
+                    }
+                    // else
+                    // {
+                    //     m_TargetSyncPosition = anchor.TransformPoint(m_PrevPosition);
+                    //     m_TargetSyncRotation3D = m_TargetSyncRotation3D = anchor.rotation * m_PrevRotation;
+                    // }
+                    // m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
+                    // m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
                 }
                 else
                 {
