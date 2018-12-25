@@ -505,7 +505,7 @@ Transform:
   m_GameObject: {fileID: 1866149333863800}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 12, y: 12, z: 12}
   m_Children:
   - {fileID: 4710901660499740}
   - {fileID: 4192781634514274}
@@ -1607,6 +1607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 0
 --- !u!114 &114062664722328838
 MonoBehaviour:
@@ -1620,6 +1621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 0
 --- !u!114 &114139399670328118
 MonoBehaviour:
@@ -1633,6 +1635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 1
 --- !u!114 &114187388571824676
 MonoBehaviour:
@@ -1646,6 +1649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 1
 --- !u!114 &114263062048199668
 MonoBehaviour:
@@ -1659,6 +1663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 0
 --- !u!114 &114324364468137578
 MonoBehaviour:
@@ -1684,6 +1689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 2
 --- !u!114 &114390707744547832
 MonoBehaviour:
@@ -1697,6 +1703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 0
 --- !u!114 &114395643113391604
 MonoBehaviour:
@@ -1710,6 +1717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 2
 --- !u!114 &114522343093691382
 MonoBehaviour:
@@ -1723,6 +1731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 2
 --- !u!114 &114552128149690790
 MonoBehaviour:
@@ -1757,6 +1766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 3
 --- !u!114 &114554069490261390
 MonoBehaviour:
@@ -1770,6 +1780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 3
 --- !u!114 &114696553699861606
 MonoBehaviour:
@@ -1783,6 +1794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 2
 --- !u!114 &114852616077004264
 MonoBehaviour:
@@ -1796,6 +1808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 2
 --- !u!114 &114861581318120928
 MonoBehaviour:
@@ -1841,6 +1854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 3
 --- !u!114 &114882934154037648
 MonoBehaviour:
@@ -1854,6 +1868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 3
 --- !u!114 &114888803466030472
 MonoBehaviour:
@@ -1867,6 +1882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 1
 --- !u!114 &114941284112669094
 MonoBehaviour:
@@ -1880,6 +1896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 1
 --- !u!114 &114943163130416374
 MonoBehaviour:
@@ -1893,6 +1910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 0
 --- !u!114 &114951869539169960
 MonoBehaviour:
@@ -1906,6 +1924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 3
 --- !u!114 &114998164534160108
 MonoBehaviour:
@@ -1919,4 +1938,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
+  slotState: 0
   slotColor: 1

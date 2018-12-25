@@ -92,7 +92,7 @@ MonoBehaviour:
   - {fileID: 1740970778754688, guid: 266338e7c65f9c1489f6e001eb7dfc64, type: 2}
   - {fileID: 1162980339723718, guid: 15abcb3dd044b894595f558a35263161, type: 2}
   blockNums: 30
-  wallHeight: 1
+  wallHeight: 1.5
   totalTime: 60
   cloudAnchor: {fileID: 0}
   isPlaying: 0

@@ -419,8 +419,16 @@ namespace Love.Core
                 if (anchorObj != null)
                 {
                     anchor = anchorObj.transform;
-                    m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
-                    m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
+                    if (isServer)
+                    {
+                        m_TargetSyncPosition = transform.position;
+                        m_TargetSyncRotation3D = transform.rotation;
+                    }
+                    else
+                    {
+                        m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
+                        m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
+                    }
                 }
                 else
                 {
