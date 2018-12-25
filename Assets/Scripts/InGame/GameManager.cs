@@ -78,6 +78,12 @@
 
             // spawn wall
             GameObject wall = Instantiate(wallPrefab, anchor.transform.position + new Vector3(0, wallHeight, 0), Quaternion.identity);
+
+            var lookPos = Camera.main.transform.position - wall.transform.position;
+            lookPos.y = 0;
+            var rotation = Quaternion.LookRotation(lookPos);
+            wall.transform.rotation = rotation;
+
             NetworkServer.Spawn(wall);
 
             // spawn blocks
