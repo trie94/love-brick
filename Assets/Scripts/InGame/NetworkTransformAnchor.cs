@@ -426,13 +426,6 @@ namespace Love.Core
                         m_TargetSyncPosition = transform.position;
                         m_TargetSyncRotation3D = transform.rotation;
                     }
-                    // else
-                    // {
-                    //     m_TargetSyncPosition = anchor.TransformPoint(m_PrevPosition);
-                    //     m_TargetSyncRotation3D = m_TargetSyncRotation3D = anchor.rotation * m_PrevRotation;
-                    // }
-                    // m_TargetSyncPosition = anchor.InverseTransformPoint(transform.position);
-                    // m_TargetSyncRotation3D = Quaternion.Inverse(anchor.rotation) * transform.rotation;
                 }
                 else
                 {

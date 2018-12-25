@@ -97,12 +97,6 @@
                 GameObject block = Instantiate(blocks[index], anchor.position + new Vector3(xRange, yRange, zRange), Random.rotation);
                 NetworkServer.Spawn(block);
             }
-
-            if (isServer)
-            {
-                PlayerBehavior.LocalPlayer.GetColorBlocks();
-                Debug.Log("host/ getcolorblocks");
-            }
         }
 
         public void OnStartGame()
@@ -132,6 +126,7 @@
             Debug.Log("game has been started! start timer");
             UIController.Instance.SetSnackbarText("game has been started! start timer");
             StartCoroutine(CountDown());
+            PlayerBehavior.LocalPlayer.GetColorBlocks();
             isPlaying = true;
         }
 

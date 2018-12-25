@@ -54,9 +54,7 @@
 
             if (playerIndex != 0)
             {
-                GetColorBlocks();
                 UIController.Instance.GetClientColor();
-                Debug.Log("client/ getcolorblocks");
             }
             else
             {
