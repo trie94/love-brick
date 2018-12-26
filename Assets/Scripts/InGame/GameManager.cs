@@ -23,7 +23,8 @@
         string min;
         string sec;
 
-        [SyncVar] int score = 0;
+       [SyncVar] public int score = 0;
+        // [SyncVar] public int totalScore = 0;
 
         static GameManager s_instance;
         public static GameManager Instance
@@ -147,14 +148,24 @@
 
         void EndGame()
         {
-            Debug.Log("game over!");
+            Debug.Log("game over! total score is " + score);
+            UIController.Instance.SetSnackbarText("game over! total score is " + score);
             isPlaying = false;
             UIController.Instance.ShowEndUI();
         }
 
-        void AddScore()
+        public void AddScore()
         {
+            if (!isServer) return;
             score++;
+            // GameManager[] gameManagers = FindObjectsOfType<GameManager>();
+
+            // totalScore = 0;
+            // for (int i = 0; i < gameManagers.Length; i++)
+            // {
+            //     totalScore += gameManagers[i].score;
+            // }
+            Debug.Log("add score");
         }
     }
 }

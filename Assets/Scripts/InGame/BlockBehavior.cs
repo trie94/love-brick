@@ -167,7 +167,6 @@
 
         public void OnMatch()
         {
-            // future work -- animation to the wall
             blockState = BlockStates.matched;
             curGlow = rend.material.GetFloat("_MKGlowPower");
             audioSource.PlayOneShot(matchSound);

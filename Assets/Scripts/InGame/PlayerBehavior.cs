@@ -85,8 +85,8 @@
                         currentBlock.OnMatch();
                         UIController.Instance.SetSnackbarText("match! " + currentBlock.gameObject);
                         Debug.Log("match");
+                        CmdRequestToAddScore();
                         return;
-                        // CmdRequestToAddScore();
                     }
 
                     playerState = PlayerStates.release;
@@ -213,6 +213,8 @@
         void CmdRequestToAddScore()
         {
             Debug.Log("client requests to add score");
+            GameManager.Instance.AddScore();
+            // UIController.Instance.SetSnackbarText("add score. current score is: " + GameManager.Instance.score);
         }
     }
 }
