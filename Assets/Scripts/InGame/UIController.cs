@@ -248,7 +248,7 @@ namespace Love.Core
         public void ShowEndUI()
         {
             // display score and replay button
-            background.SetActive(false);
+            background.SetActive(true);
             // score active and replay active
             Debug.Log("display score and replay button");
         }

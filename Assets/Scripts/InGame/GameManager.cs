@@ -89,14 +89,29 @@
             // spawn blocks
             for (int i = 0; i < blockNums; i++)
             {
-                float xRange = Random.Range(-2f, 2f);
-                float yRange = Random.Range(0, 1.5f);
-                float zRange = Random.Range(-2f, 2f);
                 int index = i % blocks.Length;
+                float spawnRadius = 1.5f;
+                float absHeight = 0.5f;
 
-                GameObject block = Instantiate(blocks[index], anchor.position + new Vector3(xRange, yRange, zRange), Random.rotation);
+                GameObject block = Instantiate(blocks[index], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
                 NetworkServer.Spawn(block);
             }
+        }
+
+        Vector3 GetRandomPosFromPoint(Vector3 originPoint, float spawnRadius, float height)
+        {
+            var xz = Random.insideUnitCircle * spawnRadius;
+
+            Vector2 originV2 = new Vector2(originPoint.x, originPoint.z);
+
+            while (Mathf.Abs(Vector2.Distance(originV2, xz)) < 0.5f)
+            {
+                xz = Random.insideUnitCircle * spawnRadius;
+            }
+            var y = Random.Range(-height, height);
+            Vector3 spawnPos = new Vector3(xz.x, y, xz.y) + originPoint;
+
+            return spawnPos;
         }
 
         public void OnStartGame()

@@ -736,6 +736,11 @@ Prefab:
       propertyPath: cloudAnchorController
       value: 
       objectReference: {fileID: 1142878898}
+    - target: {fileID: 114808040104585096, guid: c14b8320cdf67495a8a7f047f2b44377,
+        type: 2}
+      propertyPath: blockNums
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c14b8320cdf67495a8a7f047f2b44377, type: 2}
   m_IsPrefabAsset: 0

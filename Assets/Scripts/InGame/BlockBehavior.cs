@@ -213,5 +213,16 @@
                 isMatchable = true;
             }
         }
+
+        // void OnCollisionEnter(Collision collision)
+        // {
+        //     if (blockState == BlockStates.grabbed || GameManager.Instance.isPlaying)
+        //     {
+        //         return;
+        //     }
+        //     // get a new position
+        //     Debug.Log("collide! get a new position");
+        //     transform.position += Random.insideUnitSphere * 0.5f;
+        // }
     }
 }
