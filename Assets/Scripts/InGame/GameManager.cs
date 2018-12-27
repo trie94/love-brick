@@ -19,11 +19,12 @@
         [SerializeField] GameObject[] blocks;
         [SerializeField] int blockNums;
         [SerializeField] float wallHeight = 1f;
+        float initTime;
         [SerializeField] float totalTime = 60f;
         string min;
         string sec;
 
-       [SyncVar] public int score = 0;
+        [SyncVar] public int score = 0;
         // [SyncVar] public int totalScore = 0;
 
         static GameManager s_instance;
@@ -57,6 +58,7 @@
                 Debug.LogError("GameManager already exists!");
             }
             s_instance = this;
+            initTime = totalTime;
         }
 
         void OnEnable()
@@ -151,21 +153,18 @@
             Debug.Log("game over! total score is " + score);
             UIController.Instance.SetSnackbarText("game over! total score is " + score);
             isPlaying = false;
-            UIController.Instance.ShowEndUI();
+
+            float timeSpent = initTime - totalTime;
+            string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
+            string sec = Mathf.RoundToInt(timeSpent % 60).ToString("00");
+
+            UIController.Instance.ShowEndUI(score.ToString(), min, sec);
         }
 
         public void AddScore()
         {
             if (!isServer) return;
             score++;
-            // GameManager[] gameManagers = FindObjectsOfType<GameManager>();
-
-            // totalScore = 0;
-            // for (int i = 0; i < gameManagers.Length; i++)
-            // {
-            //     totalScore += gameManagers[i].score;
-            // }
-            Debug.Log("add score");
         }
     }
 }

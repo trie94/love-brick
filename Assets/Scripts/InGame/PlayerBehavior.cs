@@ -64,6 +64,11 @@
 
         void Update()
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             if (GameManager.Instance.isPlaying)
             {
                 // now able to play

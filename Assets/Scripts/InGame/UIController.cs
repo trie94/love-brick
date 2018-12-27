@@ -6,10 +6,8 @@ namespace Love.Core
     using UnityEngine;
     using UnityEngine.UI;
     using TMPro;
-    using UnityEngine.Networking;
-    using UnityEngine.Networking.Match;
 
-    public class UIController : NetworkBehaviour
+    public class UIController : MonoBehaviour
     {
         [SerializeField] GameObject snackbar;
         [SerializeField] Text SnackbarText;
@@ -26,7 +24,7 @@ namespace Love.Core
         Color backButtonColor;
 
         // time
-        [SerializeField] GameObject scoreBoard;
+        [SerializeField] GameObject topUI;
         public TextMeshProUGUI timer;
 
         // color ui
@@ -42,6 +40,14 @@ namespace Love.Core
         [SerializeField] Toggle ResolveOnDeviceToggle;
 
         [SerializeField] GameObject background;
+        [SerializeField] GameObject plainBackground;
+
+        [SerializeField] GameObject endUI;
+        [SerializeField] TextMeshProUGUI score;
+        [SerializeField] TextMeshProUGUI result;
+
+        AudioSource audioSource;
+        [SerializeField] AudioClip buttonClick;
 
         static UIController s_instance;
         public static UIController Instance
@@ -63,12 +69,8 @@ namespace Love.Core
                 Debug.Log("UI controller already exists");
             }
             s_instance = this;
+            audioSource = GetComponent<AudioSource>();
             IPAdressInfo.GetComponentInChildren<TextMeshProUGUI>().text = "My IP Address: " + _GetDeviceIpAddress();
-        }
-
-        void Start()
-        {
-            // backButtonColor = backButton.GetComponent<Image>().color;
         }
 
         // Lobby mode
@@ -77,12 +79,14 @@ namespace Love.Core
             // ui
             startButton.SetActive(false);
             background.SetActive(true);
+            plainBackground.SetActive(false);
             createRoomButton.SetActive(true);
             joinRoomButton.SetActive(true);
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
-            scoreBoard.SetActive(false);
+            topUI.SetActive(false);
             snackbar.SetActive(true);
+            endUI.SetActive(false);
             DisableBackButton();
 
             SnackbarText.text = "Please create or join a room";
@@ -95,7 +99,7 @@ namespace Love.Core
             createRoomButton.SetActive(false);
             joinRoomButton.SetActive(false);
             background.SetActive(false);
-            scoreBoard.SetActive(true);
+            topUI.SetActive(true);
             roomInfo.SetActive(true);
             IPAdressInfo.SetActive(true);
             // EnableBackButton();
@@ -156,11 +160,6 @@ namespace Love.Core
         public void SetRoomTextValue(int roomNumber)
         {
             roomInfo.GetComponentInChildren<TextMeshProUGUI>().text = "Room: " + roomNumber;
-        }
-
-        void GetRoomTextValue()
-        {
-
         }
 
         public bool GetResolveOnDeviceValue()
@@ -242,13 +241,18 @@ namespace Love.Core
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
             // snackbar.SetActive(false);
-            scoreBoard.SetActive(true);
+            topUI.SetActive(true);
         }
 
-        public void ShowEndUI()
+        public void ShowEndUI(string scoreText, string minResult, string secResult)
         {
             // display score and replay button
-            background.SetActive(true);
+            topUI.SetActive(false);
+            plainBackground.SetActive(true);
+            endUI.SetActive(true);
+
+            score.text = scoreText;
+            result.text = minResult + " : " + secResult;
             // score active and replay active
             Debug.Log("display score and replay button");
         }
@@ -270,6 +274,14 @@ namespace Love.Core
         public void SetSnackbarText(string text)
         {
             SnackbarText.text = text;
+        }
+
+        public void PlayButtonSound()
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(buttonClick, 0.2f);
+            }
         }
     }
 }
