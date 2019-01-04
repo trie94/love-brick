@@ -69,7 +69,7 @@
                 return;
             }
 
-            if (GameManager.Instance.isPlaying)
+            if (GameManager.Instance.gamestate == GameStates.play)
             {
                 // now able to play
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
@@ -219,7 +219,7 @@
         {
             Debug.Log("client requests to add score");
             GameManager.Instance.AddScore();
-            // UIController.Instance.SetSnackbarText("add score. current score is: " + GameManager.Instance.score);
+            UIController.Instance.SetSnackbarText("add score. current score is: " + GameManager.Instance.score);
         }
     }
 }

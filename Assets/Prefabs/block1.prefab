@@ -213,7 +213,7 @@ MonoBehaviour:
   grabSound: {fileID: 8300000, guid: 4d80e64acfef84739bf79c7cec7690e4, type: 3}
   releaseSound: {fileID: 8300000, guid: 5de0c85df1b51410b861ef0b2ef49861, type: 3}
   matchSound: {fileID: 8300000, guid: 1979181989c5d4519af35aa3e6a8e53f, type: 3}
-  matchableDistance: 0.3
+  matchableDistance: 0.2
 --- !u!114 &114414307315712300
 MonoBehaviour:
   m_ObjectHideFlags: 1

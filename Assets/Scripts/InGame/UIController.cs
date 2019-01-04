@@ -240,7 +240,8 @@ namespace Love.Core
             joinRoomButton.SetActive(false);
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
-            // snackbar.SetActive(false);
+            // enable this if debugging is needed
+            snackbar.SetActive(false);
             topUI.SetActive(true);
         }
 

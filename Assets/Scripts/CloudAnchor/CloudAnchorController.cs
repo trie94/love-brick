@@ -227,7 +227,7 @@
                 {
                     OnAnchorSaved(anchor.transform);
                 }
-                UIController.Instance.ShowHostingModeBegin("cloud anchor is saved, tap on the screen to move the wall to a different location.");
+                UIController.Instance.ShowHostingModeBegin("cloud anchor is saved and the wall is placed.");
                 UIController.Instance.ShowHostReadyUI(); // for host
             });
 #endif

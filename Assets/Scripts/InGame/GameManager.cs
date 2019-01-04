@@ -9,6 +9,12 @@
 #if UNITY_EDITOR
     using Input = GoogleARCore.InstantPreviewInput;
 #endif
+
+    public enum GameStates
+    {
+        lobby, play, end
+    }
+
     public class GameManager : NetworkBehaviour
     {
         [Header("Managers")]
@@ -17,6 +23,7 @@
         [Header("GameObjects")]
         [SerializeField] GameObject wallPrefab;
         [SerializeField] GameObject[] blocks;
+        [SerializeField] int slotNum = 20;
         [SerializeField] int blockNums;
         [SerializeField] float wallHeight = 1f;
         float initTime;
@@ -25,7 +32,8 @@
         string sec;
 
         [SyncVar] public int score = 0;
-        // [SyncVar] public int totalScore = 0;
+
+        public GameStates gamestate = GameStates.lobby;
 
         static GameManager s_instance;
         public static GameManager Instance
@@ -41,7 +49,6 @@
         }
 
         public Transform cloudAnchor;
-        public bool isPlaying;
 
         public delegate void GameStartCallback();
         [SyncEvent] public event GameStartCallback EventOnGameStart;
@@ -71,6 +78,31 @@
         {
             cloudAnchorController.OnAnchorSaved -= OnAnchorSaved;
             this.EventOnGameStart -= OnGameStart;
+        }
+
+        void Update()
+        {
+            if (gamestate == GameStates.play)
+            {
+                if (score >= slotNum || totalTime <= 0)
+                {
+                    EndGame();
+                    return;
+                }
+
+                totalTime -= Time.deltaTime;
+                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
+                sec = Mathf.FloorToInt(totalTime % 60).ToString("00");
+                
+                if (totalTime <= 0)
+                {
+                    UIController.Instance.timer.text = "00:00";
+                }
+                else
+                {
+                    UIController.Instance.timer.text = (min + ":" + sec);
+                }
+            }
         }
 
         #endregion
@@ -136,23 +168,26 @@
                 yield return new WaitForSeconds(1f);
             }
             UIController.Instance.timer.text = "00:00";
-            EndGame();
+
+            if (gamestate != GameStates.end)
+            {
+                EndGame();
+            }
         }
 
         void OnGameStart()
         {
-            Debug.Log("game has been started! start timer");
+            gamestate = GameStates.play;
             UIController.Instance.SetSnackbarText("game has been started! start timer");
-            StartCoroutine(CountDown());
+            // StartCoroutine(CountDown());
             PlayerBehavior.LocalPlayer.GetColorBlocks();
-            isPlaying = true;
         }
 
         void EndGame()
         {
+            gamestate = GameStates.end;
             Debug.Log("game over! total score is " + score);
-            UIController.Instance.SetSnackbarText("game over! total score is " + score);
-            isPlaying = false;
+            // UIController.Instance.SetSnackbarText("game over! total score is " + score);
 
             float timeSpent = initTime - totalTime;
             string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
