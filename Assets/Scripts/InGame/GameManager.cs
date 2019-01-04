@@ -93,7 +93,7 @@
                 totalTime -= Time.deltaTime;
                 min = Mathf.FloorToInt(totalTime / 60).ToString("00");
                 sec = Mathf.FloorToInt(totalTime % 60).ToString("00");
-                
+
                 if (totalTime <= 0)
                 {
                     UIController.Instance.timer.text = "00:00";
@@ -157,29 +157,10 @@
             }
         }
 
-        IEnumerator CountDown()
-        {
-            while (totalTime > 0f)
-            {
-                totalTime--;
-                min = Mathf.FloorToInt(totalTime / 60).ToString("00");
-                sec = Mathf.RoundToInt(totalTime % 60).ToString("00");
-                UIController.Instance.timer.text = (min + ":" + sec);
-                yield return new WaitForSeconds(1f);
-            }
-            UIController.Instance.timer.text = "00:00";
-
-            if (gamestate != GameStates.end)
-            {
-                EndGame();
-            }
-        }
-
         void OnGameStart()
         {
             gamestate = GameStates.play;
             UIController.Instance.SetSnackbarText("game has been started! start timer");
-            // StartCoroutine(CountDown());
             PlayerBehavior.LocalPlayer.GetColorBlocks();
         }
 
