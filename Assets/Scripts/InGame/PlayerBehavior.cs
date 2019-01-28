@@ -179,6 +179,7 @@
         public void GetColorBlocks()
         {
             BlockBehavior[] blocks = FindObjectsOfType<BlockBehavior>();
+            Debug.Log(blocks.Length);
 
             for (int i = 0; i < blocks.Length; i++)
             {
