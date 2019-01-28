@@ -91,8 +91,12 @@ MonoBehaviour:
   - {fileID: 1147326554190294, guid: 0c3460d470fc53241b194b0ee3cd49d8, type: 2}
   - {fileID: 1740970778754688, guid: 266338e7c65f9c1489f6e001eb7dfc64, type: 2}
   - {fileID: 1162980339723718, guid: 15abcb3dd044b894595f558a35263161, type: 2}
+  combinedBlocks:
+  - {fileID: 1160176140664966, guid: fd919e89d9dac784b9c5dee27022a7b2, type: 2}
+  - {fileID: 1286792681673940, guid: d8f3c247c9928994097ec87c0684bef0, type: 2}
   slotNum: 20
   blockNums: 28
+  combinedPairs: 2
   wallHeight: 1.5
   totalTime: 120
   score: 0

@@ -23,8 +23,10 @@
         [Header("GameObjects")]
         [SerializeField] GameObject wallPrefab;
         [SerializeField] GameObject[] blocks;
+        [SerializeField] GameObject[] combinedBlocks;
         [SerializeField] int slotNum = 20;
         [SerializeField] int blockNums;
+        [SerializeField] int combinedPairs;
         [SerializeField] float wallHeight = 1f;
         float initTime;
         [SerializeField] float totalTime = 60f;
@@ -121,15 +123,27 @@
 
             NetworkServer.Spawn(wall);
 
+            float spawnRadius = 1.5f;
+            float absHeight = 0.5f;
+
             // spawn blocks
             for (int i = 0; i < blockNums; i++)
             {
                 int index = i % blocks.Length;
-                float spawnRadius = 1.5f;
-                float absHeight = 0.5f;
 
                 GameObject block = Instantiate(blocks[index], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
                 NetworkServer.Spawn(block);
+            }
+
+            // spawn combined pair
+            for (int i = 0; i < combinedPairs; i++)
+            {
+                GameObject cBlock1 = Instantiate(combinedBlocks[0], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
+
+                GameObject cBlock2 = Instantiate(combinedBlocks[1], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
+
+                NetworkServer.Spawn(cBlock1);
+                NetworkServer.Spawn(cBlock2);
             }
         }
 
