@@ -19,5 +19,8 @@ namespace Love.Core
 
         // network transform anchor message type
         public const short NetworkTransformAnchor = MsgType.Highest + 3;
+
+        // client sync var
+        public const short NetworkClientSyncLocal = MsgType.Highest + 4;
     }
 }

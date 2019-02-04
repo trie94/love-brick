@@ -34,7 +34,6 @@
         string sec;
 
         [SyncVar] public int score = 0;
-
         public GameStates gamestate = GameStates.lobby;
 
         static GameManager s_instance;

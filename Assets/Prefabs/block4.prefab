@@ -227,8 +227,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1adb8827abf504c48ab72379722f6c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _forceSend: 0
   blockColor: 3
-  blockState: 0
+  isCombinedBlock: 0
+  combinableDistance: 0
+  blockState:
+    _value: 0
   glowLerpSpeed: 5
   shiverLerpSpeed: 10
   grabSound: {fileID: 8300000, guid: 4d80e64acfef84739bf79c7cec7690e4, type: 3}

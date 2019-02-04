@@ -107,8 +107,8 @@
                 {
                     playerState = PlayerStates.grab;
                     currentBlock.OnGrab();
-                    UIController.Instance.SetSnackbarText("grab! " + currentBlock.gameObject);
-                    Debug.Log("grab");
+                    // UIController.Instance.SetSnackbarText("grab! " + currentBlock.gameObject);
+                    // Debug.Log("grab");
                     return;
                 }
 
@@ -140,8 +140,8 @@
                         currentBlock = temp.GetComponent<BlockBehavior>();
                         playerState = PlayerStates.hover;
                         currentBlock.OnHover();
-                        UIController.Instance.SetSnackbarText("hovering! " + currentBlock.name);
-                        Debug.Log("hover");
+                        // UIController.Instance.SetSnackbarText("hovering! " + currentBlock.name);
+                        // Debug.Log("hover");
                     }
                 }
                 else if (playerState != PlayerStates.idle && playerState != PlayerStates.grab)   // not hitting anything
@@ -152,8 +152,8 @@
                     }
                     currentBlock = null;
                     playerState = PlayerStates.idle;
-                    UIController.Instance.SetSnackbarText("idling! not hovering anything or non-interactable block!");
-                    Debug.Log("idle");
+                    // UIController.Instance.SetSnackbarText("idling! not hovering anything or non-interactable block!");
+                    // Debug.Log("idle");
                 }
 
                 Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward);
