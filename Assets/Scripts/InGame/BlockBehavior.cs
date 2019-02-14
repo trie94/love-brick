@@ -129,20 +129,28 @@
                 // combined effect
                 rend.material.SetFloat("_MKGlowPower", 0.3f);
 
-                // transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
-
-                if (targetHelpers.Length >= 2)
+                if (targetHelpers != null && targetHelpers.Length >= 2)
                 {
                     Vector3 centerPos = (targetHelpers[0].transform.position + targetHelpers[1].transform.position) / 2;
 
                     transform.position = Vector3.Lerp(transform.position, centerPos, 0.3f);
                     UIController.Instance.SetSnackbarText("combined and lerping to: " + centerPos);
+                    Debug.Log(targetHelpers[0].transform.position + " + " + targetHelpers[1].transform.position + ": " + centerPos);
                 }
                 else
                 {
                     targetHelpers = FindObjectsOfType<TargetHelper>();
-                    UIController.Instance.SetSnackbarText("find the helper0: " + targetHelpers[0].transform.position);
-                    UIController.Instance.SetSnackbarText("find the helper1: " + targetHelpers[1].transform.position);
+
+                    if (targetHelpers == null)
+                    {
+                        UIController.Instance.SetSnackbarText("helpers not found");
+                        Debug.Log("helpers not found");
+                    }
+                    else
+                    {
+                        UIController.Instance.SetSnackbarText("find the helper0: " + targetHelpers[0].transform.position);
+                        UIController.Instance.SetSnackbarText("find the helper1: " + targetHelpers[1].transform.position);
+                    }
                 }
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
