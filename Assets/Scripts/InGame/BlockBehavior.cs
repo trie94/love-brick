@@ -16,8 +16,10 @@
 
         public enum BlockStates
         {
-            idle, hovered, grabbed, released, combined, matched
+            idle, hovered, grabbed, released, matched
         }
+
+        ClientSyncVarBool isCombined = new ClientSyncVarBool(false);
 
         [System.Serializable]
         public class ClientSyncVarBlockStates : ClientSyncVar<BlockStates>
@@ -113,58 +115,53 @@
                 return;
             }
 
-            if (blockState.value == BlockStates.combined)
+            if (blockState.value == BlockStates.grabbed)
             {
-                // pos
-                // UIController.Instance.SetSnackbarText("combined, block state: " + blockState.value);
-
-                float dist = Vector3.Distance(this.transform.position, pairBlock.transform.position);
-
-                if (dist > combinableDistance + offset)
+                // combined?
+                if (isCombinedBlock)
                 {
-                    // release
-                    OnDeCombine();
-                }
+                    if (isCombined.value)
+                    {
+                        float dist = Vector3.Distance(this.transform.position, pairBlock.transform.position);
+                        if ((dist > combinableDistance + offset) || pairBlock.blockState.value != BlockStates.grabbed)
+                        {
+                            OnDeCombine();
+                        }
+                        else
+                        {
+                            rend.material.SetFloat("_MKGlowPower", 0.2f);
+                            if (targetHelpers != null && targetHelpers.Length >= 2)
+                            {
+                                Vector3 centerPos = (targetHelpers[0].transform.position + targetHelpers[1].transform.position) / 2;
 
-                // combined effect
-                rend.material.SetFloat("_MKGlowPower", 0.3f);
+                                transform.position = Vector3.Lerp(transform.position, centerPos, 0.3f);
+                                UIController.Instance.SetSnackbarText("combined and lerping to: " + centerPos);
+                                Debug.Log(targetHelpers[0].transform.position + " + " + targetHelpers[1].transform.position + ": " + centerPos);
+                            }
+                            else
+                            {
+                                targetHelpers = FindObjectsOfType<TargetHelper>();
+                            }
 
-                if (targetHelpers != null && targetHelpers.Length >= 2)
-                {
-                    Vector3 centerPos = (targetHelpers[0].transform.position + targetHelpers[1].transform.position) / 2;
-
-                    transform.position = Vector3.Lerp(transform.position, centerPos, 0.3f);
-                    UIController.Instance.SetSnackbarText("combined and lerping to: " + centerPos);
-                    Debug.Log(targetHelpers[0].transform.position + " + " + targetHelpers[1].transform.position + ": " + centerPos);
+                            transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
+                        }
+                    }
+                    else    // look for a pair
+                    {
+                        FindOtherCombinedBlock();
+                    }
                 }
                 else
                 {
-                    targetHelpers = FindObjectsOfType<TargetHelper>();
+                    // else
+                    rend.material.SetFloat("_MKGlowPower", 0.1f);
 
-                    if (targetHelpers == null)
-                    {
-                        UIController.Instance.SetSnackbarText("helpers not found");
-                        Debug.Log("helpers not found");
-                    }
-                    else
-                    {
-                        UIController.Instance.SetSnackbarText("find the helper0: " + targetHelpers[0].transform.position);
-                        UIController.Instance.SetSnackbarText("find the helper1: " + targetHelpers[1].transform.position);
-                    }
+                    transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
+
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
                 }
 
-                transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
-            }
-
-            if (blockState.value == BlockStates.grabbed)
-            {
-                rend.material.SetFloat("_MKGlowPower", 0.1f);
-
-                transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
-
-                transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
-
-                FindOtherCombinedBlock();
+                // both
                 FindMatchableSlot();
             }
 
@@ -232,6 +229,11 @@
 
         public void OnRelease()
         {
+            if (isCombined.value)
+            {
+                isCombined.value = false;
+            }
+
             if (matchableSlot)
             {
                 matchableSlot.slotState = SlotStates.idle;
@@ -263,14 +265,14 @@
         void OnCombine()
         {
             Debug.Log("combine");
-            blockState.value = BlockStates.combined;
+            isCombined.value = true;
             UIController.Instance.SetSnackbarText("on combine");
         }
 
         void OnDeCombine()
         {
             Debug.Log("de-combine");
-            blockState.value = BlockStates.grabbed;
+            isCombined.value = false;
             UIController.Instance.SetSnackbarText("de-combine, block state: " + blockState.value);
         }
 
@@ -283,7 +285,7 @@
 
         void FindMatchableSlot()
         {
-            if (isCombinedBlock && blockState.value == BlockStates.combined) return;
+            if (isCombinedBlock && !isCombined.value) return;
 
             float minDist = Mathf.Infinity;
             foreach (SlotBehavior s in potentialSlots)
@@ -315,8 +317,6 @@
 
         void FindOtherCombinedBlock()
         {
-            if (!isCombinedBlock) return;
-
             // if there is a pair block
             if (pairBlock)
             {
@@ -331,11 +331,8 @@
 
                     if (dist <= combinableDistance)
                     {
-                        if (blockState.value != BlockStates.combined && pairBlock.blockState.value != BlockStates.combined)
-                        {
-                            // combine
-                            OnCombine();
-                        }
+                        // combine
+                        OnCombine();
                     }
                 }
             }
