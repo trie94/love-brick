@@ -71,7 +71,10 @@
         List<SlotBehavior> potentialSlots = new List<SlotBehavior>();
 
         [SerializeField] float matchableDistance;
+        [SerializeField] float offset = 0.1f;
         SlotBehavior matchableSlot = null;
+
+        public static TargetHelper[] targetHelpers;
 
         public override void Awake()
         {
@@ -100,6 +103,9 @@
         public override void Update()
         {
             base.Update();
+
+            if (!hasAuthority) return;
+
             if (blockState.value == BlockStates.released)
             {
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, (transform.position.y - 0.2f), transform.position.z), 0.3f);
@@ -110,11 +116,11 @@
             if (blockState.value == BlockStates.combined)
             {
                 // pos
-                UIController.Instance.SetSnackbarText("combined, block state: " + blockState.value);
+                // UIController.Instance.SetSnackbarText("combined, block state: " + blockState.value);
 
                 float dist = Vector3.Distance(this.transform.position, pairBlock.transform.position);
 
-                if (dist > combinableDistance)
+                if (dist > combinableDistance + offset)
                 {
                     // release
                     OnDeCombine();
@@ -123,7 +129,21 @@
                 // combined effect
                 rend.material.SetFloat("_MKGlowPower", 0.3f);
 
-                transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
+                // transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
+
+                if (targetHelpers.Length >= 2)
+                {
+                    Vector3 centerPos = (targetHelpers[0].transform.position + targetHelpers[1].transform.position) / 2;
+
+                    transform.position = Vector3.Lerp(transform.position, centerPos, 0.3f);
+                    UIController.Instance.SetSnackbarText("combined and lerping to: " + centerPos);
+                }
+                else
+                {
+                    targetHelpers = FindObjectsOfType<TargetHelper>();
+                    UIController.Instance.SetSnackbarText("find the helper0: " + targetHelpers[0].transform.position);
+                    UIController.Instance.SetSnackbarText("find the helper1: " + targetHelpers[1].transform.position);
+                }
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
             }

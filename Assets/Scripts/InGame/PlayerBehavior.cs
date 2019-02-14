@@ -201,6 +201,18 @@
                     // Debug.Log("client assign authority!!");
                 }
             }
+
+            // get helper obj
+            TargetHelper[] helpers = FindObjectsOfType<TargetHelper>();
+
+            for (int i = 0; i < helpers.Length; i++)
+            {
+                if (playerIndex == helpers[i].helperIndex)
+                {
+                    CmdSetAuthority(helpers[i].identity, identity);
+                    Debug.Log("set authority on the helper");
+                }
+            }
         }
 
         [Command]

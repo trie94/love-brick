@@ -27,6 +27,8 @@
         [SerializeField] int slotNum = 20;
         [SerializeField] int blockNums;
         [SerializeField] int combinedPairs;
+        [SerializeField] GameObject helperPrefab;
+
         [SerializeField] float wallHeight = 1f;
         float initTime;
         [SerializeField] float totalTime = 60f;
@@ -144,6 +146,20 @@
                 NetworkServer.Spawn(cBlock1);
                 NetworkServer.Spawn(cBlock2);
             }
+
+            // spawn helpers
+            StartCoroutine(SpawnHelpers());
+        }
+
+        IEnumerator SpawnHelpers()
+        {
+            GameObject helper1 = Instantiate(helperPrefab);
+            NetworkServer.Spawn(helper1);
+
+            yield return null;
+
+            GameObject helper2 = Instantiate(helperPrefab);
+            NetworkServer.Spawn(helper2);
         }
 
         Vector3 GetRandomPosFromPoint(Vector3 originPoint, float spawnRadius, float height)

@@ -97,6 +97,8 @@ MonoBehaviour:
   slotNum: 20
   blockNums: 28
   combinedPairs: 2
+  helperPrefab: {fileID: 1148397453923392, guid: b121ead7c8577e645a1d6a82687a82b6,
+    type: 2}
   wallHeight: 1.5
   totalTime: 120
   score: 0
