@@ -112,25 +112,23 @@
             {
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, (transform.position.y - 0.2f), transform.position.z), 0.3f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Random.rotation, 0.3f);
-                return;
             }
 
-            if (blockState.value == BlockStates.grabbed)
+            else if (blockState.value == BlockStates.grabbed)
             {
                 // combined?
                 if (isCombinedBlock)
                 {
                     if (isCombined.value)
                     {
-                        float dist = Vector3.Distance(this.transform.position, pairBlock.transform.position);
-                        if ((dist > combinableDistance + offset) || pairBlock.blockState.value != BlockStates.grabbed)
+                        if (targetHelpers != null && targetHelpers.Length >= 2)
                         {
-                            OnDeCombine();
-                        }
-                        else
-                        {
-                            rend.material.SetFloat("_MKGlowPower", 0.2f);
-                            if (targetHelpers != null && targetHelpers.Length >= 2)
+                            float dist = Vector3.Distance(targetHelpers[0].transform.position, targetHelpers[1].transform.position);
+                            if ((dist > combinableDistance + offset) || pairBlock.blockState.value != BlockStates.grabbed)
+                            {
+                                OnDeCombine();
+                            }
+                            else
                             {
                                 Vector3 centerPos = (targetHelpers[0].transform.position + targetHelpers[1].transform.position) / 2;
 
@@ -138,12 +136,10 @@
                                 UIController.Instance.SetSnackbarText("combined and lerping to: " + centerPos);
                                 Debug.Log(targetHelpers[0].transform.position + " + " + targetHelpers[1].transform.position + ": " + centerPos);
                             }
-                            else
-                            {
-                                targetHelpers = FindObjectsOfType<TargetHelper>();
-                            }
-
-                            transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
+                        }
+                        else
+                        {
+                            targetHelpers = FindObjectsOfType<TargetHelper>();
                         }
                     }
                     else    // look for a pair
@@ -151,21 +147,19 @@
                         FindOtherCombinedBlock();
                     }
                 }
-                else
+
+                if (!isCombined.value)
                 {
-                    // else
-                    rend.material.SetFloat("_MKGlowPower", 0.1f);
-
                     transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
-
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
                 }
 
                 // both
+                rend.material.SetFloat("_MKGlowPower", 0.1f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
                 FindMatchableSlot();
             }
 
-            if (blockState.value == BlockStates.matched)
+            else if (blockState.value == BlockStates.matched)
             {
                 curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
                 rend.material.SetFloat("_MKGlowPower", curGlow);
@@ -175,7 +169,7 @@
                 transform.rotation = Quaternion.Lerp(transform.rotation, matchableSlot.transform.rotation, 0.3f);
             }
 
-            if (blockState.value == BlockStates.hovered)
+            else if (blockState.value == BlockStates.hovered)
             {
                 // hover effect
                 if (glowLerpFactor > 1f)
@@ -203,7 +197,7 @@
                 transform.position = Vector3.Lerp(startPos, targetPos, shiverLerpFactor);
             }
 
-            if ((blockState.value == BlockStates.idle) && (rend.material.GetFloat("_MKGlowPower") != 0f))
+            else if ((blockState.value == BlockStates.idle) && (rend.material.GetFloat("_MKGlowPower") != 0f))
             {
                 rend.material.SetFloat("_MKGlowPower", 0f);
             }
