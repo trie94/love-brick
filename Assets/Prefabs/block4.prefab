@@ -231,14 +231,17 @@ MonoBehaviour:
   blockColor: 3
   isCombinedBlock: 0
   combinableDistance: 0
+  combinePos:
+    _value: {x: 0, y: 0, z: 0}
   blockState:
     _value: 0
   glowLerpSpeed: 5
   shiverLerpSpeed: 10
-  grabSound: {fileID: 8300000, guid: 4d80e64acfef84739bf79c7cec7690e4, type: 3}
-  releaseSound: {fileID: 8300000, guid: 5de0c85df1b51410b861ef0b2ef49861, type: 3}
+  grabSound: {fileID: 8300000, guid: b43a050c83702456489012938d78c260, type: 3}
+  releaseSound: {fileID: 8300000, guid: acbb11db189a840669fc9ce723b1b15e, type: 3}
   matchSound: {fileID: 8300000, guid: 1979181989c5d4519af35aa3e6a8e53f, type: 3}
   matchableDistance: 0.2
+  offset: 0.1
 --- !u!114 &114670451369544172
 MonoBehaviour:
   m_ObjectHideFlags: 1

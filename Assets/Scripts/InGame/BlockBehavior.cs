@@ -62,6 +62,7 @@
 
         Vector3 startPos;
         Vector3 targetPos;
+        Quaternion releaseRot;
 
         Collider col;
 
@@ -122,8 +123,8 @@
 
             if (blockState.value == BlockStates.released)
             {
-                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, (transform.position.y - 0.2f), transform.position.z), 0.3f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, Random.rotation, 0.3f);
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, (transform.position.y - 0.03f), transform.position.z), 0.3f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, releaseRot, 0.3f);
             }
 
             else if (blockState.value == BlockStates.grabbed)
@@ -230,7 +231,7 @@
         {
             if (blockState.value == BlockStates.released) return;
             blockState.value = BlockStates.grabbed;
-            audioSource.PlayOneShot(grabSound, 0.8f);
+            audioSource.PlayOneShot(grabSound, 1f);
         }
 
         public void OnRelease()
@@ -245,7 +246,8 @@
                 matchableSlot.slotState = SlotStates.idle;
                 matchableSlot = null;
             }
-            audioSource.PlayOneShot(releaseSound, 0.3f);
+            audioSource.PlayOneShot(releaseSound, 1f);
+            releaseRot = Random.rotation;
             StartCoroutine(ReleaseToIdle());
         }
 
