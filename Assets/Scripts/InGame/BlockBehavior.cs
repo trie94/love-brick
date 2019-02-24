@@ -40,6 +40,7 @@
         }
 
         public bool isCombinedBlock;
+        Renderer childRenderer;
         [SerializeField] float combinableDistance;
         BlockBehavior pairBlock = null;
         public ClientSyncVarVector3 combinePos = new ClientSyncVarVector3(Vector3.zero);
@@ -99,6 +100,17 @@
             if (isCombinedBlock)
             {
                 combinedBlockBehaviors.Add(this);
+
+                // find the child renderer
+                Renderer[] renderers = GetComponentsInChildren<Renderer>();
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    if (renderers[i] != rend)
+                    {
+                        childRenderer = renderers[i];
+                    }
+                }
+                childRenderer.enabled = false;
             }
         }
 
@@ -223,9 +235,9 @@
 
         public void OnRelease()
         {
-            if (isCombined.value)
+            if (isCombinedBlock && isCombined.value)
             {
-                isCombined.value = false;
+                OnDeCombine();
             }
 
             if (matchableSlot)
@@ -260,6 +272,8 @@
         {
             Debug.Log("combine");
             isCombined.value = true;
+            pairBlock.GetComponent<Renderer>().enabled = false;
+            childRenderer.enabled = true;
             UIController.Instance.SetSnackbarText("on combine");
         }
 
@@ -267,6 +281,8 @@
         {
             Debug.Log("de-combine");
             isCombined.value = false;
+            pairBlock.GetComponent<Renderer>().enabled = true;
+            childRenderer.enabled = false;
             UIController.Instance.SetSnackbarText("de-combine, block state: " + blockState.value);
         }
 
