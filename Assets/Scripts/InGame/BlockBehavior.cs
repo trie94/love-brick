@@ -7,7 +7,7 @@
 
     public enum BlockColors
     {
-        purple, white, pink, yellow
+        purple, white, pink, yellow, purpleYellow
     }
 
     public class BlockBehavior : NetworkClientSyncBehaviour
@@ -92,10 +92,22 @@
             slotHelper = FindObjectOfType<SlotHelper>();
             for (int i = 0; i < slotHelper.slotBehaviors.Length; i++)
             {
-                if (slotHelper.slotBehaviors[i].slotColor.ToString() == blockColor.ToString())
+                // combined blocks
+                if (isCombinedBlock)
                 {
-                    potentialSlots.Add(slotHelper.slotBehaviors[i]);
+                    if (slotHelper.slotBehaviors[i].slotColor == BlockColors.purpleYellow)
+                    {
+                        potentialSlots.Add(slotHelper.slotBehaviors[i]);
+                    }
                 }
+                else    // regular block
+                {
+                    if (slotHelper.slotBehaviors[i].slotColor == blockColor)
+                    {
+                        potentialSlots.Add(slotHelper.slotBehaviors[i]);
+                    }
+                }
+
             }
 
             if (isCombinedBlock)
@@ -177,8 +189,23 @@
                 curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
                 rend.material.SetFloat("_MKGlowPower", curGlow);
 
-                transform.position = Vector3.Lerp(transform.position, matchableSlot.transform.position, 0.3f);
+                Vector3 offset = Vector3.zero;
 
+                if (isCombinedBlock)
+                {
+                    float offsetX = 0f;
+                    if (blockColor == BlockColors.purple)
+                    {
+                        offsetX = 0.0215f;
+                    }
+                    if (blockColor == BlockColors.yellow)
+                    {
+                        offsetX = -0.025f;
+                    }
+                    offset = new Vector3(offsetX, 0, 0);
+                }
+
+                transform.position = Vector3.Lerp(transform.position, matchableSlot.transform.position + offset, 0.3f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, matchableSlot.transform.rotation, 0.3f);
             }
 

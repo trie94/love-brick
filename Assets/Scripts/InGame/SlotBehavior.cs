@@ -4,11 +4,6 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    public enum SlotColors
-    {
-        purple, white, pink, yellow
-    }
-
     public enum SlotStates
     {
         idle, hover, matched
@@ -17,21 +12,35 @@
     public class SlotBehavior : MonoBehaviour
     {
         Renderer rend;
+        Renderer[] rends;
         [SerializeField] float glowLerpSpeed;
         float glowLerpFactor;
 
-        float maxGlow = 0.4f;
+        float maxGlow = 0.2f;
         float minGlow = 0f;
         float curGlow;
 
         public SlotStates slotState = SlotStates.idle;
-        public SlotColors slotColor;
+        public BlockColors slotColor;
+        public bool isCombinedSlot;
 
         void Awake()
         {
-            rend = GetComponent<Renderer>();
-            rend.material.SetFloat("_MKGlowPower", 0f);
-            rend.material.SetFloat("_MKGlowTexStrength", 1f);
+            if (isCombinedSlot)
+            {
+                rends = GetComponentsInChildren<Renderer>();
+                for (int i = 0; i < rends.Length; i++)
+                {
+                    rends[i].material.SetFloat("_MKGlowPower", 0f);
+                    rends[i].material.SetFloat("_MKGlowTexStrength", 1f);
+                }
+            }
+            else
+            {
+                rend = GetComponent<Renderer>();
+                rend.material.SetFloat("_MKGlowPower", 0f);
+                rend.material.SetFloat("_MKGlowTexStrength", 1f);
+            }
         }
 
         void Update()
@@ -48,11 +57,39 @@
 
                 glowLerpFactor += Time.deltaTime * glowLerpSpeed;
                 curGlow = Mathf.Lerp(minGlow, maxGlow, glowLerpFactor);
-                rend.material.SetFloat("_MKGlowPower", curGlow);
+
+                if (isCombinedSlot)
+                {
+                    for (int i = 0; i < rends.Length; i++)
+                    {
+                        rends[i].material.SetFloat("_MKGlowPower", curGlow);
+                    }
+                }
+                else
+                {
+                    rend.material.SetFloat("_MKGlowPower", curGlow);
+                }
             }
-            else if (rend.material.GetFloat("_MKGlowPower") != 0f)
+            else
             {
-                rend.material.SetFloat("_MKGlowPower", 0f);
+                if (isCombinedSlot)
+                {
+                    for (int i = 0; i < rends.Length; i++)
+                    {
+                        if (rends[i].material.GetFloat("_MKGlowPower") != 0f)
+                        {
+                            rends[i].material.SetFloat("_MKGlowPower", 0f);
+                        }
+
+                    }
+                }
+                else
+                {
+                    if (rend.material.GetFloat("_MKGlowPower") != 0f)
+                    {
+                        rend.material.SetFloat("_MKGlowPower", 0f);
+                    }
+                }
             }
         }
     }

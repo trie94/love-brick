@@ -165,10 +165,9 @@
         Vector3 GetRandomPosFromPoint(Vector3 originPoint, float spawnRadius, float height)
         {
             var xz = Random.insideUnitCircle * spawnRadius;
-
             Vector2 originV2 = new Vector2(originPoint.x, originPoint.z);
 
-            while (Mathf.Abs(Vector2.Distance(originV2, xz)) < 0.5f)
+            while (xz.magnitude < 0.5f)
             {
                 xz = Random.insideUnitCircle * spawnRadius;
             }

@@ -316,6 +316,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1658049965394758
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4108745488999230}
+  - component: {fileID: 33303319321749244}
+  - component: {fileID: 23405978453954956}
+  m_Layer: 0
+  m_Name: combined_slot_left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1780786403038894
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +364,23 @@ GameObject:
   - component: {fileID: 114998164534160108}
   m_Layer: 0
   m_Name: slot7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1842258468607536
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4479087822343152}
+  - component: {fileID: 33504921484759960}
+  - component: {fileID: 23480148034806506}
+  m_Layer: 0
+  m_Name: combined_slot_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -483,6 +517,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4161986316737958}
   m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4108745488999230
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1658049965394758}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.0101, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 3.333333}
+  m_Children: []
+  m_Father: {fileID: 4494443303423950}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4136465813373462
 Transform:
@@ -648,6 +695,19 @@ Transform:
   m_Father: {fileID: 4161986316737958}
   m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4479087822343152
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1842258468607536}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -0.0034, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 3.333333}
+  m_Children: []
+  m_Father: {fileID: 4494443303423950}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4494443303423950
 Transform:
   m_ObjectHideFlags: 1
@@ -657,7 +717,9 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0.3}
-  m_Children: []
+  m_Children:
+  - {fileID: 4108745488999230}
+  - {fileID: 4479087822343152}
   m_Father: {fileID: 4161986316737958}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -824,6 +886,76 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1165786407140784}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: 099556619c7787e44af05f250c2118b0, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!23 &23405978453954956
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1658049965394758}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: 99957dc466246ec489a63aa4168f4660, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!23 &23480148034806506
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1842258468607536}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -1419,7 +1551,7 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1126488559988546}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1428,7 +1560,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: b9922b227f0f46a47bbb70b05de9e38f, type: 2}
+  - {fileID: 2100000, guid: 099556619c7787e44af05f250c2118b0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1462,6 +1594,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1432787782829986}
   m_Mesh: {fileID: 4300006, guid: 70ab5564091b07244867773d4aeb4ce4, type: 3}
+--- !u!33 &33303319321749244
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1658049965394758}
+  m_Mesh: {fileID: 4300000, guid: 74003851549ae864a854543b592dacdc, type: 3}
 --- !u!33 &33318355660047160
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -1497,6 +1636,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1165786407140784}
   m_Mesh: {fileID: 4300038, guid: 70ab5564091b07244867773d4aeb4ce4, type: 3}
+--- !u!33 &33504921484759960
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1842258468607536}
+  m_Mesh: {fileID: 4300000, guid: 608c6f26ee573904dac52fc185cd854a, type: 3}
 --- !u!33 &33507530329391102
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -1609,6 +1755,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 0
+  isCombinedSlot: 0
 --- !u!114 &114062664722328838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1623,6 +1770,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 0
+  isCombinedSlot: 0
 --- !u!114 &114139399670328118
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1637,6 +1785,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 1
+  isCombinedSlot: 0
 --- !u!114 &114187388571824676
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1651,6 +1800,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 1
+  isCombinedSlot: 0
 --- !u!114 &114263062048199668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1665,6 +1815,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 0
+  isCombinedSlot: 0
 --- !u!114 &114324364468137578
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1691,6 +1842,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 2
+  isCombinedSlot: 0
 --- !u!114 &114390707744547832
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1705,6 +1857,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 0
+  isCombinedSlot: 0
 --- !u!114 &114395643113391604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1718,7 +1871,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
   slotState: 0
-  slotColor: 2
+  slotColor: 4
+  isCombinedSlot: 1
 --- !u!114 &114522343093691382
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1733,6 +1887,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 2
+  isCombinedSlot: 0
 --- !u!114 &114552128149690790
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1768,6 +1923,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 3
+  isCombinedSlot: 0
 --- !u!114 &114554069490261390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1782,6 +1938,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 3
+  isCombinedSlot: 0
 --- !u!114 &114696553699861606
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1796,6 +1953,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 2
+  isCombinedSlot: 0
 --- !u!114 &114852616077004264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1810,6 +1968,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 2
+  isCombinedSlot: 0
 --- !u!114 &114861581318120928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1856,6 +2015,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 3
+  isCombinedSlot: 0
 --- !u!114 &114882934154037648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1870,6 +2030,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 3
+  isCombinedSlot: 0
 --- !u!114 &114888803466030472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1884,6 +2045,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 1
+  isCombinedSlot: 0
 --- !u!114 &114941284112669094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1898,6 +2060,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 1
+  isCombinedSlot: 0
 --- !u!114 &114943163130416374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1912,6 +2075,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 0
+  isCombinedSlot: 0
 --- !u!114 &114951869539169960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1926,6 +2090,7 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 3
+  isCombinedSlot: 0
 --- !u!114 &114998164534160108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1940,3 +2105,4 @@ MonoBehaviour:
   glowLerpSpeed: 5
   slotState: 0
   slotColor: 1
+  isCombinedSlot: 0
