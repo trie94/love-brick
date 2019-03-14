@@ -70,6 +70,8 @@
         [SerializeField] AudioClip grabSound;
         [SerializeField] AudioClip releaseSound;
         [SerializeField] AudioClip matchSound;
+        [SerializeField] AudioClip combineSound;
+        [SerializeField] AudioClip decombineSound;
 
         SlotHelper slotHelper;
         List<SlotBehavior> potentialSlots = new List<SlotBehavior>();
@@ -303,6 +305,7 @@
             isCombined.value = true;
             pairBlock.GetComponent<Renderer>().enabled = false;
             childRenderer.enabled = true;
+            audioSource.PlayOneShot(combineSound);
             UIController.Instance.SetSnackbarText("on combine");
         }
 
@@ -312,6 +315,7 @@
             isCombined.value = false;
             pairBlock.GetComponent<Renderer>().enabled = true;
             childRenderer.enabled = false;
+            audioSource.PlayOneShot(decombineSound);
             UIController.Instance.SetSnackbarText("de-combine, block state: " + blockState.value);
         }
 
