@@ -42,6 +42,10 @@
         public bool isCombinedBlock;
         Renderer childRenderer;
         [SerializeField] float combinableDistance;
+        [SerializeField] float combineDistance;
+        [SerializeField] GameObject fakeCombinePos;
+        bool hasEnteredCombinableArea;
+
         BlockBehavior pairBlock = null;
         public ClientSyncVarVector3 combinePos = new ClientSyncVarVector3(Vector3.zero);
         public static List<BlockBehavior> combinedBlockBehaviors = new List<BlockBehavior>();
@@ -287,6 +291,8 @@
 
         public void OnMatch()
         {
+            if (isCombinedBlock && !isCombined.value) return;
+
             blockState.value = BlockStates.matched;
             curGlow = rend.material.GetFloat("_MKGlowPower");
             audioSource.PlayOneShot(matchSound);
@@ -299,22 +305,44 @@
             if (isCombinedBlock && pairBlock) pairBlock = null;
         }
 
+        void OnStartCombine()
+        {
+            // enable the child object
+            if (!childRenderer.enabled || pairBlock.GetComponent<Renderer>().enabled)
+            {
+                // turn on the child renderer and turn off the real pair renderer
+                childRenderer.enabled = true;
+                pairBlock.GetComponent<Renderer>().enabled = false;
+            }
+            // move the child object to the pair block position
+            childRenderer.gameObject.transform.position = pairBlock.transform.position;
+        }
+
         void OnCombine()
         {
             Debug.Log("combine");
             isCombined.value = true;
-            pairBlock.GetComponent<Renderer>().enabled = false;
-            childRenderer.enabled = true;
+            hasEnteredCombinableArea = false;
+
+            // stop lerping and fix the position
+            childRenderer.gameObject.transform.position = fakeCombinePos.transform.position;
             audioSource.PlayOneShot(combineSound);
             UIController.Instance.SetSnackbarText("on combine");
+        }
+
+        void OnStartDecombine()
+        {
+
         }
 
         void OnDeCombine()
         {
             Debug.Log("de-combine");
             isCombined.value = false;
+            isMatchable = false;
             pairBlock.GetComponent<Renderer>().enabled = true;
             childRenderer.enabled = false;
+            hasEnteredCombinableArea = false;
             audioSource.PlayOneShot(decombineSound);
             UIController.Instance.SetSnackbarText("de-combine, block state: " + blockState.value);
         }
@@ -328,7 +356,14 @@
 
         void FindMatchableSlot()
         {
-            if (isCombinedBlock && !isCombined.value) return;
+            if (isCombinedBlock && !isCombined.value)
+            {
+                if (matchableSlot != null)
+                {
+                    matchableSlot = null;
+                }
+                return;
+            }
 
             float minDist = Mathf.Infinity;
             foreach (SlotBehavior s in potentialSlots)
@@ -372,10 +407,32 @@
 
                     UIController.Instance.SetSnackbarText("there is a pair " + pairBlock + ", distance between the block and the pair is " + dist);
 
-                    if (dist <= combinableDistance)
+                    // once it reaches to the position, set the status combined
+                    if (dist <= combineDistance)
                     {
-                        // combine
                         OnCombine();
+                    }
+
+                    // combinable area to fake lerping
+                    if (dist <= combinableDistance && dist > combineDistance)
+                    {
+                        if (!hasEnteredCombinableArea)
+                        {
+                            OnStartCombine();
+                            hasEnteredCombinableArea = true;
+                        }
+                        // lerp the child object to the fake position
+                        childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, fakeCombinePos.transform.position, 0.3f);
+                        UIController.Instance.SetSnackbarText("combinable area: lerping " + dist);
+                    }
+                    else
+                    {
+                        if (!isCombined.value && (childRenderer.enabled || !pairBlock.GetComponent<Renderer>().enabled))
+                        {
+                            pairBlock.GetComponent<Renderer>().enabled = true;
+                            childRenderer.enabled = false;
+                            hasEnteredCombinableArea = false;
+                        }
                     }
                 }
             }
