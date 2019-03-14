@@ -353,9 +353,7 @@ MonoBehaviour:
   isCombinedBlock: 1
   combinableDistance: 0.3
   combineDistance: 0.28
-  fakeCombinePos: {fileID: 1661591641469698}
-  combinePos:
-    _value: {x: 0, y: 0, z: 0}
+  combinePos: {fileID: 1661591641469698}
   blockState:
     _value: 0
   glowLerpSpeed: 5

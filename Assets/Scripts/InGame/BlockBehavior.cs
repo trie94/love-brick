@@ -43,11 +43,12 @@
         Renderer childRenderer;
         [SerializeField] float combinableDistance;
         [SerializeField] float combineDistance;
-        [SerializeField] GameObject fakeCombinePos;
+        [SerializeField] GameObject combinePos;
+        bool isDecombining;
+
         bool hasEnteredCombinableArea;
 
         BlockBehavior pairBlock = null;
-        public ClientSyncVarVector3 combinePos = new ClientSyncVarVector3(Vector3.zero);
         public static List<BlockBehavior> combinedBlockBehaviors = new List<BlockBehavior>();
 
         public ClientSyncVarBlockStates blockState = new ClientSyncVarBlockStates(BlockStates.idle);
@@ -141,51 +142,94 @@
 
             if (blockState.value == BlockStates.released)
             {
+                // when decombine
+                if (isCombinedBlock && isDecombining)
+                {
+                    childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, pairBlock.transform.position, 0.3f);
+                    childRenderer.gameObject.transform.rotation = Quaternion.Lerp(childRenderer.gameObject.transform.rotation, releaseRot, 0.3f);
+                }
+
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, (transform.position.y - 0.03f), transform.position.z), 0.3f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, releaseRot, 0.3f);
             }
 
             else if (blockState.value == BlockStates.grabbed)
             {
-                // combined?
+                // combined-blocks?
                 if (isCombinedBlock)
                 {
-                    if (isCombined.value)
+                    if (!pairBlock) FindOtherCombinedBlock();
+
+                    // if the distance is close enough
+                    if (targetHelpers != null && targetHelpers.Length >= 2)
                     {
-                        if (targetHelpers != null && targetHelpers.Length >= 2)
+                        float dist = Vector3.Distance(targetHelpers[0].transform.position, targetHelpers[1].transform.position);
+                        if (isCombined.value)
                         {
-                            float dist = Vector3.Distance(targetHelpers[0].transform.position, targetHelpers[1].transform.position);
-                            if ((dist > combinableDistance + offset) || pairBlock.blockState.value != BlockStates.grabbed)
+                            if (dist > combinableDistance + offset || pairBlock.blockState.value != BlockStates.grabbed)
                             {
                                 OnDeCombine();
                             }
                             else
                             {
+                                // combined, block follows the center position
                                 Vector3 centerPos = (targetHelpers[0].transform.position + targetHelpers[1].transform.position) / 2;
-
                                 transform.position = Vector3.Lerp(transform.position, centerPos, 0.3f);
-                                UIController.Instance.SetSnackbarText("combined and lerping to: " + centerPos);
-                                Debug.Log(targetHelpers[0].transform.position + " + " + targetHelpers[1].transform.position + ": " + centerPos);
                             }
                         }
-                        else
+                        else    // not combined
                         {
-                            targetHelpers = FindObjectsOfType<TargetHelper>();
+                            if (pairBlock && pairBlock.blockState.value == BlockStates.grabbed)
+                            {
+                                if (isDecombining)
+                                {
+                                    // decombining
+                                    childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, pairBlock.transform.position, 0.3f);
+                                    childRenderer.gameObject.transform.rotation = Quaternion.Lerp(childRenderer.gameObject.transform.rotation, releaseRot, 0.3f);
+
+                                    if (Vector3.Distance(childRenderer.gameObject.transform.position, pairBlock.transform.position) <= 0.2f)
+                                    {
+                                        OnEndDecombine();
+                                    }
+                                }
+
+                                if (dist > combinableDistance)
+                                {
+                                    pairBlock.GetComponent<Renderer>().enabled = true;
+                                    childRenderer.enabled = false;
+                                    hasEnteredCombinableArea = false;
+                                }
+                                // combinable area to fake lerping
+                                else if (dist <= combinableDistance)
+                                {
+                                    if (!hasEnteredCombinableArea)
+                                    {
+                                        OnEnterCombine();
+                                        hasEnteredCombinableArea = true;
+                                    }
+                                    // lerp the child object to the fake position
+                                    childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, combinePos.transform.position, 0.3f);
+                                }
+
+                                if (dist <= combineDistance)
+                                {
+                                    OnCombine();
+                                }
+                            }
                         }
                     }
-                    else    // look for a pair
+                    else
                     {
-                        FindOtherCombinedBlock();
+                        targetHelpers = FindObjectsOfType<TargetHelper>();
                     }
-                }
-
-                if (!isCombined.value)
-                {
-                    transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
                 }
 
                 // both
                 rend.material.SetFloat("_MKGlowPower", 0.1f);
+                if (!isCombined.value)
+                {
+                    transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
+                }
                 transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
                 FindMatchableSlot();
             }
@@ -269,7 +313,7 @@
 
         public void OnRelease()
         {
-            if (isCombinedBlock && isCombined.value)
+            if (isCombinedBlock && isCombined.value && pairBlock)
             {
                 OnDeCombine();
             }
@@ -291,8 +335,6 @@
 
         public void OnMatch()
         {
-            if (isCombinedBlock && !isCombined.value) return;
-
             blockState.value = BlockStates.matched;
             curGlow = rend.material.GetFloat("_MKGlowPower");
             audioSource.PlayOneShot(matchSound);
@@ -305,17 +347,13 @@
             if (isCombinedBlock && pairBlock) pairBlock = null;
         }
 
-        void OnStartCombine()
+        void OnEnterCombine()
         {
-            // enable the child object
-            if (!childRenderer.enabled || pairBlock.GetComponent<Renderer>().enabled)
-            {
-                // turn on the child renderer and turn off the real pair renderer
-                childRenderer.enabled = true;
-                pairBlock.GetComponent<Renderer>().enabled = false;
-            }
+            childRenderer.enabled = true;
+            pairBlock.GetComponent<Renderer>().enabled = false;
             // move the child object to the pair block position
             childRenderer.gameObject.transform.position = pairBlock.transform.position;
+            UIController.Instance.SetSnackbarText("on enter combine");
         }
 
         void OnCombine()
@@ -325,30 +363,37 @@
             hasEnteredCombinableArea = false;
 
             // stop lerping and fix the position
-            childRenderer.gameObject.transform.position = fakeCombinePos.transform.position;
+            childRenderer.gameObject.transform.position = combinePos.transform.position;
             audioSource.PlayOneShot(combineSound);
             UIController.Instance.SetSnackbarText("on combine");
         }
 
-        void OnStartDecombine()
-        {
-
-        }
-
         void OnDeCombine()
         {
-            Debug.Log("de-combine");
             isCombined.value = false;
             isMatchable = false;
-            pairBlock.GetComponent<Renderer>().enabled = true;
-            childRenderer.enabled = false;
+            isDecombining = true;
             hasEnteredCombinableArea = false;
+            Debug.Log("de-combine");
             audioSource.PlayOneShot(decombineSound);
             UIController.Instance.SetSnackbarText("de-combine, block state: " + blockState.value);
         }
 
+        void OnEndDecombine()
+        {
+            pairBlock.GetComponent<Renderer>().enabled = true;
+            childRenderer.enabled = false;
+            isDecombining = false;
+            UIController.Instance.SetSnackbarText("on end de-combine");
+        }
+
         IEnumerator ReleaseToIdle()
         {
+            if (isCombinedBlock && isDecombining)
+            {
+                OnEndDecombine();
+            }
+
             blockState.value = BlockStates.released;
             yield return new WaitForSeconds(0.5f);
             blockState.value = BlockStates.idle;
@@ -395,64 +440,20 @@
 
         void FindOtherCombinedBlock()
         {
-            // if there is a pair block
-            if (pairBlock)
+            Debug.Log("there is no pair block, try to find one");
+            UIController.Instance.SetSnackbarText("there is no pair block, try to find one");
+
+            for (int i = 0; i < combinedBlockBehaviors.Count; i++)
             {
-                if (pairBlock.blockState.value == BlockStates.grabbed)
+                BlockBehavior currentBlock = combinedBlockBehaviors[i];
+                // skip self
+                if (currentBlock == this) continue;
+
+                if (currentBlock.blockState.value == BlockStates.grabbed)
                 {
-                    // if the distance is close enough and the block is not matched
-                    float dist = Vector3.Distance(this.transform.position, pairBlock.transform.position);
-
-                    Debug.Log("there is a pair " + pairBlock + ", distance between the block and the pair is " + dist);
-
-                    UIController.Instance.SetSnackbarText("there is a pair " + pairBlock + ", distance between the block and the pair is " + dist);
-
-                    // once it reaches to the position, set the status combined
-                    if (dist <= combineDistance)
-                    {
-                        OnCombine();
-                    }
-
-                    // combinable area to fake lerping
-                    if (dist <= combinableDistance && dist > combineDistance)
-                    {
-                        if (!hasEnteredCombinableArea)
-                        {
-                            OnStartCombine();
-                            hasEnteredCombinableArea = true;
-                        }
-                        // lerp the child object to the fake position
-                        childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, fakeCombinePos.transform.position, 0.3f);
-                        UIController.Instance.SetSnackbarText("combinable area: lerping " + dist);
-                    }
-                    else
-                    {
-                        if (!isCombined.value && (childRenderer.enabled || !pairBlock.GetComponent<Renderer>().enabled))
-                        {
-                            pairBlock.GetComponent<Renderer>().enabled = true;
-                            childRenderer.enabled = false;
-                            hasEnteredCombinableArea = false;
-                        }
-                    }
-                }
-            }
-            else    // if there is no pair block
-            {
-                Debug.Log("there is no pair block, try to find one");
-                UIController.Instance.SetSnackbarText("there is no pair block, try to find one");
-
-                for (int i = 0; i < combinedBlockBehaviors.Count; i++)
-                {
-                    BlockBehavior currentBlock = combinedBlockBehaviors[i];
-                    // skip self
-                    if (currentBlock == this) continue;
-
-                    if (currentBlock.blockState.value == BlockStates.grabbed)
-                    {
-                        pairBlock = currentBlock;
-                        UIController.Instance.SetSnackbarText("pair found: " + pairBlock);
-                        return;
-                    }
+                    pairBlock = currentBlock;
+                    UIController.Instance.SetSnackbarText("pair found: " + pairBlock);
+                    return;
                 }
             }
         }
