@@ -28,7 +28,7 @@
             idle, hover, grab, release, match
         }
 
-        PlayerStates playerState = PlayerStates.idle;
+        public PlayerStates playerState = PlayerStates.idle;
         BlockBehavior currentBlock;
         BlockBehavior currentBlockBehavior;
 
@@ -228,7 +228,7 @@
         }
 
         [Command]
-        void CmdRequestToAddScore()
+        public void CmdRequestToAddScore()
         {
             Debug.Log("client requests to add score");
             GameManager.Instance.AddScore();
