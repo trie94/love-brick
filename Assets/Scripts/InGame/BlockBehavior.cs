@@ -179,41 +179,47 @@
                         }
                         else    // not combined
                         {
-                            if (pairBlock && pairBlock.blockState.value == BlockStates.grabbed)
+                            if (pairBlock)
                             {
-                                if (isDecombining)
+                                if (pairBlock.blockState.value == BlockStates.grabbed)
                                 {
-                                    // decombining
-                                    childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, pairBlock.transform.position, 0.3f);
-                                    childRenderer.gameObject.transform.rotation = Quaternion.Lerp(childRenderer.gameObject.transform.rotation, releaseRot, 0.3f);
-
-                                    if (Vector3.Distance(childRenderer.gameObject.transform.position, pairBlock.transform.position) <= 0.2f)
+                                    if (dist > combinableDistance)
                                     {
-                                        OnEndDecombine();
+                                        pairBlock.GetComponent<Renderer>().enabled = true;
+                                        childRenderer.enabled = false;
+                                        hasEnteredCombinableArea = false;
+                                    }
+                                    // combinable area to fake lerping
+                                    else if (dist <= combinableDistance)
+                                    {
+                                        if (!hasEnteredCombinableArea)
+                                        {
+                                            OnEnterCombine();
+                                            hasEnteredCombinableArea = true;
+                                        }
+                                        // lerp the child object to the fake position
+                                        childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, combinePos.transform.position, 0.3f);
+                                        childRenderer.gameObject.transform.rotation = Quaternion.Lerp(childRenderer.gameObject.transform.rotation, combinePos.transform.rotation, 0.3f);
+                                    }
+
+                                    if (dist <= combineDistance)
+                                    {
+                                        OnCombine();
                                     }
                                 }
-
-                                if (dist > combinableDistance)
+                                else
                                 {
-                                    pairBlock.GetComponent<Renderer>().enabled = true;
-                                    childRenderer.enabled = false;
-                                    hasEnteredCombinableArea = false;
-                                }
-                                // combinable area to fake lerping
-                                else if (dist <= combinableDistance)
-                                {
-                                    if (!hasEnteredCombinableArea)
+                                    if (isDecombining)
                                     {
-                                        OnEnterCombine();
-                                        hasEnteredCombinableArea = true;
-                                    }
-                                    // lerp the child object to the fake position
-                                    childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, combinePos.transform.position, 0.3f);
-                                }
+                                        // decombining
+                                        childRenderer.gameObject.transform.position = Vector3.Lerp(childRenderer.gameObject.transform.position, pairBlock.transform.position, 0.3f);
+                                        childRenderer.gameObject.transform.rotation = Quaternion.Lerp(childRenderer.gameObject.transform.rotation, releaseRot, 0.3f);
 
-                                if (dist <= combineDistance)
-                                {
-                                    OnCombine();
+                                        if (Vector3.Distance(childRenderer.gameObject.transform.position, pairBlock.transform.position) <= 0.2f)
+                                        {
+                                            OnEndDecombine();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -364,6 +370,7 @@
 
             // stop lerping and fix the position
             childRenderer.gameObject.transform.position = combinePos.transform.position;
+            childRenderer.gameObject.transform.rotation = combinePos.transform.rotation;
             audioSource.PlayOneShot(combineSound);
             UIController.Instance.SetSnackbarText("on combine");
         }

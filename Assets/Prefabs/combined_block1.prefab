@@ -352,7 +352,7 @@ MonoBehaviour:
   blockColor: 0
   isCombinedBlock: 1
   combinableDistance: 0.3
-  combineDistance: 0.28
+  combineDistance: 0.27
   combinePos: {fileID: 1083087437707268}
   blockState:
     _value: 0
