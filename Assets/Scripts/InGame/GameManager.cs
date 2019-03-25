@@ -34,6 +34,13 @@
         [SerializeField] float totalTime = 60f;
         string min;
         string sec;
+        bool isTicking;
+
+        Color progressColor;
+        Color alertColor;
+        [SerializeField] AudioClip beep;
+        [SerializeField] AudioClip beepLast;
+        AudioSource audioSource;
 
         [SyncVar] public int score = 0;
         public GameStates gamestate = GameStates.lobby;
@@ -68,7 +75,11 @@
                 Debug.LogError("GameManager already exists!");
             }
             s_instance = this;
+
             initTime = totalTime;
+            progressColor = UIController.Instance.timerSliderFillColor.color;
+            alertColor = Color.red;
+            audioSource = GetComponent<AudioSource>();
         }
 
         void OnEnable()
@@ -101,9 +112,24 @@
                 {
                     UIController.Instance.timerSlider.value = 0;
                     UIController.Instance.timer.text = "00:00";
+                    audioSource.PlayOneShot(beepLast);
                 }
                 else
                 {
+                    // timer alert effect
+                    if (totalTime < 10 && !isTicking)
+                    {
+                        isTicking = true;
+                        StartCoroutine(CountDown());
+                    }
+
+                    // test
+                    // if (!isTicking)
+                    // {
+                    //     isTicking = true;
+                    //     StartCoroutine(CountDown());
+                    // }
+
                     UIController.Instance.timerSlider.value = Mathf.Clamp01(totalTime / initTime);
                     UIController.Instance.timer.text = (min + ":" + sec);
                 }
@@ -111,6 +137,41 @@
         }
 
         #endregion
+
+        IEnumerator CountDown()
+        {
+            float lerpFactor = 0;
+            float duration = 0.5f;
+
+            Color c1 = alertColor;
+            Color c2 = progressColor;
+            bool playSound = true;
+
+            while (gamestate != GameStates.end && totalTime > 1)
+            {
+                lerpFactor += Time.deltaTime / duration;
+                UIController.Instance.timerSliderFillColor.color = Color.Lerp(c1, c2, lerpFactor);
+
+                if (lerpFactor > 1f)
+                {
+                    lerpFactor = 0;
+                    Color temp = c1;
+                    c1 = c2;
+                    c2 = temp;
+
+                    if (playSound)
+                    {
+                        audioSource.PlayOneShot(beep);
+                    }
+
+                    playSound = !playSound;
+                }
+
+                yield return null;
+            }
+
+            UIController.Instance.timerSliderFillColor.color = alertColor;
+        }
 
         void OnAnchorSaved(Transform anchor)
         {

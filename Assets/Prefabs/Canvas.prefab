@@ -962,6 +962,7 @@ MonoBehaviour:
   topUI: {fileID: 1715269180485532}
   timer: {fileID: 114066115499479016}
   timerSlider: {fileID: 114867452986876144}
+  timerSliderFillColor: {fileID: 114240338737895572}
   HostColor: {fileID: 1254635946406260}
   ClientColor: {fileID: 1032221431332842}
   InputRoot: {fileID: 1418589822960298}
@@ -4156,7 +4157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 261.8, y: 1147}
+  m_AnchoredPosition: {x: 205, y: 1147}
   m_SizeDelta: {x: 830, y: 158}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224518532687521538
@@ -4234,7 +4235,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 262, y: 1154}
+  m_AnchoredPosition: {x: 205, y: 1154}
   m_SizeDelta: {x: 720, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224625586366604214
@@ -4308,7 +4309,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: -300}
+  m_AnchoredPosition: {x: -300, y: -316}
   m_SizeDelta: {x: 400, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224707813377232960
@@ -4456,7 +4457,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: -480}
+  m_AnchoredPosition: {x: -300, y: -496.00006}
   m_SizeDelta: {x: 400, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224855568188394576
