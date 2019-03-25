@@ -99,10 +99,12 @@
 
                 if (totalTime <= 0)
                 {
+                    UIController.Instance.timerSlider.value = 0;
                     UIController.Instance.timer.text = "00:00";
                 }
                 else
                 {
+                    UIController.Instance.timerSlider.value = Mathf.Clamp01(totalTime / initTime);
                     UIController.Instance.timer.text = (min + ":" + sec);
                 }
             }

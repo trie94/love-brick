@@ -26,6 +26,7 @@ namespace Love.Core
         // time
         [SerializeField] GameObject topUI;
         public TextMeshProUGUI timer;
+        public Slider timerSlider;
 
         // color ui
         [SerializeField] GameObject HostColor;
