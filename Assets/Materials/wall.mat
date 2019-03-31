@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: wall
-  m_Shader: {fileID: 4800000, guid: 3f387b3c7760d5a488b5596b42425701, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0fc06dbae827e7646bd0850ff121daa5, type: 3}
   m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0

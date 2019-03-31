@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1951298980081790
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showMainBehavior: 1
-  showInnerGlowBehavior: 0
+  showInnerGlowBehavior: 1
   rtFormat: 0
   blurShader: {fileID: 4800000, guid: 1855d9636fad3914bacc4a543165c974, type: 3}
   compositeShader: {fileID: 4800000, guid: e384de4389ba527479054baf0ddb1d3e, type: 3}

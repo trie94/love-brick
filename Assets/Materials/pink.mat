@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: pink
-  m_Shader: {fileID: 4800000, guid: 3f387b3c7760d5a488b5596b42425701, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0fc06dbae827e7646bd0850ff121daa5, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -85,5 +85,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 0.5424528, b: 0.6710446, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MKGlowColor: {r: 1, g: 1, b: 1, a: 0.5}
-    - _MKGlowTexColor: {r: 0.9921569, g: 0.54509807, b: 0.67058825, a: 1}
+    - _MKGlowColor: {r: 0.96470594, g: 0.3137255, b: 0.49411768, a: 0.5}
+    - _MKGlowTexColor: {r: 0.9921569, g: 0.54509807, b: 0.67058825, a: 0.23529412}

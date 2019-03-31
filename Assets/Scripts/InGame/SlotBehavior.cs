@@ -3,13 +3,14 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using UnityEngine.Networking;
 
     public enum SlotStates
     {
-        idle, hover, matched
+        idle, hover
     }
 
-    public class SlotBehavior : MonoBehaviour
+    public class SlotBehavior : NetworkBehaviour
     {
         Renderer rend;
         Renderer[] rends;
@@ -20,9 +21,11 @@
         float minGlow = 0f;
         float curGlow;
 
-        public SlotStates slotState = SlotStates.idle;
         public BlockColors slotColor;
+        public SlotStates slotState;
         public bool isCombinedSlot;
+        public bool isMatched;
+        public BlockBehavior matchedBlock;
 
         void Awake()
         {
@@ -45,6 +48,8 @@
 
         void Update()
         {
+            if (GameManager.Instance.gamestate != GameStates.play) return;
+
             if (slotState == SlotStates.hover)
             {
                 if (glowLerpFactor > 1f)

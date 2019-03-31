@@ -40,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1237054700287142}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.333, y: 0, z: 1.848}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 12, y: 12, z: 12}
   m_Children: []
   m_Father: {fileID: 0}
@@ -210,8 +210,8 @@ MonoBehaviour:
   blockColor: 0
   isCombinedBlock: 0
   combinableDistance: 0
-  combinePos:
-    _value: {x: 0, y: 0, z: 0}
+  combineDistance: 0
+  combinePos: {fileID: 0}
   blockState:
     _value: 0
   glowLerpSpeed: 5
@@ -223,6 +223,7 @@ MonoBehaviour:
   decombineSound: {fileID: 8300000, guid: e9514ae7e315f234c83ca4782aa257e3, type: 3}
   matchableDistance: 0.2
   offset: 0.1
+  particle: {fileID: 1953385297080696, guid: 09ae9a9a509ff0a47b545b4b3c0b6a72, type: 2}
 --- !u!114 &114414307315712300
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -22,12 +22,13 @@
 
         [Header("GameObjects")]
         [SerializeField] GameObject wallPrefab;
-        [SerializeField] GameObject[] blocks;
-        [SerializeField] GameObject[] combinedBlocks;
+        [SerializeField] GameObject[] blockPrefabs;
+        [SerializeField] GameObject[] combinedBlockPrefabs;
         [SerializeField] int slotNum = 20;
         [SerializeField] int blockNums;
         [SerializeField] int combinedPairs;
         [SerializeField] GameObject helperPrefab;
+        List<GameObject> blocks = new List<GameObject>();
 
         [SerializeField] float wallHeight = 1f;
         float initTime;
@@ -116,19 +117,11 @@
                 }
                 else
                 {
-                    // timer alert effect
                     if (totalTime < 10 && !isTicking)
                     {
                         isTicking = true;
                         StartCoroutine(CountDown());
                     }
-
-                    // test
-                    // if (!isTicking)
-                    // {
-                    //     isTicking = true;
-                    //     StartCoroutine(CountDown());
-                    // }
 
                     UIController.Instance.timerSlider.value = Mathf.Clamp01(totalTime / initTime);
                     UIController.Instance.timer.text = (min + ":" + sec);
@@ -193,21 +186,25 @@
             // spawn blocks
             for (int i = 0; i < blockNums; i++)
             {
-                int index = i % blocks.Length;
+                int index = i % blockPrefabs.Length;
 
-                GameObject block = Instantiate(blocks[index], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
+                GameObject block = Instantiate(blockPrefabs[index], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
                 NetworkServer.Spawn(block);
+                blocks.Add(block);
             }
 
             // spawn combined pair
             for (int i = 0; i < combinedPairs; i++)
             {
-                GameObject cBlock1 = Instantiate(combinedBlocks[0], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
+                GameObject cBlock1 = Instantiate(combinedBlockPrefabs[0], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
 
-                GameObject cBlock2 = Instantiate(combinedBlocks[1], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
+                GameObject cBlock2 = Instantiate(combinedBlockPrefabs[1], GetRandomPosFromPoint(wall.transform.position, spawnRadius, absHeight), Random.rotation);
 
                 NetworkServer.Spawn(cBlock1);
                 NetworkServer.Spawn(cBlock2);
+
+                blocks.Add(cBlock1);
+                blocks.Add(cBlock2);
             }
 
             // spawn helpers
@@ -260,12 +257,50 @@
             gamestate = GameStates.end;
             Debug.Log("game over! total score is " + score);
             // UIController.Instance.SetSnackbarText("game over! total score is " + score);
+            StartCoroutine(LitBlocks());
+
+            // UIController.Instance.ShowEndUI(score.ToString(), min, sec);
+        }
+
+        IEnumerator LitBlocks()
+        {
+            // SlotHelper slotHelper = FindObjectOfType<SlotHelper>();
+            // yield return new WaitForSeconds(1f);
+
+            // for (int i = 0; i < slotHelper.slotBehaviors.Length; i++)
+            // {
+            //     SlotBehavior currSlot = slotHelper.slotBehaviors[i];
+
+            //     if (currSlot.isMatched)
+            //     {
+            //         BlockBehavior b = currSlot.matchedBlock;
+            //         b.OnFinale();
+            //         UIController.Instance.SetSnackbarText("block: " + b);
+            //         yield return new WaitForSeconds(1f);
+            //     }
+            // }
+
+            // random order
+            yield return new WaitForSeconds(1f);
+
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                BlockBehavior currBlock = blocks[i].GetComponent<BlockBehavior>();
+                if (currBlock.blockState.value == BlockStates.matched)
+                {
+                    GameObject particleEffect = Instantiate(currBlock.particle, currBlock.transform.position, Quaternion.identity);
+                    NetworkServer.Spawn(particleEffect);
+                    yield return new WaitForSeconds(0.2f);
+                    currBlock.OnFinale();
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+            yield return new WaitForSeconds(1f);
 
             float timeSpent = initTime - totalTime;
             string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
             string sec = Mathf.RoundToInt(timeSpent % 60).ToString("00");
-
-            UIController.Instance.ShowEndUI(score.ToString(), min, sec);
+            // UIController.Instance.ShowEndUI(score.ToString(), min, sec);
         }
 
         public void AddScore()

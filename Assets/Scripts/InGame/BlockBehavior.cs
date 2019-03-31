@@ -10,14 +10,15 @@
         purple, white, pink, yellow, purpleYellow
     }
 
+    public enum BlockStates
+    {
+        idle, hovered, grabbed, released, matched
+    }
+
     public class BlockBehavior : NetworkClientSyncBehaviour
     {
         public BlockColors blockColor;
 
-        public enum BlockStates
-        {
-            idle, hovered, grabbed, released, matched
-        }
 
         ClientSyncVarBool isCombined = new ClientSyncVarBool(false);
 
@@ -86,6 +87,7 @@
         SlotBehavior matchableSlot = null;
 
         public static TargetHelper[] targetHelpers;
+        public GameObject particle;
 
         public override void Awake()
         {
@@ -139,6 +141,7 @@
             base.Update();
 
             if (!hasAuthority) return;
+            if (GameManager.Instance.gamestate != GameStates.play) return;
 
             if (blockState.value == BlockStates.released)
             {
@@ -352,12 +355,42 @@
             audioSource.PlayOneShot(matchSound);
 
             if (col) col.enabled = false;
-            if (matchableSlot) matchableSlot.slotState = SlotStates.matched;
+            if (matchableSlot)
+            {
+                matchableSlot.slotState = SlotStates.idle;
+                matchableSlot.isMatched = true;
+                matchableSlot.matchedBlock = this;
+            }
             Debug.Log("match");
 
             // combined block
             if (isCombinedBlock && pairBlock) pairBlock = null;
             UIController.Instance.SetSnackbarText("match, slot: " + matchableSlot + " / slot state: " + matchableSlot.slotState);
+        }
+
+        public void OnFinale()
+        {
+            Color c = rend.material.GetColor("_Color");
+            float glowPower = 0.5f;
+
+            if (blockColor == BlockColors.white)
+            {
+                c.a = 100 / 225f;
+            }
+            else if (blockColor == BlockColors.purple)
+            {
+                c.a = 110 / 225f;
+                glowPower = 2.0f;
+            }
+            else    // yellow and pink
+            {
+                c.a = 100 / 225f;
+            }
+
+            rend.material.SetColor("_Color", c);
+            rend.material.SetFloat("_MKGlowPower", glowPower);
+            rend.material.SetFloat("_MKGlowTexStrength", 0f);
+            // add sound later on
         }
 
         void OnEnterCombine()
@@ -437,7 +470,7 @@
                         matchableSlot = null;
                     }
 
-                    if (dist <= matchableDistance && s.slotState != SlotStates.matched)
+                    if (dist <= matchableDistance && !s.isMatched)
                     {
                         matchableSlot = s;
                         minDist = dist;
