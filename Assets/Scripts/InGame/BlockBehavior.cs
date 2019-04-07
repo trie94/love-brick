@@ -62,9 +62,16 @@
         float glowLerpFactor;
         float shiverLerpFactor;
 
-        float maxGlow = 0.4f;
+        float maxGlow = 1f;
         float minGlow = 0f;
+
+        float maxTexGlow = 3f;
+        float minTexGlow = 0f;
+
         float curGlow;
+        float curTexGlow;
+
+        [SerializeField] Texture2D glowTex;
 
         Vector3 startPos;
         Vector3 targetPos;
@@ -96,7 +103,7 @@
             audioSource = GetComponent<AudioSource>();
             col = GetComponent<Collider>();
             rend.material.SetFloat("_MKGlowPower", 0f);
-            rend.material.SetFloat("_MKGlowTexStrength", 1f);
+            rend.material.SetFloat("_MKGlowTexStrength", 0f);
             startPos = transform.position;
             slotHelper = FindObjectOfType<SlotHelper>();
             for (int i = 0; i < slotHelper.slotBehaviors.Length; i++)
@@ -239,7 +246,15 @@
                 }
 
                 // both
-                rend.material.SetFloat("_MKGlowPower", 0.1f);
+                rend.material.SetFloat("_MKGlowPower", maxGlow * 0.5f);
+                rend.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.5f);
+
+                if (isCombinedBlock && childRenderer.enabled)
+                {
+                    childRenderer.material.SetFloat("_MKGlowPower", maxGlow * 0.5f);
+                    childRenderer.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.5f);
+                }
+
                 if (!isCombined.value)
                 {
                     transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
@@ -251,7 +266,9 @@
             else if (blockState.value == BlockStates.matched)
             {
                 curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
+                curTexGlow = Mathf.Lerp(curTexGlow, 0f, 0.3f);
                 rend.material.SetFloat("_MKGlowPower", curGlow);
+                rend.material.SetFloat("_MKGlowTexStrength", 0f);
 
                 Vector3 offset = Vector3.zero;
 
@@ -282,6 +299,10 @@
                     float tempGlow = minGlow;
                     minGlow = maxGlow;
                     maxGlow = tempGlow;
+
+                    float tempTexGlow = minTexGlow;
+                    minTexGlow = maxTexGlow;
+                    maxTexGlow = minTexGlow;
                 }
 
                 if (shiverLerpFactor > 1f)
@@ -296,7 +317,10 @@
                 shiverLerpFactor += Time.deltaTime * shiverLerpSpeed;
 
                 curGlow = Mathf.Lerp(minGlow, maxGlow, glowLerpFactor);
+                curTexGlow = Mathf.Lerp(curTexGlow, minTexGlow, glowLerpFactor);
+
                 rend.material.SetFloat("_MKGlowPower", curGlow);
+                rend.material.SetFloat("_MKGlowTexStrength", curTexGlow);
 
                 transform.position = Vector3.Lerp(startPos, targetPos, shiverLerpFactor);
             }
@@ -304,6 +328,7 @@
             else if ((blockState.value == BlockStates.idle) && (rend.material.GetFloat("_MKGlowPower") != 0f))
             {
                 rend.material.SetFloat("_MKGlowPower", 0f);
+                rend.material.SetFloat("_MKGlowTexStrength", 0f);
             }
         }
 
@@ -312,8 +337,12 @@
             blockState.value = BlockStates.hovered;
             // init
             curGlow = glowLerpFactor = 0f;
-            maxGlow = 0.4f;
-            minGlow = 0.2f;
+            maxGlow = 1f;
+            minGlow = 0f;
+
+            curTexGlow = 0f;
+            maxTexGlow = 3f;
+            minTexGlow = 0f;
             startPos = transform.position;
             targetPos = startPos + Random.insideUnitSphere * 0.01f;
         }
@@ -352,6 +381,7 @@
             blockState.value = BlockStates.matched;
             isMatchable = false;
             curGlow = rend.material.GetFloat("_MKGlowPower");
+            curTexGlow = rend.material.GetFloat("_MKGlowTexStrength");
             audioSource.PlayOneShot(matchSound);
 
             if (col) col.enabled = false;
@@ -371,25 +401,38 @@
         public void OnFinale()
         {
             Color c = rend.material.GetColor("_Color");
-            float glowPower = 0.5f;
+            float glowPower;
+            float glowTexStrength;
 
             if (blockColor == BlockColors.white)
             {
-                c.a = 100 / 225f;
+                // c.a = 100 / 255f;
+                glowPower = 0.1f;
+                glowTexStrength = 0.3f;
             }
             else if (blockColor == BlockColors.purple)
             {
-                c.a = 110 / 225f;
-                glowPower = 2.0f;
+                // c.a = 115 / 255f;
+                glowPower = 0.5f;
+                glowTexStrength = 0.5f;
             }
-            else    // yellow and pink
+            else if (blockColor == BlockColors.yellow)
             {
-                c.a = 100 / 225f;
+                // c.a = 100 / 255f;
+                glowPower = 0.5f;
+                glowTexStrength = 0.1f;
+            }
+            else    // pink
+            {
+                // c.a = 255 / 255f;
+                glowPower = 0.5f;
+                glowTexStrength = 0.5f;
             }
 
             rend.material.SetColor("_Color", c);
+            rend.material.SetTexture("_MKGlowTex", glowTex);
             rend.material.SetFloat("_MKGlowPower", glowPower);
-            rend.material.SetFloat("_MKGlowTexStrength", 0f);
+            rend.material.SetFloat("_MKGlowTexStrength", glowTexStrength);
             // add sound later on
         }
 

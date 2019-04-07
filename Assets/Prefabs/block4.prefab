@@ -237,6 +237,7 @@ MonoBehaviour:
     _value: 0
   glowLerpSpeed: 5
   shiverLerpSpeed: 10
+  glowTex: {fileID: 2800000, guid: d889a3999afe749af9a0b6d40a3c5994, type: 3}
   grabSound: {fileID: 8300000, guid: b43a050c83702456489012938d78c260, type: 3}
   releaseSound: {fileID: 8300000, guid: acbb11db189a840669fc9ce723b1b15e, type: 3}
   matchSound: {fileID: 8300000, guid: 1979181989c5d4519af35aa3e6a8e53f, type: 3}

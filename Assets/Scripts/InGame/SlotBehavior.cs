@@ -17,9 +17,14 @@
         [SerializeField] float glowLerpSpeed;
         float glowLerpFactor;
 
-        float maxGlow = 0.2f;
+        float maxGlow = 1f;
         float minGlow = 0f;
+
+        float maxTexGlow = 3f;
+        float minTexGlow = 0f;
+
         float curGlow;
+        float curTexGlow;
 
         public BlockColors slotColor;
         public SlotStates slotState;
@@ -35,14 +40,14 @@
                 for (int i = 0; i < rends.Length; i++)
                 {
                     rends[i].material.SetFloat("_MKGlowPower", 0f);
-                    rends[i].material.SetFloat("_MKGlowTexStrength", 1f);
+                    rends[i].material.SetFloat("_MKGlowTexStrength", 0f);
                 }
             }
             else
             {
                 rend = GetComponent<Renderer>();
                 rend.material.SetFloat("_MKGlowPower", 0f);
-                rend.material.SetFloat("_MKGlowTexStrength", 1f);
+                rend.material.SetFloat("_MKGlowTexStrength", 0f);
             }
         }
 
@@ -58,21 +63,30 @@
                     float tempGlow = minGlow;
                     minGlow = maxGlow;
                     maxGlow = tempGlow;
+
+                    float tempTexGlow = minTexGlow;
+                    minTexGlow = maxTexGlow;
+                    maxTexGlow = minTexGlow;
                 }
 
                 glowLerpFactor += Time.deltaTime * glowLerpSpeed;
                 curGlow = Mathf.Lerp(minGlow, maxGlow, glowLerpFactor);
+                curTexGlow = Mathf.Lerp(curTexGlow, minTexGlow, glowLerpFactor);
 
                 if (isCombinedSlot)
                 {
                     for (int i = 0; i < rends.Length; i++)
                     {
                         rends[i].material.SetFloat("_MKGlowPower", curGlow);
+
+                        rends[i].material.SetFloat("_MKGlowTexStrength", curTexGlow);
                     }
                 }
                 else
                 {
                     rend.material.SetFloat("_MKGlowPower", curGlow);
+
+                    rend.material.SetFloat("_MKGlowTexStrength", curTexGlow);
                 }
             }
             else
@@ -84,6 +98,7 @@
                         if (rends[i].material.GetFloat("_MKGlowPower") != 0f)
                         {
                             rends[i].material.SetFloat("_MKGlowPower", 0f);
+                            rends[i].material.SetFloat("_MKGlowTexStrength", 0f);
                         }
 
                     }
@@ -93,6 +108,7 @@
                     if (rend.material.GetFloat("_MKGlowPower") != 0f)
                     {
                         rend.material.SetFloat("_MKGlowPower", 0f);
+                        rend.material.SetFloat("_MKGlowTexStrength", 0f);
                     }
                 }
             }

@@ -1753,9 +1753,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 0
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114062664722328838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1768,9 +1770,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 0
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114139399670328118
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1783,9 +1787,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 1
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114187388571824676
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1798,9 +1804,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 1
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114263062048199668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1813,9 +1821,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 0
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114324364468137578
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1840,9 +1850,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 2
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114390707744547832
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1855,9 +1867,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 0
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114395643113391604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1870,9 +1884,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 4
+  slotState: 0
   isCombinedSlot: 1
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114522343093691382
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1885,9 +1901,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 2
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114552128149690790
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1921,9 +1939,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 3
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114554069490261390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1936,9 +1956,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 3
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114696553699861606
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1951,9 +1973,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 2
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114852616077004264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1966,9 +1990,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 2
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114861581318120928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2013,9 +2039,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 3
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114882934154037648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2028,9 +2056,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 3
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114888803466030472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2043,9 +2073,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 1
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114941284112669094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2058,9 +2090,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 1
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114943163130416374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2073,9 +2107,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 0
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114951869539169960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2088,9 +2124,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 3
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}
 --- !u!114 &114998164534160108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2103,6 +2141,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowLerpSpeed: 5
-  slotState: 0
   slotColor: 1
+  slotState: 0
   isCombinedSlot: 0
+  isMatched: 0
+  matchedBlock: {fileID: 0}

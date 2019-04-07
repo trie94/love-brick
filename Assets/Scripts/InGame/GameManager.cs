@@ -29,6 +29,7 @@
         [SerializeField] int combinedPairs;
         [SerializeField] GameObject helperPrefab;
         List<GameObject> blocks = new List<GameObject>();
+        [SerializeField] Light directionalLight;
 
         [SerializeField] float wallHeight = 1f;
         float initTime;
@@ -113,7 +114,7 @@
                 {
                     UIController.Instance.timerSlider.value = 0;
                     UIController.Instance.timer.text = "00:00";
-                    audioSource.PlayOneShot(beepLast);
+                    audioSource.PlayOneShot(beepLast, 0.8f);
                 }
                 else
                 {
@@ -154,7 +155,7 @@
 
                     if (playSound)
                     {
-                        audioSource.PlayOneShot(beep);
+                        audioSource.PlayOneShot(beep, 0.8f);
                     }
 
                     playSound = !playSound;
@@ -257,32 +258,33 @@
             gamestate = GameStates.end;
             Debug.Log("game over! total score is " + score);
             // UIController.Instance.SetSnackbarText("game over! total score is " + score);
-            StartCoroutine(LitBlocks());
+            StartCoroutine(TurnOffLight());
 
             // UIController.Instance.ShowEndUI(score.ToString(), min, sec);
         }
 
+        IEnumerator TurnOffLight()
+        {
+            // turn off the light for the finale
+            Color currColor = directionalLight.color;
+            Color targetColor = new Color(0, 0, 0);
+            float lerpFactor = 0f;
+            float duration = 5f;
+
+            while (lerpFactor < 1f)
+            {
+                directionalLight.color = Color.Lerp(currColor, targetColor, lerpFactor);
+                lerpFactor += Time.deltaTime / duration;
+                yield return null;
+            }
+
+            directionalLight.enabled = false;
+            yield return LitBlocks();
+        }
+
         IEnumerator LitBlocks()
         {
-            // SlotHelper slotHelper = FindObjectOfType<SlotHelper>();
-            // yield return new WaitForSeconds(1f);
-
-            // for (int i = 0; i < slotHelper.slotBehaviors.Length; i++)
-            // {
-            //     SlotBehavior currSlot = slotHelper.slotBehaviors[i];
-
-            //     if (currSlot.isMatched)
-            //     {
-            //         BlockBehavior b = currSlot.matchedBlock;
-            //         b.OnFinale();
-            //         UIController.Instance.SetSnackbarText("block: " + b);
-            //         yield return new WaitForSeconds(1f);
-            //     }
-            // }
-
             // random order
-            yield return new WaitForSeconds(1f);
-
             for (int i = 0; i < blocks.Count; i++)
             {
                 BlockBehavior currBlock = blocks[i].GetComponent<BlockBehavior>();
@@ -295,7 +297,7 @@
                     yield return new WaitForSeconds(1f);
                 }
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
             float timeSpent = initTime - totalTime;
             string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
