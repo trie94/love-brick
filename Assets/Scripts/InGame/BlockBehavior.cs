@@ -62,11 +62,11 @@
         float glowLerpFactor;
         float shiverLerpFactor;
 
-        float maxGlow = 1f;
-        float minGlow = 0f;
+        float maxGlow;
+        float minGlow;
 
-        float maxTexGlow = 3f;
-        float minTexGlow = 0f;
+        float maxTexGlow;
+        float minTexGlow;
 
         float curGlow;
         float curTexGlow;
@@ -317,7 +317,7 @@
                 shiverLerpFactor += Time.deltaTime * shiverLerpSpeed;
 
                 curGlow = Mathf.Lerp(minGlow, maxGlow, glowLerpFactor);
-                curTexGlow = Mathf.Lerp(curTexGlow, minTexGlow, glowLerpFactor);
+                curTexGlow = Mathf.Lerp(minTexGlow, maxTexGlow, glowLerpFactor);
 
                 rend.material.SetFloat("_MKGlowPower", curGlow);
                 rend.material.SetFloat("_MKGlowTexStrength", curTexGlow);
@@ -337,11 +337,21 @@
             blockState.value = BlockStates.hovered;
             // init
             curGlow = glowLerpFactor = 0f;
-            maxGlow = 1f;
+            maxGlow = 0.4f;
+
+            if (blockColor == BlockColors.purple || blockColor == BlockColors.pink)
+            {
+                maxGlow = 1f;
+            }
             minGlow = 0f;
 
             curTexGlow = 0f;
-            maxTexGlow = 3f;
+            maxTexGlow = 0.4f;
+
+            if (blockColor == BlockColors.purple || blockColor == BlockColors.pink)
+            {
+                maxTexGlow = 1f;
+            }
             minTexGlow = 0f;
             startPos = transform.position;
             targetPos = startPos + Random.insideUnitSphere * 0.01f;

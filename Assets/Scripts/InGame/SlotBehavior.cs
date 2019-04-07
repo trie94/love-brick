@@ -17,10 +17,10 @@
         [SerializeField] float glowLerpSpeed;
         float glowLerpFactor;
 
-        float maxGlow = 1f;
+        float maxGlow = 0.4f;
         float minGlow = 0f;
 
-        float maxTexGlow = 3f;
+        float maxTexGlow = 0.4f;
         float minTexGlow = 0f;
 
         float curGlow;
@@ -48,6 +48,13 @@
                 rend = GetComponent<Renderer>();
                 rend.material.SetFloat("_MKGlowPower", 0f);
                 rend.material.SetFloat("_MKGlowTexStrength", 0f);
+            }
+
+            // darker colors should have bigger value
+            if (slotColor == BlockColors.purple || slotColor == BlockColors.pink)
+            {
+                maxGlow = 1f;
+                maxTexGlow = 1f;
             }
         }
 
