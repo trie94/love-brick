@@ -149,6 +149,9 @@
 
             if (!hasAuthority) return;
 
+            // when matching the blocks, the matched block should go to the slot
+            // even when the game ends
+
             if (blockState.value == BlockStates.released)
             {
                 if (GameManager.Instance.gamestate != GameStates.play)
@@ -279,13 +282,17 @@
 
             else if (blockState.value == BlockStates.matched)
             {
-                if (GameManager.Instance.gamestate == GameStates.finale) return;
+                if (GameManager.Instance.gamestate == GameStates.play)
+                {
+                    curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
+                    curTexGlow = Mathf.Lerp(curTexGlow, 0f, 0.3f);
+                    rend.material.SetFloat("_MKGlowPower", curGlow);
+                    rend.material.SetFloat("_MKGlowTexStrength", 0f);
+                }
 
-                curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
-                curTexGlow = Mathf.Lerp(curTexGlow, 0f, 0.3f);
-                rend.material.SetFloat("_MKGlowPower", curGlow);
-                rend.material.SetFloat("_MKGlowTexStrength", 0f);
-
+                // there is a case where we lose track and the wall gets shifted
+                // so we keep update the position of the matched block to follow the slots
+                // even when the game ends
                 Vector3 offset = Vector3.zero;
 
                 if (isCombinedBlock)
@@ -349,6 +356,7 @@
 
             else if ((blockState.value == BlockStates.idle) && (rend.material.GetFloat("_MKGlowPower") != 0f))
             {
+                if (GameManager.Instance.gamestate == GameStates.finale) return;
                 rend.material.SetFloat("_MKGlowPower", 0f);
                 rend.material.SetFloat("_MKGlowTexStrength", 0f);
             }
