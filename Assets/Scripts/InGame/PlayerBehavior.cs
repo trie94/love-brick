@@ -36,6 +36,8 @@
 
         bool isTouching;
 
+        BlockBehavior[] blocks;
+
         #region Unity methods
 
         void Start()
@@ -178,7 +180,7 @@
 
         public void GetColorBlocks()
         {
-            BlockBehavior[] blocks = FindObjectsOfType<BlockBehavior>();
+            blocks = FindObjectsOfType<BlockBehavior>();
             Debug.Log(blocks.Length);
 
             for (int i = 0; i < blocks.Length; i++)

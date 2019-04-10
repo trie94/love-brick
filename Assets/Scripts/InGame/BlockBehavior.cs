@@ -148,10 +148,15 @@
             base.Update();
 
             if (!hasAuthority) return;
-            if (GameManager.Instance.gamestate != GameStates.play) return;
 
             if (blockState.value == BlockStates.released)
             {
+                if (GameManager.Instance.gamestate != GameStates.play)
+                {
+                    blockState.value = BlockStates.idle;
+                    return;
+                }
+
                 // when decombine
                 if (isCombinedBlock && isDecombining)
                 {
@@ -165,6 +170,12 @@
 
             else if (blockState.value == BlockStates.grabbed)
             {
+                if (GameManager.Instance.gamestate != GameStates.play)
+                {
+                    blockState.value = BlockStates.idle;
+                    return;
+                }
+
                 // combined-blocks?
                 if (isCombinedBlock)
                 {
@@ -249,22 +260,27 @@
                 rend.material.SetFloat("_MKGlowPower", maxGlow * 0.5f);
                 rend.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.5f);
 
-                if (isCombinedBlock && childRenderer.enabled)
+                // child renderer glowing
+                if (isCombinedBlock && isCombined.value && childRenderer.enabled)
                 {
                     childRenderer.material.SetFloat("_MKGlowPower", maxGlow * 0.5f);
                     childRenderer.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.5f);
                 }
 
+                // for both, when not combined
                 if (!isCombined.value)
                 {
                     transform.position = Vector3.Lerp(transform.position, Camera.main.transform.position + Camera.main.transform.forward * 0.5f, 0.3f);
                 }
+
                 transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.3f);
                 FindMatchableSlot();
             }
 
             else if (blockState.value == BlockStates.matched)
             {
+                if (GameManager.Instance.gamestate == GameStates.finale) return;
+
                 curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
                 curTexGlow = Mathf.Lerp(curTexGlow, 0f, 0.3f);
                 rend.material.SetFloat("_MKGlowPower", curGlow);
@@ -292,6 +308,12 @@
 
             else if (blockState.value == BlockStates.hovered)
             {
+                if (GameManager.Instance.gamestate != GameStates.play)
+                {
+                    blockState.value = BlockStates.idle;
+                    return;
+                }
+
                 // hover effect
                 if (glowLerpFactor > 1f)
                 {
@@ -335,26 +357,35 @@
         public void OnHover()
         {
             blockState.value = BlockStates.hovered;
+
             // init
-            curGlow = glowLerpFactor = 0f;
-            maxGlow = 0.4f;
+            InitGlowFactors();
+            startPos = transform.position;
+            targetPos = startPos + Random.insideUnitSphere * 0.01f;
+        }
+
+        void InitGlowFactors()
+        {
+            glowLerpFactor = 0f;
+            curGlow = curTexGlow = minGlow = minTexGlow = 0f;
 
             if (blockColor == BlockColors.purple || blockColor == BlockColors.pink)
             {
                 maxGlow = 1f;
             }
-            minGlow = 0f;
-
-            curTexGlow = 0f;
-            maxTexGlow = 0.4f;
+            else
+            {
+                maxGlow = 0.4f;
+            }
 
             if (blockColor == BlockColors.purple || blockColor == BlockColors.pink)
             {
                 maxTexGlow = 1f;
             }
-            minTexGlow = 0f;
-            startPos = transform.position;
-            targetPos = startPos + Random.insideUnitSphere * 0.01f;
+            else
+            {
+                maxTexGlow = 0.4f;
+            }
         }
 
         public void OnGrab()
@@ -406,6 +437,18 @@
             // combined block
             if (isCombinedBlock && pairBlock) pairBlock = null;
             UIController.Instance.SetSnackbarText("match, slot: " + matchableSlot + " / slot state: " + matchableSlot.slotState);
+        }
+
+        [ClientRpc]
+        public void RpcFinaleParticles()
+        {
+            Instantiate(particle, this.transform.position, Quaternion.identity);
+        }
+
+        [ClientRpc]
+        public void RpcFinale()
+        {
+            OnFinale();
         }
 
         public void OnFinale()

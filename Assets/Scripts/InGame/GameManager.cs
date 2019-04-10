@@ -12,7 +12,7 @@
 
     public enum GameStates
     {
-        lobby, play, end
+        lobby, play, end, finale
     }
 
     public class GameManager : NetworkBehaviour
@@ -256,8 +256,8 @@
         void EndGame()
         {
             gamestate = GameStates.end;
-            Debug.Log("game over! total score is " + score);
-            // UIController.Instance.SetSnackbarText("game over! total score is " + score);
+            // Debug.Log("game over! total score is " + score);
+            UIController.Instance.SetSnackbarText("game over! total score is " + score);
             StartCoroutine(TurnOffLight());
 
             // UIController.Instance.ShowEndUI(score.ToString(), min, sec);
@@ -269,7 +269,7 @@
             Color currColor = directionalLight.color;
             Color targetColor = new Color(0, 0, 0);
             float lerpFactor = 0f;
-            float duration = 5f;
+            float duration = 3f;
 
             while (lerpFactor < 1f)
             {
@@ -279,6 +279,7 @@
             }
 
             directionalLight.enabled = false;
+            gamestate = GameStates.finale;
             yield return LitBlocks();
         }
 
@@ -290,10 +291,11 @@
                 BlockBehavior currBlock = blocks[i].GetComponent<BlockBehavior>();
                 if (currBlock.blockState.value == BlockStates.matched)
                 {
-                    GameObject particleEffect = Instantiate(currBlock.particle, currBlock.transform.position, Quaternion.identity);
-                    NetworkServer.Spawn(particleEffect);
+                    // GameObject particleEffect = Instantiate(currBlock.particle, currBlock.transform.position, Quaternion.identity);
+                    // NetworkServer.Spawn(particleEffect);
+                    if (isServer) currBlock.RpcFinaleParticles();
                     yield return new WaitForSeconds(0.2f);
-                    currBlock.OnFinale();
+                    if (isServer) currBlock.RpcFinale();
                     yield return new WaitForSeconds(1f);
                 }
             }
