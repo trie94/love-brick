@@ -100,7 +100,7 @@
         {
             if (gamestate == GameStates.play)
             {
-                if (score >= slotNum || totalTime <= 0)
+                if (score >= slotNum + 1 || totalTime <= 0)
                 {
                     EndGame();
                     return;
