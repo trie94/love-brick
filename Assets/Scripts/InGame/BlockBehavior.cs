@@ -72,6 +72,7 @@
         float curTexGlow;
 
         [SerializeField] Texture2D glowTex;
+        [SerializeField] Texture2D childGlowTex;
 
         Vector3 startPos;
         Vector3 targetPos;
@@ -266,8 +267,17 @@
                 // child renderer glowing
                 if (isCombinedBlock && isCombined.value && childRenderer.enabled)
                 {
-                    childRenderer.material.SetFloat("_MKGlowPower", maxGlow * 0.5f);
-                    childRenderer.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.5f);
+                    if (blockColor == BlockColors.purple)
+                    {
+                        childRenderer.material.SetFloat("_MKGlowPower", maxGlow * 0.25f);
+                        childRenderer.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.25f);
+                    }
+
+                    if (blockColor == BlockColors.yellow)
+                    {
+                        childRenderer.material.SetFloat("_MKGlowPower", maxGlow * 0.5f);
+                        childRenderer.material.SetFloat("_MKGlowTexStrength", maxTexGlow * 0.5f);
+                    }
                 }
 
                 // for both, when not combined
@@ -288,6 +298,12 @@
                     curTexGlow = Mathf.Lerp(curTexGlow, 0f, 0.3f);
                     rend.material.SetFloat("_MKGlowPower", curGlow);
                     rend.material.SetFloat("_MKGlowTexStrength", 0f);
+
+                    if (isCombinedBlock)
+                    {
+                        childRenderer.material.SetFloat("_MKGlowPower", curGlow);
+                        childRenderer.material.SetFloat("_MKGlowTexStrength", 0f);
+                    }
                 }
 
                 // there is a case where we lose track and the wall gets shifted
@@ -467,27 +483,50 @@
 
             if (blockColor == BlockColors.white)
             {
-                // c.a = 100 / 255f;
                 glowPower = 0.1f;
                 glowTexStrength = 0.3f;
             }
             else if (blockColor == BlockColors.purple)
             {
-                // c.a = 115 / 255f;
                 glowPower = 0.5f;
                 glowTexStrength = 0.5f;
             }
             else if (blockColor == BlockColors.yellow)
             {
-                // c.a = 100 / 255f;
                 glowPower = 0.5f;
                 glowTexStrength = 0.1f;
             }
             else    // pink
             {
-                // c.a = 255 / 255f;
                 glowPower = 0.5f;
                 glowTexStrength = 0.5f;
+            }
+
+            if (isCombinedBlock)
+            {
+                Color cc = childRenderer.material.GetColor("_Color");
+                float childGlowPower;
+                float childGlowTexStrength;
+
+                if (blockColor == BlockColors.purple)
+                {
+                    childGlowPower = 0.5f;
+                    childGlowTexStrength = 0.1f;
+                    childRenderer.material.SetColor("_Color", cc);
+                    childRenderer.material.SetTexture("_MKGlowTex", childGlowTex);
+                    childRenderer.material.SetFloat("_MKGlowPower", childGlowPower);
+                    childRenderer.material.SetFloat("_MKGlowTexStrength", childGlowTexStrength);
+                }
+
+                if (blockColor == BlockColors.yellow)
+                {
+                    childGlowPower = 0.5f;
+                    childGlowTexStrength = 0.5f;
+                    childRenderer.material.SetColor("_Color", cc);
+                    childRenderer.material.SetTexture("_MKGlowTex", childGlowTex);
+                    childRenderer.material.SetFloat("_MKGlowPower", childGlowPower);
+                    childRenderer.material.SetFloat("_MKGlowTexStrength", childGlowTexStrength);
+                }
             }
 
             rend.material.SetColor("_Color", c);

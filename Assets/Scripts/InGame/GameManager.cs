@@ -259,8 +259,6 @@
             // Debug.Log("game over! total score is " + score);
             UIController.Instance.SetSnackbarText("game over! total score is " + score);
             StartCoroutine(TurnOffLight());
-
-            // UIController.Instance.ShowEndUI(score.ToString(), min, sec);
         }
 
         IEnumerator TurnOffLight()
@@ -285,21 +283,38 @@
 
         IEnumerator LitBlocks()
         {
+            BlockBehavior combinedBlock = null;
+
             // random order
             for (int i = 0; i < blocks.Count; i++)
             {
                 BlockBehavior currBlock = blocks[i].GetComponent<BlockBehavior>();
+
                 if (currBlock.blockState.value == BlockStates.matched)
                 {
-                    // GameObject particleEffect = Instantiate(currBlock.particle, currBlock.transform.position, Quaternion.identity);
-                    // NetworkServer.Spawn(particleEffect);
+                    // skip the combined block for the last moment
+                    if (currBlock.isCombinedBlock)
+                    {
+                        combinedBlock = currBlock;
+                        continue;
+                    }
+
                     if (isServer) currBlock.RpcFinaleParticles();
                     yield return new WaitForSeconds(0.2f);
                     if (isServer) currBlock.RpcFinale();
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(0.5f);
                 }
             }
-            yield return new WaitForSeconds(0.5f);
+            // combined block goes last!
+            if (combinedBlock != null)
+            {
+                if (isServer) combinedBlock.RpcFinaleParticles();
+                yield return new WaitForSeconds(0.2f);
+                if (isServer) combinedBlock.RpcFinale();
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            yield return new WaitForSeconds(1f);
 
             float timeSpent = initTime - totalTime;
             string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
