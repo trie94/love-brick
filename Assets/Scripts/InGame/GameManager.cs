@@ -283,7 +283,7 @@
 
         IEnumerator LitBlocks()
         {
-            BlockBehavior combinedBlock = null;
+            List<BlockBehavior> matchedCombinedBlocks = new List<BlockBehavior>();
 
             // random order
             for (int i = 0; i < blocks.Count; i++)
@@ -295,7 +295,7 @@
                     // skip the combined block for the last moment
                     if (currBlock.isCombinedBlock)
                     {
-                        combinedBlock = currBlock;
+                        matchedCombinedBlocks.Add(currBlock);
                         continue;
                     }
 
@@ -306,11 +306,21 @@
                 }
             }
             // combined block goes last!
-            if (combinedBlock != null)
+            if (matchedCombinedBlocks != null)
             {
-                if (isServer) combinedBlock.RpcFinaleParticles();
+                // we only need one particle effect
+                if (isServer) matchedCombinedBlocks[0].RpcFinaleParticles();
                 yield return new WaitForSeconds(0.2f);
-                if (isServer) combinedBlock.RpcFinale();
+
+                for (int i = 0; i <= matchedCombinedBlocks.Count; i++)
+                {
+                    // this call affects both sides, but the server's combined block is different from
+                    // the client block, so it does not matter to the server side
+                    if (isServer) matchedCombinedBlocks[i].RpcFinale();
+                    // this call does not affect the client side
+                    // the server's combined block is affected by this call
+                    if (isServer) matchedCombinedBlocks[i].OnFinale();
+                }
                 yield return new WaitForSeconds(0.5f);
             }
 

@@ -316,11 +316,11 @@
                     float offsetX = 0f;
                     if (blockColor == BlockColors.purple)
                     {
-                        offsetX = 0.0215f;
+                        offsetX = 0.02f;
                     }
                     if (blockColor == BlockColors.yellow)
                     {
-                        offsetX = -0.025f;
+                        offsetX = -0.029f;
                     }
                     offset = new Vector3(offsetX, 0, 0);
                 }

@@ -73,10 +73,14 @@
                 }
             }
 
-            if (GameManager.Instance.gamestate != GameStates.play) return;
-
             if (slotState == SlotStates.hover)
             {
+                if (GameManager.Instance.gamestate != GameStates.play)
+                {
+                    slotState = SlotStates.idle;
+                    return;
+                }
+
                 if (glowLerpFactor > 1f)
                 {
                     glowLerpFactor = 0f;
@@ -98,18 +102,16 @@
                     for (int i = 0; i < rends.Length; i++)
                     {
                         rends[i].material.SetFloat("_MKGlowPower", curGlow);
-
                         rends[i].material.SetFloat("_MKGlowTexStrength", curTexGlow);
                     }
                 }
                 else
                 {
                     rend.material.SetFloat("_MKGlowPower", curGlow);
-
                     rend.material.SetFloat("_MKGlowTexStrength", curTexGlow);
                 }
             }
-            else
+            else    // idle
             {
                 if (isCombinedSlot)
                 {
@@ -118,6 +120,10 @@
                         if (rends[i].material.GetFloat("_MKGlowPower") != 0f)
                         {
                             rends[i].material.SetFloat("_MKGlowPower", 0f);
+                        }
+
+                        if (rends[i].material.GetFloat("_MKGlowTexStrength") != 0f)
+                        {
                             rends[i].material.SetFloat("_MKGlowTexStrength", 0f);
                         }
 
@@ -128,6 +134,10 @@
                     if (rend.material.GetFloat("_MKGlowPower") != 0f)
                     {
                         rend.material.SetFloat("_MKGlowPower", 0f);
+                    }
+
+                    if (rend.material.GetFloat("_MKGlowTexStrength") != 0f)
+                    {
                         rend.material.SetFloat("_MKGlowTexStrength", 0f);
                     }
                 }

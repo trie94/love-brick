@@ -197,7 +197,7 @@ MonoBehaviour:
     type: 2}
   directionalLight: {fileID: 0}
   wallHeight: 1.5
-  totalTime: 30
+  totalTime: 120
   beep: {fileID: 8300000, guid: 3ebbe52d6383f3b4a9f03dd309c6038a, type: 3}
   beepLast: {fileID: 8300000, guid: 01b6b95dd0d4dc84c8ee0d01ab022e2b, type: 3}
   score: 0
