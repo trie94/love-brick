@@ -168,7 +168,7 @@ MonoBehaviour:
     i14: 67
     i15: 119
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114808040104585096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -200,6 +200,8 @@ MonoBehaviour:
   totalTime: 120
   beep: {fileID: 8300000, guid: 3ebbe52d6383f3b4a9f03dd309c6038a, type: 3}
   beepLast: {fileID: 8300000, guid: 01b6b95dd0d4dc84c8ee0d01ab022e2b, type: 3}
+  finalUISound: {fileID: 8300000, guid: 24c878ef794491a45a09fe39110129da, type: 3}
   score: 0
+  hasFinaleDone: 0
   gamestate: 0
   cloudAnchor: {fileID: 0}

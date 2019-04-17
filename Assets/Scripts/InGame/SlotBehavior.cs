@@ -60,19 +60,6 @@
 
         void Update()
         {
-            if (GameManager.Instance.gamestate == GameStates.finale)
-            {
-                if (rend.material.GetFloat("_MKGlowPower") != 0f)
-                {
-                    rend.material.SetFloat("_MKGlowPower", 0f);
-                }
-
-                if (rend.material.GetFloat("MKGlowTexXtrength") != 0f)
-                {
-                    rend.material.SetFloat("_MKGlowTexStrength", 0f);
-                }
-            }
-
             if (slotState == SlotStates.hover)
             {
                 if (GameManager.Instance.gamestate != GameStates.play)

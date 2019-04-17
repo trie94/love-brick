@@ -42,9 +42,12 @@
         Color alertColor;
         [SerializeField] AudioClip beep;
         [SerializeField] AudioClip beepLast;
+        [SerializeField] AudioClip finalUISound;
         AudioSource audioSource;
 
         [SyncVar] public int score = 0;
+        [SyncVar] public bool hasFinaleDone = false;
+        bool hasScoreBoard = false;
         public GameStates gamestate = GameStates.lobby;
 
         static GameManager s_instance;
@@ -64,9 +67,6 @@
 
         public delegate void GameStartCallback();
         [SyncEvent] public event GameStartCallback EventOnGameStart;
-
-        public delegate void ClientJoinCallback();
-        public event ClientJoinCallback OnClientJoin;
 
         #region Unity methods
 
@@ -127,6 +127,12 @@
                     UIController.Instance.timerSlider.value = Mathf.Clamp01(totalTime / initTime);
                     UIController.Instance.timer.text = (min + ":" + sec);
                 }
+            }
+
+            if (hasFinaleDone && !hasScoreBoard)
+            {
+                ShowGameEndUI();
+                hasScoreBoard = true;
             }
         }
 
@@ -261,6 +267,17 @@
             StartCoroutine(TurnOffLight());
         }
 
+        public void ShowGameEndUI()
+        {
+            float timeSpent = initTime - totalTime;
+            string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
+            string sec = Mathf.RoundToInt(timeSpent % 60).ToString("00");
+            audioSource.PlayOneShot(finalUISound);
+
+            UIController.Instance.SetSnackbarText("this should be shown on the both sides");
+            UIController.Instance.ShowEndUI(score.ToString(), min, sec);
+        }
+
         IEnumerator TurnOffLight()
         {
             // turn off the light for the finale
@@ -306,30 +323,20 @@
                 }
             }
             // combined block goes last!
-            if (matchedCombinedBlocks != null)
+            if (matchedCombinedBlocks != null && matchedCombinedBlocks.Count > 0)
             {
                 // we only need one particle effect
                 if (isServer) matchedCombinedBlocks[0].RpcFinaleParticles();
                 yield return new WaitForSeconds(0.2f);
 
-                for (int i = 0; i <= matchedCombinedBlocks.Count; i++)
+                for (int i = 0; i < matchedCombinedBlocks.Count; i++)
                 {
-                    // this call affects both sides, but the server's combined block is different from
-                    // the client block, so it does not matter to the server side
                     if (isServer) matchedCombinedBlocks[i].RpcFinale();
-                    // this call does not affect the client side
-                    // the server's combined block is affected by this call
-                    if (isServer) matchedCombinedBlocks[i].OnFinale();
                 }
                 yield return new WaitForSeconds(0.5f);
             }
-
             yield return new WaitForSeconds(1f);
-
-            float timeSpent = initTime - totalTime;
-            string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
-            string sec = Mathf.RoundToInt(timeSpent % 60).ToString("00");
-            // UIController.Instance.ShowEndUI(score.ToString(), min, sec);
+            if (isServer) hasFinaleDone = true;
         }
 
         public void AddScore()

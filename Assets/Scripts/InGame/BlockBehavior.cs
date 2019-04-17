@@ -86,6 +86,7 @@
         [SerializeField] AudioClip matchSound;
         [SerializeField] AudioClip combineSound;
         [SerializeField] AudioClip decombineSound;
+        [SerializeField] AudioClip finalePop;
 
         SlotHelper slotHelper;
         List<SlotBehavior> potentialSlots = new List<SlotBehavior>();
@@ -533,7 +534,9 @@
             rend.material.SetTexture("_MKGlowTex", glowTex);
             rend.material.SetFloat("_MKGlowPower", glowPower);
             rend.material.SetFloat("_MKGlowTexStrength", glowTexStrength);
+
             // add sound later on
+            audioSource.PlayOneShot(finalePop);
         }
 
         void OnEnterCombine()

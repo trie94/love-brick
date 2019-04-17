@@ -365,6 +365,7 @@ MonoBehaviour:
   matchSound: {fileID: 8300000, guid: 1979181989c5d4519af35aa3e6a8e53f, type: 3}
   combineSound: {fileID: 8300000, guid: ae55173ad9f1f084fba3fc218f042af5, type: 3}
   decombineSound: {fileID: 8300000, guid: e9514ae7e315f234c83ca4782aa257e3, type: 3}
+  finalePop: {fileID: 8300000, guid: d2278981d10f1214f8c7874972df6867, type: 3}
   matchableDistance: 0.2
   offset: 0.1
   particle: {fileID: 1953385297080696, guid: 09ae9a9a509ff0a47b545b4b3c0b6a72, type: 2}

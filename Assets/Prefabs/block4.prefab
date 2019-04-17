@@ -238,11 +238,13 @@ MonoBehaviour:
   glowLerpSpeed: 5
   shiverLerpSpeed: 10
   glowTex: {fileID: 2800000, guid: d889a3999afe749af9a0b6d40a3c5994, type: 3}
+  childGlowTex: {fileID: 0}
   grabSound: {fileID: 8300000, guid: b43a050c83702456489012938d78c260, type: 3}
   releaseSound: {fileID: 8300000, guid: acbb11db189a840669fc9ce723b1b15e, type: 3}
   matchSound: {fileID: 8300000, guid: 1979181989c5d4519af35aa3e6a8e53f, type: 3}
   combineSound: {fileID: 8300000, guid: ae55173ad9f1f084fba3fc218f042af5, type: 3}
   decombineSound: {fileID: 8300000, guid: e9514ae7e315f234c83ca4782aa257e3, type: 3}
+  finalePop: {fileID: 8300000, guid: d2278981d10f1214f8c7874972df6867, type: 3}
   matchableDistance: 0.2
   offset: 0.1
   particle: {fileID: 1144136949291152, guid: fbba9c0fff689c6418a2224c4a7bdbf7, type: 2}
