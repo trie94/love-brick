@@ -86,7 +86,8 @@
         [SerializeField] AudioClip matchSound;
         [SerializeField] AudioClip combineSound;
         [SerializeField] AudioClip decombineSound;
-        [SerializeField] AudioClip finalePop;
+        [SerializeField] AudioClip[] finalePops;
+        static int finalePopIndex;
 
         SlotHelper slotHelper;
         List<SlotBehavior> potentialSlots = new List<SlotBehavior>();
@@ -293,7 +294,7 @@
 
             else if (blockState.value == BlockStates.matched)
             {
-                if (GameManager.Instance.gamestate == GameStates.play)
+                if (GameManager.Instance.gamestate == GameStates.play || GameManager.Instance.gamestate == GameStates.end)
                 {
                     curGlow = Mathf.Lerp(curGlow, 0f, 0.3f);
                     curTexGlow = Mathf.Lerp(curTexGlow, 0f, 0.3f);
@@ -317,16 +318,17 @@
                     float offsetX = 0f;
                     if (blockColor == BlockColors.purple)
                     {
-                        offsetX = 0.02f;
+                        offsetX = -0.0016f;
+
                     }
-                    if (blockColor == BlockColors.yellow)
-                    {
-                        offsetX = -0.029f;
-                    }
+                    // if (blockColor == BlockColors.yellow)
+                    // {
+                    //     offsetX = -0.025f;
+                    // }
                     offset = new Vector3(offsetX, 0, 0);
                 }
 
-                transform.position = Vector3.Lerp(transform.position, matchableSlot.transform.position + offset, 0.3f);
+                transform.position = Vector3.Lerp(transform.position, matchableSlot.transform.TransformPoint(offset), 0.3f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, matchableSlot.transform.rotation, 0.3f);
             }
 
@@ -394,7 +396,11 @@
             glowLerpFactor = 0f;
             curGlow = curTexGlow = minGlow = minTexGlow = 0f;
 
-            if (blockColor == BlockColors.purple || blockColor == BlockColors.pink)
+            if (blockColor == BlockColors.purple)
+            {
+                maxGlow = 1.3f;
+            }
+            else if (blockColor == BlockColors.pink)
             {
                 maxGlow = 1f;
             }
@@ -402,8 +408,11 @@
             {
                 maxGlow = 0.4f;
             }
-
-            if (blockColor == BlockColors.purple || blockColor == BlockColors.pink)
+            if (blockColor == BlockColors.purple)
+            {
+                maxTexGlow = 1.3f;
+            }
+            else if (blockColor == BlockColors.pink)
             {
                 maxTexGlow = 1f;
             }
@@ -459,8 +468,26 @@
             }
             Debug.Log("match");
 
-            // combined block
-            if (isCombinedBlock && pairBlock) pairBlock = null;
+            // combined block clean up
+            if (isCombinedBlock)
+            {
+                // we turn off the client block at all
+                if (!isServer)
+                {
+                    // enable server block
+                    Renderer[] rends = pairBlock.GetComponentsInChildren<Renderer>();
+                    for (int i = 0; i < rends.Length; i++)
+                    {
+                        if (!rends[i].enabled) rends[i].enabled = true;
+                    }
+
+                    // disable self
+                    rend.enabled = false;
+                    childRenderer.enabled = false;
+                }
+
+                pairBlock = null;
+            }
             UIController.Instance.SetSnackbarText("match, slot: " + matchableSlot + " / slot state: " + matchableSlot.slotState);
         }
 
@@ -536,7 +563,11 @@
             rend.material.SetFloat("_MKGlowTexStrength", glowTexStrength);
 
             // add sound later on
-            audioSource.PlayOneShot(finalePop);
+            audioSource.PlayOneShot(finalePops[finalePopIndex]);
+            if (finalePopIndex + 1 < finalePops.Length)
+            {
+                finalePopIndex++;
+            }
         }
 
         void OnEnterCombine()

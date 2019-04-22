@@ -192,7 +192,7 @@ MonoBehaviour:
   - {fileID: 1286792681673940, guid: d8f3c247c9928994097ec87c0684bef0, type: 2}
   slotNum: 20
   blockNums: 28
-  combinedPairs: 2
+  combinedPairs: 4
   helperPrefab: {fileID: 1148397453923392, guid: b121ead7c8577e645a1d6a82687a82b6,
     type: 2}
   directionalLight: {fileID: 0}
@@ -201,6 +201,7 @@ MonoBehaviour:
   beep: {fileID: 8300000, guid: 3ebbe52d6383f3b4a9f03dd309c6038a, type: 3}
   beepLast: {fileID: 8300000, guid: 01b6b95dd0d4dc84c8ee0d01ab022e2b, type: 3}
   finalUISound: {fileID: 8300000, guid: 24c878ef794491a45a09fe39110129da, type: 3}
+  BGMSource: {fileID: 0}
   score: 0
   hasFinaleDone: 0
   gamestate: 0

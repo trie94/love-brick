@@ -51,7 +51,12 @@
             }
 
             // darker colors should have bigger value
-            if (slotColor == BlockColors.purple || slotColor == BlockColors.pink)
+            if (slotColor == BlockColors.purple)
+            {
+                maxGlow = 1.3f;
+                maxTexGlow = 1.3f;
+            }
+            else if (slotColor == BlockColors.pink)
             {
                 maxGlow = 1f;
                 maxTexGlow = 1f;

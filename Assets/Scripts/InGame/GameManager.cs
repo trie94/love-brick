@@ -26,6 +26,7 @@
         [SerializeField] GameObject[] combinedBlockPrefabs;
         [SerializeField] int slotNum = 20;
         [SerializeField] int blockNums;
+        int combinedBlockSlots = 2;
         [SerializeField] int combinedPairs;
         [SerializeField] GameObject helperPrefab;
         List<GameObject> blocks = new List<GameObject>();
@@ -44,6 +45,7 @@
         [SerializeField] AudioClip beepLast;
         [SerializeField] AudioClip finalUISound;
         AudioSource audioSource;
+        [SerializeField] AudioSource BGMSource;
 
         [SyncVar] public int score = 0;
         [SyncVar] public bool hasFinaleDone = false;
@@ -100,7 +102,7 @@
         {
             if (gamestate == GameStates.play)
             {
-                if (score >= slotNum + 1 || totalTime <= 0)
+                if (score >= slotNum + combinedBlockSlots || totalTime <= 0)
                 {
                     EndGame();
                     return;
@@ -273,9 +275,7 @@
             string min = Mathf.FloorToInt(timeSpent / 60).ToString("00");
             string sec = Mathf.RoundToInt(timeSpent % 60).ToString("00");
             audioSource.PlayOneShot(finalUISound);
-
-            UIController.Instance.SetSnackbarText("this should be shown on the both sides");
-            UIController.Instance.ShowEndUI(score.ToString(), min, sec);
+            UIController.Instance.ShowEndUI(score.ToString() + " / 22", min, sec);
         }
 
         IEnumerator TurnOffLight()
@@ -289,6 +289,9 @@
             while (lerpFactor < 1f)
             {
                 directionalLight.color = Color.Lerp(currColor, targetColor, lerpFactor);
+
+                // decrease the background volume
+                BGMSource.volume = Mathf.Lerp(BGMSource.volume, 0.02f, lerpFactor);
                 lerpFactor += Time.deltaTime / duration;
                 yield return null;
             }
@@ -310,30 +313,32 @@
                 if (currBlock.blockState.value == BlockStates.matched)
                 {
                     // skip the combined block for the last moment
+                    // only add either purple or yellow
                     if (currBlock.isCombinedBlock)
                     {
-                        matchedCombinedBlocks.Add(currBlock);
+                        if (currBlock.blockColor == BlockColors.purple)
+                        {
+                            matchedCombinedBlocks.Add(currBlock);
+                        }
                         continue;
                     }
 
                     if (isServer) currBlock.RpcFinaleParticles();
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.1f);
                     if (isServer) currBlock.RpcFinale();
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.2f);
                 }
             }
             // combined block goes last!
             if (matchedCombinedBlocks != null && matchedCombinedBlocks.Count > 0)
             {
-                // we only need one particle effect
-                if (isServer) matchedCombinedBlocks[0].RpcFinaleParticles();
-                yield return new WaitForSeconds(0.2f);
-
                 for (int i = 0; i < matchedCombinedBlocks.Count; i++)
                 {
+                    if (isServer) matchedCombinedBlocks[i].RpcFinaleParticles();
+                    yield return new WaitForSeconds(0.1f);
                     if (isServer) matchedCombinedBlocks[i].RpcFinale();
+                    yield return new WaitForSeconds(0.2f);
                 }
-                yield return new WaitForSeconds(0.5f);
             }
             yield return new WaitForSeconds(1f);
             if (isServer) hasFinaleDone = true;

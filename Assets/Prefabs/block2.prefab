@@ -223,7 +223,27 @@ MonoBehaviour:
   matchSound: {fileID: 8300000, guid: 1979181989c5d4519af35aa3e6a8e53f, type: 3}
   combineSound: {fileID: 8300000, guid: ae55173ad9f1f084fba3fc218f042af5, type: 3}
   decombineSound: {fileID: 8300000, guid: e9514ae7e315f234c83ca4782aa257e3, type: 3}
-  finalePop: {fileID: 8300000, guid: d2278981d10f1214f8c7874972df6867, type: 3}
+  finalePops:
+  - {fileID: 8300000, guid: df0068070b3d94509ab8e00dbdbd8c3c, type: 3}
+  - {fileID: 8300000, guid: 6e34b411a88114ca88d6f8ef8c83fefb, type: 3}
+  - {fileID: 8300000, guid: 1a55f6afed0f74748881bf865a9fd43f, type: 3}
+  - {fileID: 8300000, guid: 371259fc6bd4d412fa2f2caa583caa81, type: 3}
+  - {fileID: 8300000, guid: fdbd2062983a047f5a1978a40e321fe2, type: 3}
+  - {fileID: 8300000, guid: 27cd5eec28b92432ebc09b2c5e3198bc, type: 3}
+  - {fileID: 8300000, guid: 2922f1681cf0a49708772d4ec9a41354, type: 3}
+  - {fileID: 8300000, guid: 49303b4b466be4df793162f0f9eabbf5, type: 3}
+  - {fileID: 8300000, guid: 22bddcc5967144f1e814c40b8e7a688e, type: 3}
+  - {fileID: 8300000, guid: b5b5309064a754a8b9f8187fe4ff1690, type: 3}
+  - {fileID: 8300000, guid: 9e000e1cf4a684e79bc62f0b8cc8a81f, type: 3}
+  - {fileID: 8300000, guid: ad8e35b1785fd40d1ac105c3295f13a1, type: 3}
+  - {fileID: 8300000, guid: ac0b2346c3352443b96a836ab5d42262, type: 3}
+  - {fileID: 8300000, guid: 6a738ecf13a2d4701b5ec198733beeb9, type: 3}
+  - {fileID: 8300000, guid: 72da9cd6c37804944ae2b88b55f0f98c, type: 3}
+  - {fileID: 8300000, guid: 6375d3c59471e4b21bdb79b0d6f47cf9, type: 3}
+  - {fileID: 8300000, guid: c3e65dcb4e17044b892300c22d69153c, type: 3}
+  - {fileID: 8300000, guid: 0c41f05f5e06c4c878cf56c1d9a243ee, type: 3}
+  - {fileID: 8300000, guid: e1f7b95fe236d4b09b05a386384d71db, type: 3}
+  - {fileID: 8300000, guid: 2e4d1f6240d794c03ba80d8b566025d5, type: 3}
   matchableDistance: 0.2
   offset: 0.1
   particle: {fileID: 1440259705801908, guid: 5a31c6efedf3051449573c3f9806af30, type: 2}

@@ -139,6 +139,14 @@
 
                     if ((currentBlock == null || currentBlock.gameObject != temp) && temp.GetComponent<NetworkIdentity>().hasAuthority)
                     {
+                        if (currentBlock != null && currentBlock.gameObject != temp)
+                        {
+                            if (currentBlock.blockState.value == BlockStates.hovered)
+                            {
+                                currentBlock.OnIdle();
+                            }
+                        }
+
                         currentBlock = temp.GetComponent<BlockBehavior>();
                         playerState = PlayerStates.hover;
                         currentBlock.OnHover();

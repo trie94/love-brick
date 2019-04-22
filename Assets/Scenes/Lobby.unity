@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.49641275, b: 0.57481736, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -369,6 +369,10 @@ Prefab:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1428274161546542, guid: f177297a86b28ca48814efb68c063843, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f177297a86b28ca48814efb68c063843, type: 2}
   m_IsPrefabAsset: 0
@@ -620,6 +624,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8382e6a65524e4924b32fb0362aca270, type: 2}
   m_IsPrefabAsset: 0
+--- !u!82 &1582307430 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 82373880625036870, guid: 8382e6a65524e4924b32fb0362aca270,
+    type: 2}
+  m_PrefabInternal: {fileID: 1392546138}
 --- !u!1001 &1640775410
 Prefab:
   m_ObjectHideFlags: 0
@@ -776,6 +785,11 @@ Prefab:
       propertyPath: directionalLight
       value: 
       objectReference: {fileID: 1148165827}
+    - target: {fileID: 114808040104585096, guid: c14b8320cdf67495a8a7f047f2b44377,
+        type: 2}
+      propertyPath: BGMSource
+      value: 
+      objectReference: {fileID: 1582307430}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c14b8320cdf67495a8a7f047f2b44377, type: 2}
   m_IsPrefabAsset: 0
