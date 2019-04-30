@@ -243,7 +243,7 @@ namespace Love.Core
             roomInfo.SetActive(false);
             IPAdressInfo.SetActive(false);
             // enable this if debugging is needed
-            // snackbar.SetActive(false);
+            snackbar.SetActive(false);
             topUI.SetActive(true);
         }
 
