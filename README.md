@@ -16,7 +16,7 @@ _Previous work can be found in [love](https://github.com/trie94/love)._
 * AR Core SDK for Unity
 
 ## Author
-*Yein Jo*
+**Yein Jo**
 
 ## License
 This project is from a small group study in HCII and ETC at CMU and licensed under the CMU students: Po Bhattacharya, Ketki Jadhav, Radha Nath, Yein Jo; Jessica Hammer as an instructor.
