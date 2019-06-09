@@ -4,6 +4,7 @@ Brick is a collaborative game in which two players work together to fill in a pa
 _Previous work can be found in [love](https://github.com/trie94/love)._
 
 ## [Demo Video](https://www.youtube.com/watch?v=6DIVVlTO9Uw)
+![thumbnail](./readme_thumb.png)
 
 ## Built With
 * [Unity 2018.2.8f1](https://unity3d.com/get-unity/download/archive)
